@@ -38,6 +38,30 @@
   </entry>
   
   <entry>
+    <title>我的第一篇博客</title>
+    <link href="https://www.guoyaohua.cn/2019/05/06/my-first-blog/"/>
+    <id>https://www.guoyaohua.cn/2019/05/06/my-first-blog/</id>
+    <published>2019-05-06T09:36:21.000Z</published>
+    <updated>2019-05-07T01:39:57.774Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="标题一"><a href="#标题一" class="headerlink" title="标题一"></a>标题一</h2><h3 id="标题二"><a href="#标题二" class="headerlink" title="标题二"></a>标题二</h3>]]></content>
+    
+    <summary type="html">
+    
+      这是我第一篇博客
+    
+    </summary>
+    
+      <category term="deeplearning/test" scheme="https://www.guoyaohua.cn/categories/deeplearning-test/"/>
+    
+    
+      <category term="blog" scheme="https://www.guoyaohua.cn/tags/blog/"/>
+    
+      <category term="first" scheme="https://www.guoyaohua.cn/tags/first/"/>
+    
+  </entry>
+  
+  <entry>
     <title>Hello World</title>
     <link href="https://www.guoyaohua.cn/2019/05/06/hello-world-1/"/>
     <id>https://www.guoyaohua.cn/2019/05/06/hello-world-1/</id>
