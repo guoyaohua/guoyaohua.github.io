@@ -1,0 +1,1966 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext">
+  
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.0.1">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.ico?v=7.0.1">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico?v=7.0.1">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.ico?v=7.0.1">
+
+
+  <link rel="mask-icon" href="/images/favicon.ico?v=7.0.1" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.0.1',
+    sidebar: {"position":"right","display":"always","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="引言接触深度学习已经快两年了，之前一直使用Google Colab和Kaggle Kernel提供的免费GPU（Tesla K80）训练模型（最近Google将Colab的GPU升级为Tesla T4，计算速度又提升了一个档次），不过由于内地网络的原因，Google和Kaggle连接十分不稳定，经常断线重连，一直是很令人头痛的问题，而且二者均有很多限制，例如Google Colab一个脚本运行的最">
+<meta name="keywords" content="DeepLearning">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深度学习工作站攒机">
+<meta property="og:url" content="https://www.guoyaohua.cn/2019/05/09/deeplearning-workstation/index.html">
+<meta property="og:site_name" content="郭耀华&#39;s Blog">
+<meta property="og:description" content="引言接触深度学习已经快两年了，之前一直使用Google Colab和Kaggle Kernel提供的免费GPU（Tesla K80）训练模型（最近Google将Colab的GPU升级为Tesla T4，计算速度又提升了一个档次），不过由于内地网络的原因，Google和Kaggle连接十分不稳定，经常断线重连，一直是很令人头痛的问题，而且二者均有很多限制，例如Google Colab一个脚本运行的最">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://pr2cmdtfq.bkt.clouddn.com/1557387815846.png">
+<meta property="og:image" content="http://pr2cmdtfq.bkt.clouddn.com/intel%20chipset.jpg">
+<meta property="og:image" content="http://pr2cmdtfq.bkt.clouddn.com/x99ews.png">
+<meta property="og:image" content="http://pr2cmdtfq.bkt.clouddn.com/R5E.jpg">
+<meta property="og:image" content="http://pr2cmdtfq.bkt.clouddn.com/gaming7.png">
+<meta property="og:image" content="http://pr2cmdtfq.bkt.clouddn.com/cputianti.png">
+<meta property="og:image" content="http://pr2cmdtfq.bkt.clouddn.com/intel6950x.png">
+<meta property="og:image" content="http://pr2cmdtfq.bkt.clouddn.com/6950X_.jpg">
+<meta property="og:image" content="http://pr2cmdtfq.bkt.clouddn.com/Vengeance_LPX_DDR4_BOX.png">
+<meta property="og:image" content="http://pr2cmdtfq.bkt.clouddn.com/M.2SSD.jpg">
+<meta property="og:image" content="http://pr2cmdtfq.bkt.clouddn.com/performance_RTX.png">
+<meta property="og:image" content="http://pr2cmdtfq.bkt.clouddn.com/performance_per_dollar_RTX.png">
+<meta property="og:image" content="http://pr2cmdtfq.bkt.clouddn.com/rtx2070.jpg">
+<meta property="og:image" content="http://pr2cmdtfq.bkt.clouddn.com/psu.png">
+<meta property="og:image" content="http://pr2cmdtfq.bkt.clouddn.com/fan.png">
+<meta property="og:image" content="http://pr2cmdtfq.bkt.clouddn.com/zhuangji.jpg">
+<meta property="og:image" content="http://pr2cmdtfq.bkt.clouddn.com/%E4%B8%BB%E6%9C%BA%E6%AD%A3%E9%9D%A2%E5%9B%BE.jpg">
+<meta property="og:image" content="http://pr2cmdtfq.bkt.clouddn.com/%E4%B8%BB%E6%9C%BA%E4%BE%A7%E9%9D%A2%E5%9B%BE.jpg">
+<meta property="og:image" content="http://pr2cmdtfq.bkt.clouddn.com/ludashi.jpg">
+<meta property="og:image" content="http://pr2cmdtfq.bkt.clouddn.com/cpu-z1.png">
+<meta property="og:image" content="http://pr2cmdtfq.bkt.clouddn.com/AIDA.png">
+<meta property="og:image" content="http://pr2cmdtfq.bkt.clouddn.com/ssd.png">
+<meta property="og:updated_time" content="2019-05-11T06:53:05.415Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="深度学习工作站攒机">
+<meta name="twitter:description" content="引言接触深度学习已经快两年了，之前一直使用Google Colab和Kaggle Kernel提供的免费GPU（Tesla K80）训练模型（最近Google将Colab的GPU升级为Tesla T4，计算速度又提升了一个档次），不过由于内地网络的原因，Google和Kaggle连接十分不稳定，经常断线重连，一直是很令人头痛的问题，而且二者均有很多限制，例如Google Colab一个脚本运行的最">
+<meta name="twitter:image" content="http://pr2cmdtfq.bkt.clouddn.com/1557387815846.png">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="郭耀华's Blog" type="application/atom+xml">
+
+
+
+
+  <link rel="canonical" href="https://www.guoyaohua.cn/2019/05/09/deeplearning-workstation/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>深度学习工作站攒机 | 郭耀华's Blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">郭耀华's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <h1 class="site-subtitle" itemprop="description">欲穷千里目，更上一层楼。</h1>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+  
+  
+  
+  
+
+  
+
+  <a href="https://github.com/guoyaohua" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewbox="0 0 250 250" style="fill: #222; color: #fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"/><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"/></svg></a>
+
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.guoyaohua.cn/2019/05/09/deeplearning-workstation/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="郭耀华">
+      <meta itemprop="description" content="深度学习、机器学习技术博客">
+      <meta itemprop="image" content="http://pr2cmdtfq.bkt.clouddn.com/o_face_icon.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="郭耀华's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">深度学习工作站攒机
+
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-05-09 03:59:47" itemprop="dateCreated datePublished" datetime="2019-05-09T03:59:47Z">2019-05-09</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-05-11 06:53:05" itemprop="dateModified" datetime="2019-05-11T06:53:05Z">2019-05-11</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/DeepLearning/" itemprop="url" rel="index"><span itemprop="name">DeepLearning</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon">
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>接触深度学习已经快两年了，之前一直使用<a href="https://colab.research.google.com" target="_blank" rel="noopener">Google Colab</a>和<a href="https://www.kaggle.com/kernels" target="_blank" rel="noopener">Kaggle Kernel</a>提供的免费GPU（Tesla K80）训练模型（最近Google将Colab的GPU升级为<strong>Tesla T4</strong>，计算速度又提升了一个档次），不过由于内地网络的原因，Google和Kaggle连接十分不稳定，经常断线重连，一直是很令人头痛的问题，而且二者均有很多限制，例如Google Colab一个脚本运行的最长时间为12h，Kaggle的为6h，数据集上传也存在问题，需要使用一些Trick才能达成目的，模型的保存、下载等都会耗费很多精力，总之体验不是很好，不过免费的羊毛让大家撸，肯定会有一些限制，也是可以理解的。</p>
+<p>对于租用云服务器，之前也尝试过，租用了一家小平台的GPU服务器，也存在一些操作上的困难，不适合程序调试，而且价格也不便宜。</p>
+<p>很早之前就想要搭建一个自己的深度学习工作站，不过机器成本的昂贵，一直阻碍着我攒机计划的进行。工欲善其事，必先利其器！最近终于下定决心，置办一个深度学习工作站主机。本文将我在这段时间选择、购置硬件的心得体会，分享给大家。</p>
+<h2 id="配置清单"><a href="#配置清单" class="headerlink" title="配置清单"></a>配置清单</h2><table>
+<thead>
+<tr>
+<th style="text-align:center">配件</th>
+<th style="text-align:center">品牌型号</th>
+<th style="text-align:center">数量</th>
+<th style="text-align:center">价格</th>
+<th style="text-align:center">渠道</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">CPU</td>
+<td style="text-align:center">Intel 酷睿i7 6950X 至尊版</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">3300</td>
+<td style="text-align:center">散片</td>
+</tr>
+<tr>
+<td style="text-align:center">主板</td>
+<td style="text-align:center">华硕 RAMPAGE V EXTREME X99 主板</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">1085</td>
+<td style="text-align:center">二手</td>
+</tr>
+<tr>
+<td style="text-align:center">内存</td>
+<td style="text-align:center">海盗船 复仇者LPX 16GB DDR4 2400</td>
+<td style="text-align:center">4</td>
+<td style="text-align:center">1920</td>
+<td style="text-align:center">全新</td>
+</tr>
+<tr>
+<td style="text-align:center">HDD</td>
+<td style="text-align:center">西部数据 WD40EZRZ 蓝盘 4TB</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">550</td>
+<td style="text-align:center">OEM</td>
+</tr>
+<tr>
+<td style="text-align:center">SSD</td>
+<td style="text-align:center">西数 WDS100T2X0C 黑盘 1TB</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">1220</td>
+<td style="text-align:center">全新</td>
+</tr>
+<tr>
+<td style="text-align:center">显卡</td>
+<td style="text-align:center">影驰 GeForce RTX 2070 大将</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">3400</td>
+<td style="text-align:center">全新</td>
+</tr>
+<tr>
+<td style="text-align:center">机箱</td>
+<td style="text-align:center">爱国者（aigo）月光宝盒 破晓</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">264</td>
+<td style="text-align:center">全新</td>
+</tr>
+<tr>
+<td style="text-align:center">电源</td>
+<td style="text-align:center">鑫谷 GP1350G 1250W</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">680</td>
+<td style="text-align:center">全新</td>
+</tr>
+<tr>
+<td style="text-align:center">散热器</td>
+<td style="text-align:center">爱国者（aigo）冰塔T240 极光版</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">299</td>
+<td style="text-align:center">全新</td>
+</tr>
+<tr>
+<td style="text-align:center">风扇</td>
+<td style="text-align:center">金河田  光影炫光 12CM</td>
+<td style="text-align:center">6</td>
+<td style="text-align:center">60</td>
+<td style="text-align:center">全新</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center"></td>
+<td style="text-align:center"></td>
+<td style="text-align:center">12778</td>
+<td style="text-align:center">总计</td>
+</tr>
+</tbody>
+</table>
+<p>以上就是我主机的配置清单，目前只买了一张2070，后期会升级加入多卡，下面将详细分析一下各个配件的选购过程。</p>
+<h2 id="配件选购指南"><a href="#配件选购指南" class="headerlink" title="配件选购指南"></a>配件选购指南</h2><h3 id="主板"><a href="#主板" class="headerlink" title="主板"></a>主板</h3><p>有很多朋友在进行选购主机的时候认为应该先选CPU再选主板，个人认为配件选购的顺序和主机的用途是有关系的，对于搭建深度学习工作站而言，在正式进行硬件选购前，最重要的是需要确认一个问题，到底需要单卡（GPU）主机还是多卡主机，如果只需要搭建单显卡的主机，那么在选购主板的过程中，不需要花费太多精力，大量主板可以满足要求，如果想要搭建双卡、三卡或是四卡主机，则需要在主板上下点功夫，为了日后升级方便，我的目标是使用可支持四显卡的主机，所以在主板选择方面，会很注重PCIE扩展接口数量。</p>
+<p>在初期选择主板时，网上各式各样型号的主板会使小萌新（我）很是懵逼，在网上查找了些资料，了解了些主板的知识。为了保证CPU和主板搭配合理，装到一起能正常工作，首先我们需要了解各主板芯片组和CPU接口的具体含义。例如，下图为京东的主板截图。</p>
+<p><img src="http://pr2cmdtfq.bkt.clouddn.com/1557387815846.png" alt="京东主板商品截图"></p>
+<p>我们可以看到大多数商品名称后面都会有一个类似（AMD A320/Socket AM4）或（Intel H310/LGA 1151）的注释，其实这些就是影响你CPU和主板能否匹配的最重要参数了，在商品详情页，我们也可以找到这个参数，前面的“Intel H310”或“AMD A320”指的就是主板的芯片组，而后面的“LGA 1151”或“Socket AM4”指的就是主板上CPU插槽的类型了。</p>
+<h4 id="芯片组"><a href="#芯片组" class="headerlink" title="芯片组"></a>芯片组</h4><p>芯片组示主板的核心芯片，选对芯片组，主板和CPU才能兼容。目前主流的主板分为Intel和AMD两个系列，分别对应不同品牌的处理器。而每个系列又按照芯片组类型的不同，分为很多子系列。以Intel系列主板为例，在市面上可以看到华硕、技嘉、七彩虹等近十个品牌的产品，不同品牌的主板在外观和技术上会有一些差别，但他们使用的芯片组都是由Intel提供的。</p>
+<p><img src="http://pr2cmdtfq.bkt.clouddn.com/intel%20chipset.jpg" alt></p>
+<div align="center">题注内容</div>
+
+<p>不过，虽然同属于Intel系列主板，但根据处理器的不同，需要搭配对应芯片组的主板才能成功组建出一台可以使用的主机。比如目前Intel最新的九代酷睿 i9-9900k 处理器需要搭配Z390、Z370或H370芯片组的主板来使用。而AMD的Ryzen 3/5/7系列CPU和APU产品则可以搭配X370、B350或A320芯片组的主板。 </p>
+<p>那么不同芯片组的主板又有什么区别呢？有的时候，多个芯片组的主板虽然可以支持同一款处理器，但在主板的规格上还是有一定区别的。这些区别包括但不限于原生USB及磁盘接口数量、是否支持CPU超频、是否支持多显卡互联等。这对于不太了解主板的用户来说确实很难选择，简单总结一下：</p>
+<p>B系列（如B360、B250）属于入门级产品，不具备超频和多卡互联的功能，同时接口及插槽数量也相对要少一些。<br>H系列（如H310）比B系列略微高端一些，可以支持多卡互联，接口及插槽数量有所增长。<br>Z系列（如Z390、Z370）除了具备H系列的特点支持，还能够对CPU进行超频，并且接口和插槽数量也非常丰富。<br>X系列（如X99、X299）可支持Intel至尊系列高端处理器，同时具备Z系列的各项特点。</p>
+<p>同时，Intel的100系列和200系列主板可以搭配6代及7代酷睿处理器，300系列主板需要搭配8代酷睿处理器，X299系列主板需要搭配7代至尊系列酷睿处理器。</p>
+<p>对于单路CPU的主板，能够同时支持四张显卡卡的神板，毫无疑问就只有X99/X299系列的主板了，当然你也可以考虑intel 服务器C系列多路CPU主板，可以支持两个CPU在一张主板上。我的目标是使用单路CPU，所以也就没有关注C系列主板。</p>
+<p>对于X299和X99之间的选择，有的朋友会主张买新不买旧，我个人的建议还是性价比高才是好的，较新的X299板子相比X99主板要贵大几百甚至1k左右，功能上的提升并不是很大，对于我们大多数Deep Learning开发者而言，X99的板子足够了，毕竟要把钱花在刀刃上，GPU才是大手笔。X99板子主要推荐以下三款：</p>
+<p><a href="https://www.asus.com.cn/Motherboards/X99E_WSUSB_31/" target="_blank" rel="noopener">Asus/华硕 X99-E WS/USB 3.1</a><br><img src="http://pr2cmdtfq.bkt.clouddn.com/x99ews.png" alt="Asus/华硕 X99-E WS/USB 3.1"></p>
+<p><a href="https://www.asus.com.cn/Motherboards/RAMPAGE_V_EXTREMEU31/overview/" target="_blank" rel="noopener">Asus/华硕 RAMPAGE V EXTREME/U3.1</a><br><img src="http://pr2cmdtfq.bkt.clouddn.com/R5E.jpg" alt="Asus/华硕 RAMPAGE V EXTREME/U3.1"></p>
+<p><a href="https://cn.msi.com/Motherboard/X99S-GAMING-7.html" target="_blank" rel="noopener">MSI/微星 X99S GAMING 7</a><br><img src="http://pr2cmdtfq.bkt.clouddn.com/gaming7.png" alt="MSI/微星 X99S GAMING 7"></p>
+<h4 id="对比"><a href="#对比" class="headerlink" title="对比"></a>对比</h4><table>
+<thead>
+<tr>
+<th style="text-align:center">型号名称</th>
+<th style="text-align:center">MSI/微星 X99S GAMING 7</th>
+<th style="text-align:center">华硕RAMPAGE V EXTREME/U3.1</th>
+<th style="text-align:center">华硕X99-E WS/USB 3.1</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">主芯片组</td>
+<td style="text-align:center">Intel X99</td>
+<td style="text-align:center">Intel X99</td>
+<td style="text-align:center">Intel X99</td>
+</tr>
+<tr>
+<td style="text-align:center">CPU插槽</td>
+<td style="text-align:center">LGA 2011-v3</td>
+<td style="text-align:center">LGA 2011-v3</td>
+<td style="text-align:center">LGA 2011-v3</td>
+</tr>
+<tr>
+<td style="text-align:center">内存规格</td>
+<td style="text-align:center">8×DDR4 DIMM 四通道</td>
+<td style="text-align:center">8×DDR4 DIMM 四通道</td>
+<td style="text-align:center">8×DDR4 DIMM 四通道</td>
+</tr>
+<tr>
+<td style="text-align:center">最大内存容量</td>
+<td style="text-align:center">128GB</td>
+<td style="text-align:center">128GB</td>
+<td style="text-align:center">128GB</td>
+</tr>
+<tr>
+<td style="text-align:center">PCI-E标准</td>
+<td style="text-align:center">PCI-E 3.0</td>
+<td style="text-align:center">PCI-E 3.0</td>
+<td style="text-align:center">PCI-E 3.0</td>
+</tr>
+<tr>
+<td style="text-align:center">PCI-E插槽</td>
+<td style="text-align:center">4×PCI-E X16 插槽</td>
+<td style="text-align:center">5×PCI-E X16 插槽<br>1×PCI-E X1 插槽</td>
+<td style="text-align:center">7×PCI-E X16 插槽</td>
+</tr>
+<tr>
+<td style="text-align:center">存储接口</td>
+<td style="text-align:center">10×SATA III<br>1×SATA Express<br>1×M.2（10Gb/s）</td>
+<td style="text-align:center">1×M.2<br>2×SATA Express<br>8×SATA III</td>
+<td style="text-align:center">1×M.2<br>2×SATA Express<br>8×SATA III<br>2×eSATA</td>
+</tr>
+<tr>
+<td style="text-align:center">USB接口</td>
+<td style="text-align:center">6×USB2.0（2背板+4内置）<br>12×USB3.0（4背板+8内置）</td>
+<td style="text-align:center">14×USB3.0（4内置+10背板）<br>6×USB2.0（4内置+2背板）</td>
+<td style="text-align:center">14×USB3.0（4内置+10背板）<br>4×USB2.0（4内置）</td>
+</tr>
+<tr>
+<td style="text-align:center">主板板型</td>
+<td style="text-align:center">ATX板型</td>
+<td style="text-align:center">E-ATX板型</td>
+<td style="text-align:center">E-ATX板型</td>
+</tr>
+<tr>
+<td style="text-align:center">外形尺寸</td>
+<td style="text-align:center">30.5×24.4cm</td>
+<td style="text-align:center">30.5×27.2cm</td>
+<td style="text-align:center">30.5×26.7cm</td>
+</tr>
+<tr>
+<td style="text-align:center">多显卡技术</td>
+<td style="text-align:center">NVIDIA 3-Way SLI<br> NVIDIA 3-Way SLI</td>
+<td style="text-align:center">NVIDIA 4-Way SLI<br>AMD 4-Way CrossFireX</td>
+<td style="text-align:center">NVIDIA 4-Way SLI<br>AMD 4-Way CrossFire</td>
+</tr>
+</tbody>
+</table>
+<p>可以看到这三款主板，均为X99芯片组，CPU插槽均为 LGA 2011-v3 ，而且有8个内存插槽，支持四通道，最高128G的内存容量，内存容量这部分个人很喜欢，对于大型数据集数据预处理的过程，对内存容量和CPU要求都很高，而且足够的内存容量使你不用再为多开窗口卡顿现象而担忧。三者都支持多显卡扩展，华硕R5E和华硕X99 E-WS均支持4显卡交火，微星X99S Gaming 7支持3显卡交火，不过显卡交火，对于深度学习计算没有任何的帮助，对游戏确是有一些提升，我们日常所说的多显卡训练模型，也不是用到交火技术，而是Data Parallel或Model Parallel，所以交火与否我们不需要关注，需要关注的时PCIE ×16扩展插槽的有效个数（有的间距太近，无法全插）。</p>
+<p>起初最想购买的是“华硕 X99-E WS”，经典的工作站主板，很多深度学习开发者的首选，支持四路显卡交火，更为优秀的是竟然有7个×16全速PCIE 3.0扩展插槽，但是对于这类主板虽然有如此强大的扩展功能，但在真正插显卡的时候，由于PCIE接口之间的空间限制，你是无法插满插槽的，而且现在显卡都很厚，很可能会造成接口的浪费。这个板子已经停产，不过在天猫的华硕旗舰店仍然有存货，售价“3899元”，还是很贵的。其中有很多功能，对于我们日常使用、训练模型来讲并不是很用得上，会造成没必要的开销。最后我选择了在淘宝购买二手的“华硕 RAMPAGE V EXTREME”，毕竟便宜。如果经费充足的朋友，我仍然建议购买“华硕 X99 E-WS”这个主板。</p>
+<h3 id="CPU"><a href="#CPU" class="headerlink" title="CPU"></a>CPU</h3><p>对于CPU的选取是基于确定主板CPU插槽类型为前提的，例如我们上文中我们选择的X99系列三款主板，CPU插槽类型均为“LGA 2011-v3”，我们就要选与此匹配的CPU，各插槽类型的CPU具体有哪些型号，可以去<a href="http://detail.zol.com.cn/cpu/" target="_blank" rel="noopener">中关村在线</a>查询，里面还有一些性能测评的文章和排行榜信息，值得推荐。</p>
+<p>为了能够为CPU做出明智的选择，我们首先需要了解CPU以及它与深度学习的关系。CPU为深度学习做了什么？当你在GPU上运行深度网络时，CPU几乎不会进行任何计算。它主要的作用是：（1）启动GPU函数调用，（2）执行CPU函数。</p>
+<p>CPU对于数据预处理的过程却起重要作用。有两种常见的数据处理策略，它们具有不同的CPU需求。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 一、在训练时进行数据预处理</span></span><br><span class="line"><span class="keyword">for</span> train_step <span class="keyword">in</span> range(tot_train_step):</span><br><span class="line">    load_mini_batch()</span><br><span class="line">    preprocess_mini_batch()</span><br><span class="line">    train_on_mini_batch()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 二、在训练前进行数据预处理</span></span><br><span class="line">preprocess_data()</span><br><span class="line"><span class="keyword">for</span> train_step <span class="keyword">in</span> range(tot_train_step):</span><br><span class="line">    load_preprocessed_mini_batch()</span><br><span class="line">    train_on_mini_batch()</span><br></pre></td></tr></table></figure>
+<p>对于第一个策略，为避免CPU的性能成为训练模型的速度的瓶颈，具有高主频多内核的CPU可以显著提高性能，加快训练速度。对于第二种策略，由于是预先进行数据预处理，在训练时的速度取决于GPU性能，与CPU无关，理论上CPU的性能不会成为瓶颈。但是我个人的观点还是，在经费允许的情况下，尽管CPU的性能越强大越好，但是也不一定非要追求最新款、最强大的CPU，性价比和个人需求才是最关键的。</p>
+<blockquote>
+<p>当然，此处附加一点说明，如果攒机后不仅需要训练模型，而且偶尔也会玩一些游戏消遣的话，尽量选择高主频的主机，志强系列多核心低主频CPU不适合游戏玩家。</p>
+</blockquote>
+<h4 id="PCIe-通道"><a href="#PCIe-通道" class="headerlink" title="PCIe  通道"></a>PCIe  通道</h4><p>CPU的PCIe通道对模型训练的影响网上也纵说纷云，首先让我们先了解一下什么是CPU的PCIe通道</p>
+<blockquote>
+<p><a href="https://baike.baidu.com/item/PCI-Express" target="_blank" rel="noopener">PCI-Express</a>(peripheral component interconnect express)是一种高速串行计算机扩展总线标准，它原来的名称为“3GIO”，是由<a href="https://baike.baidu.com/item/英特尔/305730" target="_blank" rel="noopener">英特尔</a>在2001年提出的，旨在替代旧的PCI，PCI-X和AGP总线标准。PCIe属于高速串行点对点双通道高带宽传输，所连接的设备分配独享通道带宽，不共享总线带宽，主要支持主动电源管理，错误报告，端对端的可靠性传输，热插拔以及服务质量(<a href="https://baike.baidu.com/item/QOS" target="_blank" rel="noopener">QOS</a>)等功能。</p>
+</blockquote>
+<p>简而言之，PCIe通道就是主机中各组件进行数据交互的信道，PCIe通道分两种：</p>
+<ol>
+<li>CPU直连通道，主流消费级只给你16条(8700K)，高端&amp;服务器上才会多给(7980XE)。</li>
+<li>DMI3总线PCH芯片分发出来的，是主板的属性。例如Z370主板声称有24条PCIE通道，其实这24条就是PCH通道，要共享DMI3等效直连PCIe ×4的带宽。</li>
+</ol>
+<p>就PCH而言，在很多高性能扩展面前没有智联通道强大，所以对于CPU的直连通道数就显得至关重要了。</p>
+<p>Tim Dettmers大神在他的博文《<a href="https://timdettmers.com/2018/12/16/deep-learning-hardware-guide/" target="_blank" rel="noopener">A Full Hardware Guide to Deep Learning</a>》中也做出了对PCIe通路的见解，Tim认为在单机少量（小于4）GPU的主机中，PCIe通路对模型训练的影响并不是很大，但对于大于4个GPU或GPU集群PCIe通路的影响就会很显著。在文章中，Tim对比了不同通道数量在模型训练过程中的速度传输速度对比。</p>
+<blockquote>
+<p><strong>CPU and PCI-Express</strong></p>
+<p>People go crazy about PCIe lanes! However, the thing is that it has almost no effect on deep learning performance. If you have a single GPU, PCIe lanes are only needed to transfer data from your CPU RAM to your GPU RAM quickly. However, an ImageNet batch of 32 images (32x225x225x3) and 32-bit needs 1.1 milliseconds with 16 lanes, 2.3 milliseconds with 8 lanes, and 4.5 milliseconds with 4 lanes. These are theoretic numbers, and in practice you often see PCIe be twice as slow — but this is still lightning fast! PCIe lanes often have a latency in the nanosecond range and thus latency can be ignored.</p>
+<p>Putting this together we have for an ImageNet mini-batch of 32 images and a ResNet-152 the following timing:</p>
+<ul>
+<li>Forward and backward pass: 216 milliseconds (ms)</li>
+<li>16 PCIe lanes CPU-&gt;GPU transfer: About 2 ms (1.1 ms theoretical)</li>
+<li>8 PCIe lanes CPU-&gt;GPU transfer: About 5 ms (2.3 ms)</li>
+<li>4 PCIe lanes CPU-&gt;GPU transfer: About 9 ms (4.5 ms)</li>
+</ul>
+<p>Thus going from 4 to 16 PCIe lanes will give you a performance increase of roughly 3.2%. However, if you use <a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader" target="_blank" rel="noopener">PyTorch’s data loader</a> with pinned memory you gain exactly 0% performance. So do not waste your money on PCIe lanes if you are using a single GPU!</p>
+<p>When you select CPU PCIe lanes and motherboard PCIe lanes make sure that you select a combination which supports the desired number of GPUs. If you buy a motherboard that supports 2 GPUs, and you want to have 2 GPUs eventually, make sure that you buy a CPU that supports 2 GPUs, but do not necessarily look at PCIe lanes.</p>
+<p><strong>PCIe Lanes and Multi-GPU Parallelism</strong></p>
+<p>Are PCIe lanes important if you train networks on multiple GPUs with data parallelism? I have <a href="https://arxiv.org/abs/1511.04561" target="_blank" rel="noopener">published a paper on this at ICLR2016</a>, and I can tell you if you have 96 GPUs then PCIe lanes are really important. However, if you have 4 or fewer GPUs this does not matter much. If you parallelize across 2-3 GPUs, I would not care at all about PCIe lanes. With 4 GPUs, I would make sure that I can get a support of 8 PCIe lanes per GPU (32 PCIe lanes in total). Since almost nobody runs a system with more than 4 GPUs as a rule of thumb: Do not spend extra money to get more PCIe lanes per GPU — it does not matter!</p>
+</blockquote>
+<p>不过依我个人的看法，还是要选支持PCIe通道数大一点的CPU，毕竟M.2 NVME SSD就会占据四条通道，如果我们CPU只支持16通道，并且有两个GPU的话，每个GPU只能分到×4的速度，这个总感觉不太好。显卡已经花了那么多钱，我们当然希望它能全速跑，不要由于CPU PCIe通路的短板影响整体的性能，得不偿失。所以我更倾向于选择40条通路的CPU。目前主流CPU大多支持16通道、24通道，对于至尊系列CPU会有支持40通道的，对于大部分志强系列服务器CPU大多数支持44通道。</p>
+<h4 id="对比-1"><a href="#对比-1" class="headerlink" title="对比"></a>对比</h4><p>对于志强系列，网上所有渠道都基本是拆机CPU，很多是外国服务器淘汰下的CPU，质量方面，由于没有使用过，不妄加评论。志强系列U特点是核心多，单核主频低，如果对于高并发有需求的朋友，可以优先选择志强系列U，搭配双路服务器主板。但对于我个人来讲，对单核主频要求高一些，所以我更倾向于桌面级CPU。</p>
+<p>在我选择CPU的过程中，<a href="https://diy.pconline.com.cn/tiantitu/cpu/" target="_blank" rel="noopener">CPU天梯图</a>对我很有帮助，很直观的展现了Intel/AMD所有CPU的性能排行，也推荐给大家。</p>
+<p><img src="http://pr2cmdtfq.bkt.clouddn.com/cputianti.png" alt="CPU天梯图"></p>
+<p>经过反复的对比，最终锁定了两款CPU“i7-6850K”和“i7-6950X”，首先首先我先解释一下为什么没有选择最新的九代酷睿系列，目前九代酷睿发布没多久，例如“I9-9900K”也是炒的很火热， 虽然最新系列的CPU单核主频都有所提高，但是核心数并没有太大改善，致使CPU整体性能（多核性能）并不是越新越好，从上方的天梯图我们也可以看出，“I7-6950X”排在”I9-9900K”前面，第二个原因就是，CPU是一个没什么损耗的器件，如果没有变态超频使用的话，全新和二手的U新能没什么区别，对于这些已经停产的CPU，网上流通的都是拆机的二手版本，只要选择正式版（不要<a href="http://www.lotpc.com/yjzs/6996.html" target="_blank" rel="noopener">QS/ES版本</a>），其实都可以的，而且价格便宜，性价比极高，例如我们Intel官网可以看到“i7-6950X”的官方报价为￥11053.74，上万元！</p>
+<p><img src="http://pr2cmdtfq.bkt.clouddn.com/intel6950x.png" alt="6950X官网"></p>
+<p>而在淘宝等渠道购买的正式版I7-6950X散片，只有3400元，价格差距如此之大。对于这种旧款CPU的散片（正式版）性价比还是蛮高的，所以推荐大家购买散片CPU（当然也会有很多朋友担心散片CPU的质量问题，这个确实不能保证每个渠道的U都是好的，看人品吧~）。下面对比一下“i7-6850K”、“I7-6950X”、“i75960X”以及“I7-6900K”这几款CPU。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">基本要素</th>
+<th style="text-align:center"><a href="https://www.intel.cn/content/www/cn/zh/products/processors/core/x-series/i7-6950x.html" target="_blank" rel="noopener">酷睿™ i7-6950X</a></th>
+<th style="text-align:center"><a href="https://www.intel.cn/content/www/cn/zh/products/processors/core/x-series/i7-6850k.html" target="_blank" rel="noopener">酷睿™ i7-6850K</a></th>
+<th style="text-align:center"><a href="https://www.intel.cn/content/www/cn/zh/products/processors/core/x-series/i7-5960x.html" target="_blank" rel="noopener">酷睿™ i7-5960X</a></th>
+<th style="text-align:center"><a href="https://www.intel.cn/content/www/cn/zh/products/processors/core/x-series/i7-6900k.html" target="_blank" rel="noopener">酷睿™ i7-6900K</a></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">发行日期</td>
+<td style="text-align:center">Q2’16</td>
+<td style="text-align:center">Q2’16</td>
+<td style="text-align:center">Q3’14</td>
+<td style="text-align:center">Q2’16</td>
+</tr>
+<tr>
+<td style="text-align:center">光刻</td>
+<td style="text-align:center">14 nm</td>
+<td style="text-align:center">14 nm</td>
+<td style="text-align:center">22 nm</td>
+<td style="text-align:center">14 nm</td>
+</tr>
+<tr>
+<td style="text-align:center">内核</td>
+<td style="text-align:center">10</td>
+<td style="text-align:center">6</td>
+<td style="text-align:center">8</td>
+<td style="text-align:center">8</td>
+</tr>
+<tr>
+<td style="text-align:center">线程</td>
+<td style="text-align:center">20</td>
+<td style="text-align:center">12</td>
+<td style="text-align:center">16</td>
+<td style="text-align:center">16</td>
+</tr>
+<tr>
+<td style="text-align:center">基本频率</td>
+<td style="text-align:center">3.00 GHz</td>
+<td style="text-align:center">3.60 GHz</td>
+<td style="text-align:center">3.00 GHz</td>
+<td style="text-align:center">3.20 GHz</td>
+</tr>
+<tr>
+<td style="text-align:center">睿频频率</td>
+<td style="text-align:center">3.50 GHz</td>
+<td style="text-align:center">3.80 GHz</td>
+<td style="text-align:center">3.50 GHz</td>
+<td style="text-align:center">3.70 GHz</td>
+</tr>
+<tr>
+<td style="text-align:center">缓存</td>
+<td style="text-align:center">25 MB</td>
+<td style="text-align:center">15 MB</td>
+<td style="text-align:center">20 MB</td>
+<td style="text-align:center">20 MB</td>
+</tr>
+<tr>
+<td style="text-align:center">TDP</td>
+<td style="text-align:center">140 W</td>
+<td style="text-align:center">140 W</td>
+<td style="text-align:center">140 W</td>
+<td style="text-align:center">140 W</td>
+</tr>
+<tr>
+<td style="text-align:center">最大内存</td>
+<td style="text-align:center">128 GB</td>
+<td style="text-align:center">128 GB</td>
+<td style="text-align:center">64 GB</td>
+<td style="text-align:center">128 GB</td>
+</tr>
+<tr>
+<td style="text-align:center">内存类型</td>
+<td style="text-align:center">DDR4 2400/2133</td>
+<td style="text-align:center">DDR4 2400/2133</td>
+<td style="text-align:center">DDR4 1600/1866/2133</td>
+<td style="text-align:center">DDR4 2400/2133</td>
+</tr>
+<tr>
+<td style="text-align:center">内存通道</td>
+<td style="text-align:center">4</td>
+<td style="text-align:center">4</td>
+<td style="text-align:center">4</td>
+<td style="text-align:center">4</td>
+</tr>
+<tr>
+<td style="text-align:center">PCIe通道</td>
+<td style="text-align:center">40</td>
+<td style="text-align:center">40</td>
+<td style="text-align:center">40</td>
+<td style="text-align:center">40</td>
+</tr>
+</tbody>
+</table>
+<p>可以看到，四者均支持40条直通PCIe通道，当主板支持四路交火时，以“华硕RAMPAGE V EXTREME”为例，四张显卡分别占用（×8，×8，×8，×8）的速度，不会对性能产生太大影响。“I7-5960X”仅支持最高64GB的内存容量，这个对于我们的板子就略显不足了，相比“I7-6850K”和“I7-6900K”，在单核主频方面6850k基本频率为3.60GHz高于6900K的3.20GHz，不过核心数却没有胜出，二者基本属于同一等级的CPU，整体性能6900K略高于6850K，不过从性价比方面来看（散片），6850K的性价比还是略高的，散片售价仅2500元左右。“I7-6950X”是这几款U中性能最强劲的，虽然单核主频只有3.00GHz但是10核心20线程使其整体性能遥遥领先，可以从上文中的CPU天梯图中看到，尽管这个U是16年推出的，不过在当日的排行版也能排列到十几名，表现还是很出色的，唯一的不足就是价格略显昂贵，散片价格为3400元，之前一直想买2500元的6850K，后来一咬牙买了6950X。</p>
+<p><img src="http://pr2cmdtfq.bkt.clouddn.com/6950X_.jpg" alt="I7-6950X散片"></p>
+<p>总之，在选购CPU时，建议需要以下顺序：</p>
+<ol>
+<li>筛选与主板插槽类型匹配的CPU。</li>
+<li>查看<a href="https://diy.pconline.com.cn/tiantitu/cpu/" target="_blank" rel="noopener">CPU天梯图</a>，了解CPU的整体性能排序。</li>
+<li>在intel官网上将预选出的商品进行详细参数对比。</li>
+<li>淘宝、京东对比散片价格，考虑入手性价比高的U。</li>
+</ol>
+<blockquote>
+<p>个人建议：由于CPU这个东东如果正常使用基本没什么损耗，在选购散片时，会发现各个商家价格会有所差别，其实不一定要买最贵的，价格的不同可能是由于商家进货渠道引起的，只要认准“正式版”即可，避开“QS/ES”版本。</p>
+</blockquote>
+<h3 id="内存"><a href="#内存" class="headerlink" title="内存"></a>内存</h3><p>内存是相对好选的组件，就没有必要多说了，以我个人来看，当然容量越大越好，毕竟现在内存价格低谷，抓紧买！</p>
+<p>建议“海盗船复仇者”系列，我在选购内存的时候，基本把淘宝翻了个遍，看了很多厂家，价格都很贵，而且有很多都是小厂。对于海盗船复仇者系列内存，很多DIY玩家的首选，也不是没有原因的，现在一条16G的台式内存，只卖不到500元，很是便宜！而且口碑一直不错。</p>
+<p><img src="http://pr2cmdtfq.bkt.clouddn.com/Vengeance_LPX_DDR4_BOX.png" alt="海盗船 复仇者系列"></p>
+<h4 id="频率"><a href="#频率" class="headerlink" title="频率"></a>频率</h4><p>目前市场上的内存大多在频率上做了很多营销手段，我们可以看到（2133 MHz、2400MHz、3000MHz、3200MHz以至于更高）的内存频率，同容量不同频率的内存条价格也相差很多，贵几百元的都有。但是我们是否有必要追求高频率的内存呢？</p>
+<p>经过阅读网上一些大牛的文章，大多数人的观点都是，RAM频率对性能方面没有明显的提升，尤其是在做深度学习方面。其实频率只是各个厂商的一种营销手段，RAM公司会引诱大家购买“更快”的内存，其性价比并不高。有追求频率的钱，还不如多加一条内存。此处可参阅“<a href="https://www.youtube.com/watch?v=D_Yt4vSZKVk" target="_blank" rel="noopener">Does RAM speed REALLY matter?</a>” </p>
+<p>所以我入手了“海盗船 复仇者”系列单条16GB最便宜的内存<strong>2400 MHz</strong>，一共上了4条，总共64GB。主板有8个内存插槽，先插四条构成四通道，剩余的留作扩展，不过此处一定注意， 在安装内存条的时候需要阅读主板说明书，基本每个主板都会给出推荐的插法，看好个插槽所在的通道，一定不要插错了。</p>
+<h3 id="SSD"><a href="#SSD" class="headerlink" title="SSD"></a>SSD</h3><p>在初期选购固态硬盘的朋友可能会经常看到SATA3固态硬盘与M.2固态硬盘，可能有朋友会有疑问：M.2是什么意思？和SATA3固态硬盘有什么区别？下面我们就简单科普M.2接口。</p>
+<p><img src="http://pr2cmdtfq.bkt.clouddn.com/M.2SSD.jpg" alt="img"></p>
+<h4 id="M-2接口"><a href="#M-2接口" class="headerlink" title="M.2接口"></a>M.2接口</h4><p>M.2是一种固态硬盘新接口，是Intel推出的一种替代MSATA新的接口规范，也就是我们以前经常提到的NGFF，英文全称为：Next Generation Form Factor。</p>
+<p>M.2接口固态硬盘主要优势在于体积相比传统的SATA3.0、MSATA更小，并且读取速度更快，对于一些移动设备兼容性更好。</p>
+<ul>
+<li>M.2和SATA3固态硬盘的区别</li>
+</ul>
+<p>目前固态硬盘（SSD）常用的接口主要有3种：</p>
+<ol>
+<li><strong>SATA3</strong> - 外形尺寸是2.5寸硬盘的标准尺寸，与2.5寸机械硬盘可以互换。</li>
+<li><strong>mSATA</strong> - 接口尺寸与笔记本内置无线网卡相同，不过mSATA SSD的外形尺寸比无线网卡更大。</li>
+<li><strong>M.2</strong> - 初期称为NGFF接口，是近两年新出的接口，为专门为超小尺寸而设计的，使用PCI-E通道，体积更小，速度更快。</li>
+</ol>
+<p>值得一提的是<strong>M.2接口固态硬盘又分为：SATA和PCI-E两种，虽说长得一模一样，但性能却是差之千里</strong>。此外，有些主板的M.2接口不一定对其支持，所以在买M.2固态硬盘的时候，还需要了解下接口兼容性，在购买主板和SSD时关注一下接口信息即可。</p>
+<p>M.2有两种接口定义：Socket 2和Socket 3。Socket 2支持SATA或PCIe ×2通道的SSD，Socket 3专为高性能存储设计，支持PCIe ×4通道。在购买SSD时一定要确认是否走PCIe  ×4通道，这样才性能最佳。</p>
+<h4 id="容量"><a href="#容量" class="headerlink" title="容量"></a>容量</h4><p>在容量方面，大多数用户512G就够用了，毕竟SSD不是作为数据存储盘使用，而是作为系统盘安装程序使用，但由于目前SSD价格下滑，决定还是入手一个1T的，这样更充足。</p>
+<p>经过仔细挑选，最终筛选出两款SSD，“Samsung/三星 MZ-V7S1T0BW 970 EVO Plus 1TB”和“WD/西部数据 WDS100T2X0C 1TB”，比较推荐三星这款，三星的固态一直是业界最好的，速度最快的，不过西数的SSD也在第一梯队，二者价格相差300元左右，“三星970 EVO Plus”速度略高于“西数WDS100T2X0C”，官方宣传三星这款读取速度3500Mb/s、写入速度3300Mb/s，西数这款读取速度3400Mb/s、写入速度2800Mb/s，如果经费允许的朋友推荐三星这款，不过我选择了较为便宜的西数SSD。其他品牌的没用过，不能妄加评论，但是三星和西数的固态硬盘一定是第一梯队了。</p>
+<h3 id="机械硬盘"><a href="#机械硬盘" class="headerlink" title="机械硬盘"></a>机械硬盘</h3><p>机械硬盘容量视个人情况而定，对于计算机视觉工程师，如果需要存放大体积数据集，就买大一点的，毕竟HDD不贵（但一定记住避开希捷、避开希捷、避开希捷！之前笔记本加装过希捷硬盘，太渣了）。我最后入手了“西部数据 WD40EZRZ 4TB 蓝盘”，买的OEM版本，比官方价格低100多，用着还不错。</p>
+<h3 id="显卡"><a href="#显卡" class="headerlink" title="显卡"></a>显卡</h3><p>显卡的选择，Tim Dettmers的《<a href="https://timdettmers.com/2019/04/03/which-gpu-for-deep-learning/" target="_blank" rel="noopener">Which GPU(s) to Get for Deep Learning: My Experience and Advice for Using GPUs in Deep Learning</a>》一文已经分析的非常透彻，我也是参考了他的文章购置了RTX 2070显卡，各位朋友可以深入阅读该文章，此处只做简要阐述。</p>
+<h4 id="性能对比"><a href="#性能对比" class="headerlink" title="性能对比"></a>性能对比</h4><p><img src="http://pr2cmdtfq.bkt.clouddn.com/performance_RTX.png" alt></p>
+<p>GPU和TPU的标准化性能数据。越高越好。RTX卡使用16位计算。使用PyTorch 1.0.1和CUDA 10完成基准测试。</p>
+<h4 id="性价比分析"><a href="#性价比分析" class="headerlink" title="性价比分析"></a>性价比分析</h4><p><img src="http://pr2cmdtfq.bkt.clouddn.com/performance_per_dollar_RTX.png" alt></p>
+<p>卷积网络（CNN），循环网络（RNN）和Transformer的性能/价格。越高越好。RTX 2060的成本效率是Tesla V100的5倍以上。使用PyTorch 1.0.1和CUDA 10完成基准测试。</p>
+<blockquote>
+<p>注：以上图转载自《<a href="https://timdettmers.com/2019/04/03/which-gpu-for-deep-learning/" target="_blank" rel="noopener">Which GPU(s) to Get for Deep Learning: My Experience and Advice for Using GPUs in Deep Learning</a>》</p>
+</blockquote>
+<p>经过Tim的分析，更倾向于购买RTX 20系列显卡，因为其独有的“Tensor core”可以支持加速FP16的运算，减少显存的支出，也能减少计算复杂度，</p>
+<h4 id="整体建议（转载）"><a href="#整体建议（转载）" class="headerlink" title="整体建议（转载）"></a>整体建议（转载）</h4><blockquote>
+<p><strong>最佳GPU</strong>：RTX 2070<br><strong>避开GPU</strong>：任何Tesla; 任何Quadro卡;  Titan RTX，Titan V，Titan XP<br><strong>实惠但价格昂贵</strong>：RTX 2070经济<br><strong>实惠且价格便宜</strong>：RTX 2060，GTX 1060（6GB）。<br><strong>我有点钱</strong>：GTX 1060（6GB）<br><strong>我几乎没有钱</strong>：GTX 1050 Ti（4GB）。或者：CPU（原型设计）+ AWS / TPU（训练）; 或者Colab。<br><strong>我做Kaggle：RTX 2070</strong><br><strong>计算机视觉或机器翻译研究员</strong>：GTX 2080 Ti，如果您训练非常大的网络获得RTX Titans。<br><strong>NLP研究员</strong>：RTX 2080 Ti使用16位。<br><strong>我开始深入学习并且我认真对待它</strong>：从RTX 2070开始。在6-9个月之后购买更多RTX 2070并且您仍然希望投入更多时间进行深度学习。根据您接下来选择的区域（启动，Kaggle，研究，应用深度学习），销售GPU并在大约两年后购买更合适的东西。<br><strong>我想尝试深度学习，但我并不认真</strong>：GTX 1050 Ti（4或2GB）。这通常适合您的标准桌面，不需要新的PSU。如果它适合，不要购买新电脑！</p>
+</blockquote>
+<h4 id="选购"><a href="#选购" class="headerlink" title="选购"></a>选购</h4><p>看了Tim给出的建议，我最终选择了RTX 2070显卡，虽然只有8G显存，不过使用16位运算，主流网络也都能跑起来。对于品牌的选购我只建议<strong>不要买灯效、不要买超频</strong>，你要相信一点，同一个型号的显卡（例如RTX 2070），任何厂家任何款式的商品在性能上均没有什么性能差距，价格差距主要体现在所谓的超频、灯光效果上，我个人的建议是完全没有必要把钱花费在这上面，关注一下散热，一线厂商的用料都不会太差。</p>
+<p>我选购了“影驰 RTX2070 大将”，3400元。对于经费充裕的朋友，RTX 2080 Ti也是一个非常好的选择，我之后扩展可能会入手2080 Ti</p>
+<p><img src="http://pr2cmdtfq.bkt.clouddn.com/rtx2070.jpg" alt="影驰 RTX2070 大将"></p>
+<h3 id="电源"><a href="#电源" class="headerlink" title="电源"></a>电源</h3><p>通常，我们需要一个足以容纳所有未来GPU的电源。电源的稳定性也对组件的寿命有很大影响，因此购买一个优质的电源是很有意义的。</p>
+<p>因为一个主机最终要的功耗组件是GPU和CPU，我们可以通过将CPU和GPU的功耗累加，并且附加其他组件大约额外10％W来计算所需的功率。网上也有很多计算功率的网站，但大多组件不是很全面，没有什么参考价值， 我的建议就是尽量上大功率电源，留作之后升级显卡使用。还要注意，模组电源支持的PCIE口数量，例如上面我所购买的RTX2070影驰大将，电源接口为8+6pin的，占用默许电源两个8pin的PCIe供电口，如果电源给的供电口只有6个8pin供电口，那么我们只能给3张显卡供电。这个问题需要注意一下。</p>
+<p><img src="http://pr2cmdtfq.bkt.clouddn.com/psu.png" alt="电源"></p>
+<p>对于电源，我有两款产品推荐：“鑫谷GP1350G 额定1250W 全模组”和“长城巨龙服务器电源 1250W 全模组”，二者价格差不多，我买的鑫谷这款。</p>
+<h3 id="散热器"><a href="#散热器" class="headerlink" title="散热器"></a>散热器</h3><p>CPU散热部分，之前一直想上一个风冷节省支出，但是由于I7-6950X已经140W了，风冷根本压不住，所以上了240双冷排的水冷，在选购散热器时注意与商家咨询该散热器是否能压住该功率CPU。我入手的“爱国者（aigo）冰塔T240 极光版”，散热效果很好。</p>
+<h3 id="机箱"><a href="#机箱" class="headerlink" title="机箱"></a>机箱</h3><p>机箱看个人喜好吧，尽量大一点，散热能好些。我入手的“爱国者（aigo）月光宝盒 破晓”。</p>
+<h3 id="风扇"><a href="#风扇" class="headerlink" title="风扇"></a>风扇</h3><p>风扇这个东西还挺贵的，普通的大约20多一个，真是不明白贵在哪里，购买风扇踩了个坑，以为各种风扇都一样，买便宜的就好，入手了京东最便宜的风扇10元一个，看标注风力之类的都比爱国者极光好，但是实测风力没有爱国者极光风扇强大，不过极光风扇噪音有点大。</p>
+<p><img src="http://pr2cmdtfq.bkt.clouddn.com/fan.png" alt="机箱风扇"></p>
+<h2 id="组装"><a href="#组装" class="headerlink" title="组装"></a>组装</h2><p>装机部分随便上张图意思一下吧~总之是忙了一整天才弄好。</p>
+<p><img src="http://pr2cmdtfq.bkt.clouddn.com/zhuangji.jpg" alt="装机"></p>
+<p><img src="http://pr2cmdtfq.bkt.clouddn.com/%E4%B8%BB%E6%9C%BA%E6%AD%A3%E9%9D%A2%E5%9B%BE.jpg" alt></p>
+<p><img src="http://pr2cmdtfq.bkt.clouddn.com/%E4%B8%BB%E6%9C%BA%E4%BE%A7%E9%9D%A2%E5%9B%BE.jpg" alt></p>
+<h2 id="性能测试"><a href="#性能测试" class="headerlink" title="性能测试"></a>性能测试</h2><p><img src="http://pr2cmdtfq.bkt.clouddn.com/ludashi.jpg" alt></p>
+<p><img src="http://pr2cmdtfq.bkt.clouddn.com/cpu-z1.png" alt></p>
+<p><img src="http://pr2cmdtfq.bkt.clouddn.com/AIDA.png" alt></p>
+<p><img src="http://pr2cmdtfq.bkt.clouddn.com/ssd.png" alt></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>一次点赞，年薪百万！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById(&quot;QR&quot;); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.png" alt="郭耀华 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="郭耀华 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/DeepLearning/" rel="tag"><i class="fa fa-tag"></i> DeepLearning</a>
+          
+        </div>
+      
+
+      
+      
+        <div class="post-widgets">
+        
+          <div class="wp_rating">
+            <div id="wpac-rating"></div>
+          </div>
+        
+
+        
+
+        
+        </div>
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/05/07/test/" rel="next" title="test">
+                <i class="fa fa-chevron-left"></i> test
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="gitalk-container">
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="http://pr2cmdtfq.bkt.clouddn.com/o_face_icon.jpg" alt="郭耀华">
+            
+              <p class="site-author-name" itemprop="name">郭耀华</p>
+              <div class="site-description motion-element" itemprop="description">深度学习、机器学习技术博客</div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">5</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                      <a href="/categories/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">2</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                      <a href="/tags/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">3</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/guoyaohua" title="GitHub &rarr; https://github.com/guoyaohua" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="mailto:guo.yaohua@foxmail.com" title="E-Mail &rarr; mailto:guo.yaohua@foxmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                友情链接
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://jiqizhixin.com" title="http://jiqizhixin.com" rel="noopener" target="_blank">机器之心</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.guoyaohua.com/" title="http://www.guoyaohua.com/" rel="noopener" target="_blank">郭耀华博客园</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#引言"><span class="nav-text">引言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置清单"><span class="nav-text">配置清单</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配件选购指南"><span class="nav-text">配件选购指南</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#主板"><span class="nav-text">主板</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#芯片组"><span class="nav-text">芯片组</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#对比"><span class="nav-text">对比</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CPU"><span class="nav-text">CPU</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#PCIe-通道"><span class="nav-text">PCIe  通道</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#对比-1"><span class="nav-text">对比</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#内存"><span class="nav-text">内存</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#频率"><span class="nav-text">频率</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SSD"><span class="nav-text">SSD</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#M-2接口"><span class="nav-text">M.2接口</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#容量"><span class="nav-text">容量</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#机械硬盘"><span class="nav-text">机械硬盘</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#显卡"><span class="nav-text">显卡</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#性能对比"><span class="nav-text">性能对比</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#性价比分析"><span class="nav-text">性价比分析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#整体建议（转载）"><span class="nav-text">整体建议（转载）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#选购"><span class="nav-text">选购</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#电源"><span class="nav-text">电源</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#散热器"><span class="nav-text">散热器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#机箱"><span class="nav-text">机箱</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#风扇"><span class="nav-text">风扇</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#组装"><span class="nav-text">组装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#性能测试"><span class="nav-text">性能测试</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">郭耀华</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-user"></i>
+    </span>
+    <span class="site-uv" title="总访客量">
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="post-meta-divider">|</span>
+  
+
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-eye"></i>
+    </span>
+    <span class="site-pv" title="总访问量">
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+    
+    
+      
+    
+  
+  <script color="0,0,255" opacity="0.5" zindex="-1" count="99" src="//cdn.jsdelivr.net/gh/theme-next/theme-next-canvas-nest@1.0.0/canvas-nest-nomobile.min.js"></script>
+
+
+
+
+
+
+
+
+
+  
+  
+  <script id="ribbon" size="300" alpha="0.6" zindex="-1" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=7.0.1"></script>
+
+  <script src="/js/src/motion.js?v=7.0.1"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/affix.js?v=7.0.1"></script>
+
+  <script src="/js/src/schemes/pisces.js?v=7.0.1"></script>
+
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=7.0.1"></script>
+<script src="/js/src/post-details.js?v=7.0.1"></script>
+
+
+
+  
+
+
+  <script src="/js/src/next-boot.js?v=7.0.1"></script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+    
+
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+
+
+<script src="//cdn.jsdelivr.net/npm/js-md5@0.7.3/src/md5.min.js"></script>
+
+<script>
+  var gitalk = new Gitalk({
+    clientID: '38a826775c0a040926ea',
+    clientSecret: '5bd4eca73e3fd0908f64ad2c1bf7d70bde3c1a5b',
+    repo: 'guoyaohua.github.io',
+    owner: 'guoyaohua',
+    admin: ['guoyaohua'],
+    id: md5(location.pathname),
+    
+      language: window.navigator.language || window.navigator.userLanguage,
+    
+    distractionFreeMode: 'true'
+  });
+  gitalk.render('gitalk-container');
+</script>
+
+  
+
+
+  
+  <script>
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url).replace(/\/{2,}/g, '/');
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x"></i></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x"></i></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://www.gstatic.com/firebasejs/4.6.0/firebase.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/4.6.0/firebase-firestore.js"></script>
+  
+  <script>
+    (function () {
+
+      firebase.initializeApp({
+        apiKey: '',
+        projectId: ''
+      })
+
+      function getCount(doc, increaseCount) {
+        //increaseCount will be false when not in article page
+
+        return doc.get().then(function (d) {
+          var count
+          if (!d.exists) { //has no data, initialize count
+            if (increaseCount) {
+              doc.set({
+                count: 1
+              })
+              count = 1
+            }
+            else {
+              count = 0
+            }
+          }
+          else { //has data
+            count = d.data().count
+            if (increaseCount) {
+              if (!(window.localStorage && window.localStorage.getItem(title))) { //if first view this article
+                doc.set({ //increase count
+                  count: count + 1
+                })
+                count++
+              }
+            }
+          }
+          if (window.localStorage && increaseCount) { //mark as visited
+            localStorage.setItem(title, true)
+          }
+
+          return count
+        })
+      }
+
+      function appendCountTo(el) {
+        return function (count) {
+          $(el).append(
+            $('<span>').addClass('post-visitors-count').append(
+              $('<span>').addClass('post-meta-divider').text('|')
+            ).append(
+              $('<span>').addClass('post-meta-item-icon').append(
+                $('<i>').addClass('fa fa-users')
+              )
+              ).append($('<span>').text('阅读次数 ' + count))
+          )
+        }
+      }
+
+      var db = firebase.firestore()
+      var articles = db.collection('articles')
+
+      //https://hexo.io/docs/variables.html
+      var isPost = '深度学习工作站攒机'.length > 0
+      var isArchive = '' === 'true'
+      var isCategory = ''.length > 0
+      var isTag = ''.length > 0
+
+      if (isPost) { //is article page
+        var title = '深度学习工作站攒机'
+        var doc = articles.doc(title)
+
+        getCount(doc, true).then(appendCountTo($('.post-meta')))
+      }
+      else if (!isArchive && !isCategory && !isTag) { //is index page
+        var titles = [] //array to titles
+
+        var postsstr = '' //if you have a better way to get titles of posts, please change it
+        eval(postsstr)
+
+        var promises = titles.map(function (title) {
+          return articles.doc(title)
+        }).map(function (doc) {
+          return getCount(doc)
+        })
+        Promise.all(promises).then(function (counts) {
+          var metas = $('.post-meta')
+          counts.forEach(function (val, idx) {
+            appendCountTo(metas[idx])(val)
+          })
+        })
+      }
+    })()
+  </script>
+
+
+  
+  
+
+  
+  
+
+  
+
+
+  
+
+  
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+  
+
+  
+
+  
+  <script>
+    wpac_init = window.wpac_init || [];
+    wpac_init.push({
+      widget: 'Rating',
+      id: 18391,
+      el: 'wpac-rating',
+      color: 'fc6423'
+    });
+    (function() {
+      if ('WIDGETPACK_LOADED' in window) return;
+      WIDGETPACK_LOADED = true;
+      var mc = document.createElement('script');
+      mc.type = 'text/javascript';
+      mc.async = true;
+      mc.src = '//embed.widgetpack.com/widget.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(mc, s.nextSibling);
+    })();
+  </script>
+
+
+  
+
+  
+
+  
+<script>
+  $('.highlight').each(function(i, e) {
+    var $wrap = $('<div>').addClass('highlight-wrap');
+    $(e).after($wrap);
+    $wrap.append($('<button>').addClass('copy-btn').append('复制').on('click', function(e) {
+      var code = $(this).parent().find('.code').find('.line').map(function(i, e) {
+        return $(e).text();
+      }).toArray().join('\n');
+      var ta = document.createElement('textarea');
+      var yPosition = window.pageYOffset || document.documentElement.scrollTop;
+      ta.style.top = yPosition + 'px'; // Prevent page scroll
+      ta.style.position = 'absolute';
+      ta.style.opacity = '0';
+      ta.readOnly = true;
+      ta.value = code;
+      document.body.appendChild(ta);
+      ta.select();
+      ta.setSelectionRange(0, code.length);
+      ta.readOnly = false;
+      var result = document.execCommand('copy');
+      
+        if (result) $(this).text('复制成功');
+        else $(this).text('复制失败');
+      
+      ta.blur(); // For iOS
+      $(this).blur();
+    })).on('mouseleave', function(e) {
+      var $b = $(this).find('.copy-btn');
+      setTimeout(function() {
+        $b.text('复制');
+      }, 300);
+    }).append(e);
+  })
+</script>
+
+
+</body>
+</html>
