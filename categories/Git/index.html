@@ -128,7 +128,7 @@
 <meta name="keywords" content="深度学习、机器学习、人工智能">
 <meta property="og:type" content="website">
 <meta property="og:title" content="郭耀华&#39;s Blog">
-<meta property="og:url" content="http://www.guoyaohua.com/archives/2019/05/index.html">
+<meta property="og:url" content="http://www.guoyaohua.com/categories/Git/index.html">
 <meta property="og:site_name" content="郭耀华&#39;s Blog">
 <meta property="og:description" content="深度学习、机器学习技术博客">
 <meta property="og:locale" content="zh-CN">
@@ -143,7 +143,7 @@
 
 
 
-  <link rel="canonical" href="http://www.guoyaohua.com/archives/2019/05/">
+  <link rel="canonical" href="http://www.guoyaohua.com/categories/Git/">
 
 
 
@@ -153,7 +153,7 @@
   };
 </script>
 
-  <title>归档 | 郭耀华's Blog</title>
+  <title>分类: Git | 郭耀华's Blog</title>
   
 
 
@@ -201,7 +201,7 @@
     
   
 
-  <div class="container sidebar-position-right page-archive">
+  <div class="container sidebar-position-right ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -277,7 +277,7 @@
         
         
           
-          <li class="menu-item menu-item-categories">
+          <li class="menu-item menu-item-categories menu-item-active">
 
     
     
@@ -294,7 +294,7 @@
         
         
           
-          <li class="menu-item menu-item-archives menu-item-active">
+          <li class="menu-item menu-item-archives">
 
     
     
@@ -400,35 +400,15 @@
   
   
   
-  <div class="post-block archive">
+  <div class="post-block category">
+
     <div id="posts" class="posts-collapse">
-      <span class="archive-move-on"></span>
+      <div class="collection-title">
+        <h2>Git<small>分类</small>
+        </h2>
+      </div>
 
       
-      <span class="archive-page-counter">
-        
-        
-        
-          
-        
-        嗯..! 目前共计 2 篇日志。 继续努力。
-      </span>
-      
-
-      
-
-        
-        
-        
-
-        
-          
-          <div class="collection-title">
-            <h2 class="archive-year" id="archive-year-2019">2019</h2>
-          </div>
-        
-        
-
         
 
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
@@ -436,17 +416,17 @@
 
       <h3 class="post-title">
         
-          <a class="post-title-link" href="/deeplearning-workstation/" itemprop="url">
+          <a class="post-title-link" href="/Git-tutorial/" itemprop="url">
             
-              <span itemprop="name">深度学习工作站攒机指南</span>
+              <span itemprop="name">Git常用操作指南</span>
             
           </a>
         
       </h3>
 
       <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2019-05-09T03:59:47Z" content="2019-05-09">
-          05-09
+        <time class="post-time" itemprop="dateCreated" datetime="2019-07-21T15:17:08Z" content="2019-07-21">
+          07-21
         </time>
       </div>
 
@@ -454,10 +434,9 @@
   </article>
 
 
-
       
-
     </div>
+
   </div>
   
   
@@ -1204,8 +1183,8 @@
 
       //https://hexo.io/docs/variables.html
       var isPost = ''.length > 0
-      var isArchive = 'true' === 'true'
-      var isCategory = ''.length > 0
+      var isArchive = '' === 'true'
+      var isCategory = 'Git'.length > 0
       var isTag = ''.length > 0
 
       if (isPost) { //is article page
@@ -1217,7 +1196,7 @@
       else if (!isArchive && !isCategory && !isTag) { //is index page
         var titles = [] //array to titles
 
-        var postsstr = 'titles.push("深度学习工作站攒机指南");' //if you have a better way to get titles of posts, please change it
+        var postsstr = 'titles.push("Git常用操作指南");' //if you have a better way to get titles of posts, please change it
         eval(postsstr)
 
         var promises = titles.map(function (title) {
