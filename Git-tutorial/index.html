@@ -147,15 +147,15 @@
 <meta property="og:image" content="http://pic.guoyaohua.com/image/git/1563609363728.png">
 <meta property="og:image" content="http://pic.guoyaohua.com/image/git/1563613938574.png">
 <meta property="og:image" content="http://pic.guoyaohua.com/image/git/0.png">
-<meta property="og:image" content="http://pic.guoyaohua.com/image/git/0 (1">
-<meta property="og:image" content="http://pic.guoyaohua.com/image/git/0 (2">
-<meta property="og:image" content="http://pic.guoyaohua.com/image/git/0 (3">
-<meta property="og:image" content="http://pic.guoyaohua.com/image/git/0 (4">
-<meta property="og:image" content="http://pic.guoyaohua.com/image/git/0 (5">
-<meta property="og:image" content="http://pic.guoyaohua.com/image/git/0 (6">
-<meta property="og:image" content="http://pic.guoyaohua.com/image/git/0 (7">
-<meta property="og:image" content="http://pic.guoyaohua.com/image/git/0 (8">
-<meta property="og:image" content="http://pic.guoyaohua.com/image/git/0 (9">
+<meta property="og:image" content="http://pic.guoyaohua.com/image/git/1.png">
+<meta property="og:image" content="http://pic.guoyaohua.com/image/git/2.png">
+<meta property="og:image" content="http://pic.guoyaohua.com/image/git/3.png">
+<meta property="og:image" content="http://pic.guoyaohua.com/image/git/4.png">
+<meta property="og:image" content="http://pic.guoyaohua.com/image/git/5.png">
+<meta property="og:image" content="http://pic.guoyaohua.com/image/git/6.png">
+<meta property="og:image" content="http://pic.guoyaohua.com/image/git/7.png">
+<meta property="og:image" content="http://pic.guoyaohua.com/image/git/8.png">
+<meta property="og:image" content="http://pic.guoyaohua.com/image/git/9.png">
 <meta property="og:image" content="http://pic.guoyaohua.com/image/git/1563631355797.png">
 <meta property="og:image" content="http://pic.guoyaohua.com/image/git/1563631585919.png">
 <meta property="og:image" content="http://pic.guoyaohua.com/image/git/1563631787056.png">
@@ -169,8 +169,8 @@
 <meta property="og:image" content="http://pic.guoyaohua.com/image/git/rebase4.png">
 <meta property="og:image" content="http://pic.guoyaohua.com/image/git/1563677573806.png">
 <meta property="og:image" content="http://pic.guoyaohua.com/image/git/rebase2.png">
-<meta property="og:image" content="http://pic.guoyaohua.com/image/git/0 (10">
-<meta property="og:updated_time" content="2019-07-21T08:47:28.741Z">
+<meta property="og:image" content="http://pic.guoyaohua.com/image/git/10.png">
+<meta property="og:updated_time" content="2019-07-21T09:30:20.399Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Git常用操作指南">
 <meta name="twitter:description" content="前言因为工作需求，最近又重新温习了一下Git操作，遂总结了一篇Git常用操作指南，方便日后学习查阅，本博客精简提炼了在开发过程中Git经常用到的核心命令，主要参考了《廖雪峰老师的Git教程》，希望对大家学习使用Git能带来帮助。 Git简介Git是Linux之父Linus的第二个伟大的作品，它最早是在Linux上开发的，被用来管理Linux核心的源代码。后来慢慢地有人将其移植到了Unix、Wind">
@@ -438,7 +438,7 @@
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="郭耀华">
-      <meta itemprop="description" content="深度学习、机器学习技术博客">
+      <meta itemprop="description" content="深度学习、机器学习领域技术博客">
       <meta itemprop="image" content="http://pic.guoyaohua.com/o_face_icon.jpg">
     </span>
 
@@ -477,7 +477,7 @@
                 
               
 
-              <time title="创建时间：2019-07-21 15:17:08 / 修改时间：08:47:28" itemprop="dateCreated datePublished" datetime="2019-07-21T15:17:08Z">2019-07-21</time>
+              <time title="创建时间：2019-07-21 15:17:08 / 修改时间：09:30:20" itemprop="dateCreated datePublished" datetime="2019-07-21T15:17:08Z">2019-07-21</time>
             
 
             
@@ -524,6 +524,34 @@
             </span>
           
 
+          
+            <div class="post-symbolscount">
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">本文字数：</span>
+                
+                <span title="本文字数">96k</span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">1:27</span>
+              
+            </div>
           
 
           
@@ -668,15 +696,15 @@
 <p><img src="http://pic.guoyaohua.com/image/git/0.png" alt></p>
 <p>每次提交，<code>master</code>分支都会向前移动一步，这样，随着你不断提交，<code>master</code>分支的线也越来越长。</p>
 <p>当我们创建新的分支，例如<code>dev</code>时，Git新建了一个指针叫<code>dev</code>，指向<code>master</code>相同的提交，再把<code>HEAD</code>指向<code>dev</code>，就表示当前分支在<code>dev</code>上：</p>
-<p><img src="http://pic.guoyaohua.com/image/git/0 (1" alt>.png)</p>
+<p><img src="http://pic.guoyaohua.com/image/git/1.png" alt></p>
 <p>Git创建一个分支很快，因为除了增加一个<code>dev</code>指针，改改<code>HEAD</code>的指向，工作区的文件都没有任何变化。</p>
 <p>不过，从现在开始，对工作区的修改和提交就是针对<code>dev</code>分支了，比如新提交一次后，<code>dev</code>指针往前移动一步，而<code>master</code>指针不变：</p>
-<p><img src="http://pic.guoyaohua.com/image/git/0 (2" alt>.png)</p>
+<p><img src="http://pic.guoyaohua.com/image/git/2.png" alt></p>
 <p>假如我们在<code>dev</code>上的工作完成了，就可以把<code>dev</code>合并到<code>master</code>上。Git怎么合并呢？最简单的方法，就是直接把<code>master</code>指向<code>dev</code>的当前提交，就完成了合并：</p>
-<p><img src="http://pic.guoyaohua.com/image/git/0 (3" alt>.png)</p>
+<p><img src="http://pic.guoyaohua.com/image/git/3.png" alt></p>
 <p>所以Git合并分支也很快！就改改指针，工作区内容也不变！</p>
 <p>合并完分支后，甚至可以删除<code>dev</code>分支。删除<code>dev</code>分支就是把<code>dev</code>指针给删掉，删掉后，我们就剩下了一条<code>master</code>分支：</p>
-<p><img src="http://pic.guoyaohua.com/image/git/0 (4" alt>.png)</p>
+<p><img src="http://pic.guoyaohua.com/image/git/4.png" alt></p>
 <p>下面开始实战。</p>
 <p>首先，我们创建<code>dev</code>分支，然后切换到<code>dev</code>分支：</p>
 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ git checkout -b dev</span><br><span class="line">Switched to a new branch <span class="string">'dev'</span></span><br></pre></td></tr></table></figure>
@@ -692,7 +720,7 @@
 <p>现在，<code>dev</code>分支的工作完成，我们就可以切换回<code>master</code>分支：</p>
 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ git checkout master</span><br><span class="line">Switched to branch <span class="string">'master'</span></span><br></pre></td></tr></table></figure>
 <p>切换回<code>master</code>分支后，再查看一个<code>readme.txt</code>文件，刚才添加的内容不见了！因为那个提交是在<code>dev</code>分支上，而<code>master</code>分支此刻的提交点并没有变：</p>
-<p><img src="http://pic.guoyaohua.com/image/git/0 (5" alt>.png)</p>
+<p><img src="http://pic.guoyaohua.com/image/git/5.png" alt></p>
 <p>现在，我们把<code>dev</code>分支的工作成果合并到<code>master</code>分支上：</p>
 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ git merge dev</span><br><span class="line">Updating d46f35e..b17d20e</span><br><span class="line">Fast-forward</span><br><span class="line"> readme.txt | <span class="number">1</span> +</span><br><span class="line"> <span class="number">1</span> file changed, <span class="number">1</span> insertion(+)</span><br></pre></td></tr></table></figure>
 <p><code>git merge</code>命令用于合并指定分支到当前分支。合并后，再查看<code>readme.txt</code>的内容，就可以看到，和<code>dev</code>分支的最新提交是完全一样的。</p>
@@ -718,7 +746,7 @@
 <p>提交：</p>
 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ git add readme.txt </span><br><span class="line">$ git commit -m <span class="string">"&amp; simple"</span></span><br><span class="line">[master <span class="number">5</span>dc6824] &amp; simple</span><br><span class="line"> <span class="number">1</span> file changed, <span class="number">1</span> insertion(+), <span class="number">1</span> deletion(-)</span><br></pre></td></tr></table></figure>
 <p>现在，<code>master</code>分支和<code>feature1</code>分支各自都分别有新的提交，变成了这样：</p>
-<p><img src="http://pic.guoyaohua.com/image/git/0 (6" alt>.png)</p>
+<p><img src="http://pic.guoyaohua.com/image/git/6.png" alt></p>
 <p>这种情况下，Git无法执行“快速合并(Fast-forward)”，只能试图把各自的修改合并起来，但这种合并就可能会有冲突，我们试试看：</p>
 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ git merge feature1</span><br><span class="line">Auto-merging readme.txt</span><br><span class="line">CONFLICT (content): Merge conflict <span class="keyword">in</span> readme.txt</span><br><span class="line">Automatic merge failed; fix conflicts and then commit the result.</span><br></pre></td></tr></table></figure>
 <p>Git告诉我们，<code>readme.txt</code>文件存在冲突，必须手动解决冲突后再提交。<code>git status</code>也可以告诉我们冲突的文件：</p>
@@ -730,7 +758,7 @@
 <p>再提交：</p>
 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ git add readme.txt </span><br><span class="line">$ git commit -m <span class="string">"conflict fixed"</span></span><br><span class="line">[master cf810e4] conflict fixed</span><br></pre></td></tr></table></figure>
 <p>现在，<code>master</code>分支和<code>feature1</code>分支变成了下图所示：</p>
-<p><img src="http://pic.guoyaohua.com/image/git/0 (7" alt>.png)</p>
+<p><img src="http://pic.guoyaohua.com/image/git/7.png" alt></p>
 <p>用带参数的<code>git log</code>也可以看到分支的合并情况：</p>
 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">$ git log --graph --pretty=oneline --abbrev-commit</span><br><span class="line">*   cf810e4 (HEAD -&gt; master) conflict fixed</span><br><span class="line">|\  </span><br><span class="line">| * <span class="number">14096</span>d0 (feature1) AND simple</span><br><span class="line">* | <span class="number">5</span>dc6824 &amp; simple</span><br><span class="line">|/  </span><br><span class="line">* b17d20e branch test</span><br><span class="line">* d46f35e (origin/master) remove test.txt</span><br><span class="line">* b84166e add test.txt</span><br><span class="line">* <span class="number">519219</span>b git tracks changes</span><br><span class="line">* e43a48b understand how stage works</span><br><span class="line">* <span class="number">1094</span>adb append GPL</span><br><span class="line">* e475afc add distributed</span><br><span class="line">* eaadf4e wrote a readme file</span><br></pre></td></tr></table></figure>
 <p>最后，删除<code>feature1</code>分支：</p>
@@ -751,13 +779,13 @@
 <p>合并后，我们用<code>git log</code>看看分支历史：</p>
 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ git log --graph --pretty=oneline --abbrev-commit</span><br><span class="line">*   e1e9c68 (HEAD -&gt; master) merge with no-ff</span><br><span class="line">|\  </span><br><span class="line">| * f52c633 (dev) add merge</span><br><span class="line">|/  </span><br><span class="line">*   cf810e4 conflict fixed</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
 <p>可以看到，不使用<code>Fast forward</code>模式，merge后就像这样：</p>
-<p><img src="http://pic.guoyaohua.com/image/git/0 (8" alt>.png)</p>
+<p><img src="http://pic.guoyaohua.com/image/git/8.png" alt></p>
 <h4 id="分支策略"><a href="#分支策略" class="headerlink" title="分支策略"></a>分支策略</h4><p>在实际开发中，我们应该按照几个基本原则进行分支管理：</p>
 <p>首先，<code>master</code>分支应该是非常稳定的，也就是仅用来发布新版本，平时不能在上面干活；</p>
 <p>那在哪干活呢？干活都在<code>dev</code>分支上，也就是说，<code>dev</code>分支是不稳定的，到某个时候，比如1.0版本发布时，再把<code>dev</code>分支合并到<code>master</code>上，在<code>master</code>分支发布1.0版本；</p>
 <p>你和团队同事每个人都在<code>dev</code>分支上干活，每个人都有自己的分支，时不时地往<code>dev</code>分支上合并就可以了。</p>
 <p>所以，团队合作的分支看起来就像这样：</p>
-<p><img src="http://pic.guoyaohua.com/image/git/0 (9" alt>.png)</p>
+<p><img src="http://pic.guoyaohua.com/image/git/9.png" alt></p>
 <h3 id="状态存储"><a href="#状态存储" class="headerlink" title="状态存储"></a>状态存储</h3><p>当我们在开发过程中，经常遇到这样的情况，我们需要暂时放下手中的工作，切换到其他分支进行开发，例如当我们在dev分支进行程序2.0版本开发时，发现1.0版本的程序出现了bug，必须立刻进行修复，但是在目前的dev分支我们可能已经做了很多修改，暂存区可能有了暂存状态，甚至可能在开发过程中在dev分支进行了多次commit，这时如果我们想切换回master分支，进行bug修复，这时就需要使用到<code>git stash</code>命令存储原分支当前的状态。</p>
 <p>在讲解<code>git stash</code>之前，我们先考虑两种场景：</p>
 <p>第一种就是我们未在dev分支进行任何提交，此时HEAD指针指向dev，dev和master指向同一次commit，如下图：</p>
@@ -898,7 +926,7 @@
 <p>“请把上周一的那个版本打包发布，版本号是v1.2”</p>
 <p>“好的，按照tag v1.2查找commit就行！”</p>
 <p>所以，tag就是一个让人容易记住的有意义的名字，它跟某个commit绑在一起。</p>
-<h4 id="创建标签"><a href="#创建标签" class="headerlink" title="创建标签"></a>创建标签</h4><p>在Git中打标签非常简单，首先，切换到需要打标签的分支上：</p>
+<h3 id="创建标签"><a href="#创建标签" class="headerlink" title="创建标签"></a>创建标签</h3><p>在Git中打标签非常简单，首先，切换到需要打标签的分支上：</p>
 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ git branch</span><br><span class="line">* dev</span><br><span class="line">  master</span><br><span class="line">$ git checkout master</span><br><span class="line">Switched to branch <span class="string">'master'</span></span><br></pre></td></tr></table></figure>
 <p>然后，敲命令<code>git tag &lt;name&gt;</code>就可以打一个新标签：</p>
 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git tag v1.<span class="number">0</span></span><br></pre></td></tr></table></figure>
@@ -918,7 +946,7 @@
 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git tag -a v0.<span class="number">1</span> -m <span class="string">"version 0.1 released"</span> <span class="number">1094</span>adb</span><br></pre></td></tr></table></figure>
 <p>用命令<code>git show &lt;tagname&gt;</code>可以看到说明文字：</p>
 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">$ git show v0.<span class="number">1</span></span><br><span class="line">tag v0.<span class="number">1</span></span><br><span class="line">Tagger: Yaohua Guo &lt;guo.yaohua@foxmail.com&gt;</span><br><span class="line">Date:   Fri May <span class="number">18</span> <span class="number">22</span>:<span class="number">48</span>:<span class="number">43</span> <span class="number">2018</span> +<span class="number">0800</span></span><br><span class="line"></span><br><span class="line">version <span class="number">0.1</span> released</span><br><span class="line"></span><br><span class="line">commit <span class="number">1094</span>adb7b9b3807259d8cb349e7df1d4d6477073 (tag: v0.<span class="number">1</span>)</span><br><span class="line">Author: Yaohua Guo &lt;guo.yaohua@foxmail.com&gt;</span><br><span class="line">Date:   Fri May <span class="number">18</span> <span class="number">21</span>:<span class="number">06</span>:<span class="number">15</span> <span class="number">2018</span> +<span class="number">0800</span></span><br><span class="line"></span><br><span class="line">    append GPL</span><br><span class="line"></span><br><span class="line">diff --git a/readme.txt b/readme.txt</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
-<h4 id="操作标签"><a href="#操作标签" class="headerlink" title="操作标签"></a>操作标签</h4><p>如果标签打错了，也可以删除：</p>
+<h3 id="操作标签"><a href="#操作标签" class="headerlink" title="操作标签"></a>操作标签</h3><p>如果标签打错了，也可以删除：</p>
 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ git tag -d v0.<span class="number">1</span></span><br><span class="line">Deleted tag <span class="string">'v0.1'</span> (was f15b0dd)</span><br></pre></td></tr></table></figure>
 <p>因为创建的标签都只存储在本地，不会自动推送到远程。所以，打错的标签可以在本地安全删除。</p>
 <p>如果要推送某个标签到远程，使用命令<code>git push origin &lt;tagname&gt;</code>：</p>
@@ -978,7 +1006,7 @@
 <p>甚至可以进一步美化把<code>lg</code>配置成：</p>
 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git config --global alias.lg <span class="string">"log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)&lt;%an&gt;%Creset' --abbrev-commit"</span></span><br></pre></td></tr></table></figure>
 <p>来看看<code>git lg</code>的效果：</p>
-<p><img src="http://pic.guoyaohua.com/image/git/0 (10" alt>.png)</p>
+<p><img src="http://pic.guoyaohua.com/image/git/10.png" alt></p>
 <h3 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h3><p>配置Git的时候，加上<code>--global</code>是针对当前用户起作用的，如果不加，那只针对当前的仓库起作用。</p>
 <p>配置文件放哪了？每个仓库的Git配置文件都放在<code>.git/config</code>文件中：</p>
 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">$ type .git/config </span><br><span class="line">[core]</span><br><span class="line">    repositoryformatversion = <span class="number">0</span></span><br><span class="line">    filemode = true</span><br><span class="line">    bare = false</span><br><span class="line">    logallrefupdates = true</span><br><span class="line">    ignorecase = true</span><br><span class="line">    precomposeunicode = true</span><br><span class="line">[remote <span class="string">"origin"</span>]</span><br><span class="line">    url = git@github.com:michaelliao/learngit.git</span><br><span class="line">    fetch = +refs/heads/*:refs/remotes/origin/*</span><br><span class="line">[branch <span class="string">"master"</span>]</span><br><span class="line">    remote = origin</span><br><span class="line">    merge = refs/heads/master</span><br><span class="line">[alias]</span><br><span class="line">    last = log -<span class="number">1</span></span><br></pre></td></tr></table></figure>
@@ -1188,7 +1216,7 @@
               <img class="site-author-image" itemprop="image" src="http://pic.guoyaohua.com/o_face_icon.jpg" alt="郭耀华">
             
               <p class="site-author-name" itemprop="name">郭耀华</p>
-              <div class="site-description motion-element" itemprop="description">深度学习、机器学习技术博客</div>
+              <div class="site-description motion-element" itemprop="description">深度学习、机器学习领域技术博客</div>
           </div>
 
           
@@ -1333,7 +1361,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Git简介"><span class="nav-text">Git简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装之后第一步"><span class="nav-text">安装之后第一步</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#创建版本库"><span class="nav-text">创建版本库</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#本地仓库"><span class="nav-text">本地仓库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#远程仓库"><span class="nav-text">远程仓库</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#创建SSH-Key"><span class="nav-text">创建SSH Key</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#添加远程库"><span class="nav-text">添加远程库</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#关联新仓库"><span class="nav-text">关联新仓库</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#关联已有仓库"><span class="nav-text">关联已有仓库</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#版本控制"><span class="nav-text">版本控制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#工作区和暂存区"><span class="nav-text">工作区和暂存区</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#工作区（Working-Directory）"><span class="nav-text">工作区（Working Directory）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#版本库（Repository）"><span class="nav-text">版本库（Repository）</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#版本回退"><span class="nav-text">版本回退</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#重置命令"><span class="nav-text">重置命令</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#文件粒度操作"><span class="nav-text">文件粒度操作</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Reset-常用示例"><span class="nav-text">Reset 常用示例</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#撤销修改"><span class="nav-text">撤销修改</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#删除文件"><span class="nav-text">删除文件</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分支管理"><span class="nav-text">分支管理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#创建与合并分支"><span class="nav-text">创建与合并分支</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解决冲突"><span class="nav-text">解决冲突</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#分支管理策略"><span class="nav-text">分支管理策略</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#分支策略"><span class="nav-text">分支策略</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#状态存储"><span class="nav-text">状态存储</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#应用实例"><span class="nav-text">应用实例</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#多人协作"><span class="nav-text">多人协作</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#推送分支"><span class="nav-text">推送分支</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#抓取分支"><span class="nav-text">抓取分支</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Rebase"><span class="nav-text">Rebase</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#解决冲突-1"><span class="nav-text">解决冲突</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#标签管理"><span class="nav-text">标签管理</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#创建标签"><span class="nav-text">创建标签</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#操作标签"><span class="nav-text">操作标签</span></a></li></ol></li></ol><li class="nav-item nav-level-2"><a class="nav-link" href="#自定义Git"><span class="nav-text">自定义Git</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#忽略特殊文件"><span class="nav-text">忽略特殊文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置别名"><span class="nav-text">配置别名</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置文件"><span class="nav-text">配置文件</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-text">总结</span></a></li></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Git简介"><span class="nav-text">Git简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装之后第一步"><span class="nav-text">安装之后第一步</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#创建版本库"><span class="nav-text">创建版本库</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#本地仓库"><span class="nav-text">本地仓库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#远程仓库"><span class="nav-text">远程仓库</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#创建SSH-Key"><span class="nav-text">创建SSH Key</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#添加远程库"><span class="nav-text">添加远程库</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#关联新仓库"><span class="nav-text">关联新仓库</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#关联已有仓库"><span class="nav-text">关联已有仓库</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#版本控制"><span class="nav-text">版本控制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#工作区和暂存区"><span class="nav-text">工作区和暂存区</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#工作区（Working-Directory）"><span class="nav-text">工作区（Working Directory）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#版本库（Repository）"><span class="nav-text">版本库（Repository）</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#版本回退"><span class="nav-text">版本回退</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#重置命令"><span class="nav-text">重置命令</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#文件粒度操作"><span class="nav-text">文件粒度操作</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Reset-常用示例"><span class="nav-text">Reset 常用示例</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#撤销修改"><span class="nav-text">撤销修改</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#删除文件"><span class="nav-text">删除文件</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分支管理"><span class="nav-text">分支管理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#创建与合并分支"><span class="nav-text">创建与合并分支</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解决冲突"><span class="nav-text">解决冲突</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#分支管理策略"><span class="nav-text">分支管理策略</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#分支策略"><span class="nav-text">分支策略</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#状态存储"><span class="nav-text">状态存储</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#应用实例"><span class="nav-text">应用实例</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#多人协作"><span class="nav-text">多人协作</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#推送分支"><span class="nav-text">推送分支</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#抓取分支"><span class="nav-text">抓取分支</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Rebase"><span class="nav-text">Rebase</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#解决冲突-1"><span class="nav-text">解决冲突</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#标签管理"><span class="nav-text">标签管理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#创建标签"><span class="nav-text">创建标签</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#操作标签"><span class="nav-text">操作标签</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#自定义Git"><span class="nav-text">自定义Git</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#忽略特殊文件"><span class="nav-text">忽略特殊文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置别名"><span class="nav-text">配置别名</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置文件"><span class="nav-text">配置文件</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-text">总结</span></a></li></ol></div>
             
 
           </div>
@@ -1354,7 +1382,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">  <a href="http://www.miitbeian.gov.cn" rel="noopener" target="_blank">京ICP备19027007号 </a>&copy; <span itemprop="copyrightYear">2019</span>
+        <div class="copyright"><div>  <a href="http://www.guoyaohua.com">京ICP备19027007号 </a></div>&copy; <span itemprop="copyrightYear">2019</span>
   <span class="with-love" id="animate">
     <i class="fa fa-user"></i>
   </span>
