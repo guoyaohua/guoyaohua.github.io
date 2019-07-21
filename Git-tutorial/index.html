@@ -174,7 +174,7 @@
 <meta property="og:image" content="http://pic.guoyaohua.com/image/git/1563677573806.png">
 <meta property="og:image" content="http://pic.guoyaohua.com/image/git/rebase2.png">
 <meta property="og:image" content="http://pic.guoyaohua.com/image/git/10.png">
-<meta property="og:updated_time" content="2019-07-21T09:30:20.399Z">
+<meta property="og:updated_time" content="2019-07-21T10:37:47.482Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Git常用操作指南">
 <meta name="twitter:description" content="前言因为工作需求，最近又重新温习了一下Git操作，遂总结了一篇Git常用操作指南，方便日后学习查阅，本博客精简提炼了在开发过程中Git经常用到的核心命令，主要参考了《廖雪峰老师的Git教程》，希望对大家学习使用Git能带来帮助。 Git简介Git是Linux之父Linus的第二个伟大的作品，它最早是在Linux上开发的，被用来管理Linux核心的源代码。后来慢慢地有人将其移植到了Unix、Wind">
@@ -481,7 +481,7 @@
                 
               
 
-              <time title="创建时间：2019-07-21 15:17:08 / 修改时间：09:30:20" itemprop="dateCreated datePublished" datetime="2019-07-21T15:17:08Z">2019-07-21</time>
+              <time title="创建时间：2019-07-21 15:17:08 / 修改时间：10:37:47" itemprop="dateCreated datePublished" datetime="2019-07-21T15:17:08Z">2019-07-21</time>
             
 
             
@@ -649,27 +649,30 @@
 <p><img src="http://pic.guoyaohua.com/image/git/1563612094551.png" alt="1563612094551"></p>
 <p>对于soft和hard模式则无法进行文件粒度操作。</p>
 <p><img src="http://pic.guoyaohua.com/image/git/1563609363728.png" alt="1563609363728"></p>
-<h4 id="Reset-常用示例"><a href="#Reset-常用示例" class="headerlink" title="Reset 常用示例"></a>Reset 常用示例</h4><ol>
-<li><p>回退add操作</p>
+<h4 id="Reset-常用示例"><a href="#Reset-常用示例" class="headerlink" title="Reset 常用示例"></a>Reset 常用示例</h4><ul>
+<li>回退add操作</li>
+</ul>
 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ git add test</span><br><span class="line">$ git reset HEAD test  </span><br><span class="line"><span class="comment"># HEAD指的是当前指向的版本号，可以将HEAD还成任意想回退的版本号</span></span><br></pre></td></tr></table></figure>
 <p>可以将test从“已暂存”状态（Index区）回滚到指定Commit时暂存区的状态。</p>
-</li>
-<li><p>回退最后一次提交</p>
+<ul>
+<li>回退最后一次提交</li>
+</ul>
 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ git add test</span><br><span class="line">$ git commit -m <span class="string">"Add test"</span></span><br><span class="line">$ git reset --soft HEAD^</span><br></pre></td></tr></table></figure>
 <p>可以将test从“已提交”状态变为“已暂存”状态。 </p>
-</li>
-<li><p>回退最近几次提交，并把这几次提交放到新分支上</p>
+<ul>
+<li>回退最近几次提交，并把这几次提交放到新分支上</li>
+</ul>
 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ git branch topic <span class="comment"># 已当前分支为基础，新建分支topic</span></span><br><span class="line">$ git reset --hard HEAD~<span class="number">2</span> <span class="comment"># 在当前分支上回滚提交</span></span><br><span class="line">$ git checkout topic</span><br></pre></td></tr></table></figure>
 <p>通过临时分支来保留提交，然后在当前分支上做硬回滚。 </p>
-</li>
-<li><p>将本地的状态回退到和远程一样</p>
+<ul>
+<li>将本地的状态回退到和远程一样</li>
+</ul>
 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git reset --hard origin/devlop</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>回退到某个版本提交</p>
+<ul>
+<li>回退到某个版本提交</li>
+</ul>
 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git reset <span class="number">497</span>e350</span><br></pre></td></tr></table></figure>
 <p>当前HEAD会指向“497e350”，暂存区中的状态会恢复到提交“497e350”时暂存区的状态。 </p>
-</li>
-</ol>
 <h3 id="撤销修改"><a href="#撤销修改" class="headerlink" title="撤销修改"></a>撤销修改</h3><p>当我们因为一些原因想要丢弃工作区某些文件修改时，可以使用“<code>git checkout -- &lt;file&gt;</code>”命令，该命令仅会恢复工作区文件状态，不会对版本库有任何改动。</p>
 <p><img src="http://pic.guoyaohua.com/image/git/1563613938574.png" alt="1563613938574"></p>
 <p>命令<code>git checkout -- file1.txt</code>意思就是，把<code>file1.txt</code>文件在工作区的修改全部撤销，这里有两种情况：</p>
