@@ -174,7 +174,7 @@
 <meta property="og:image" content="http://pic.guoyaohua.com/image/git/1563677573806.png">
 <meta property="og:image" content="http://pic.guoyaohua.com/image/git/rebase2.png">
 <meta property="og:image" content="http://pic.guoyaohua.com/image/git/10.png">
-<meta property="og:updated_time" content="2019-07-21T10:39:38.710Z">
+<meta property="og:updated_time" content="2019-09-01T05:20:32.254Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Git常用操作指南">
 <meta name="twitter:description" content="前言因为工作需求，最近又重新温习了一下Git操作，遂总结了一篇Git常用操作指南，方便日后学习查阅，本博客精简提炼了在开发过程中Git经常用到的核心命令，主要参考了《廖雪峰老师的Git教程》，希望对大家学习使用Git能带来帮助。 Git简介Git是Linux之父Linus的第二个伟大的作品，它最早是在Linux上开发的，被用来管理Linux核心的源代码。后来慢慢地有人将其移植到了Unix、Wind">
@@ -481,12 +481,24 @@
                 
               
 
-              <time title="创建时间：2019-07-21 15:17:08 / 修改时间：10:39:38" itemprop="dateCreated datePublished" datetime="2019-07-21T15:17:08Z">2019-07-21</time>
+              <time title="创建时间：2019-07-21 15:17:08" itemprop="dateCreated datePublished" datetime="2019-07-21T15:17:08Z">2019-07-21</time>
             
 
             
               
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-09-01 05:20:32" itemprop="dateModified" datetime="2019-09-01T05:20:32Z">2019-09-01</time>
               
             
           </span>
@@ -592,25 +604,25 @@
 <p>如果没有，则执行：</p>
 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ssh-keygen -t rsa -C <span class="string">"youremail@example.com"</span></span><br></pre></td></tr></table></figure>
 <p>一路回车即可。执行命令后，我们再进入到”<code>~/.ssh</code>“目录下，运行”<code>ls</code>“命令，可以看到里面有<code>id_rsa</code>和<code>id_rsa.pub</code>两个文件，这两个就是SSH Key的秘钥对，<code>id_rsa</code>是私钥，不能泄露出去，<code>id_rsa.pub</code>是公钥，可以放心地告诉任何人。</p>
-<p><img src="http://pic.guoyaohua.com/image/git/1563105584864.png" alt="1563105584864"></p>
+<p><img src="http://pic.guoyaohua.com/image/git/1563105584864.png" alt></p>
 <p>打开“Account settings”，“SSH Keys”页面，然后，点“New SSH Key”，填上任意Title，在Key文本框里粘贴<code>id_rsa.pub</code>文件的内容（Win 10 下可使用”<code>type ~/.ssh/id_rsa.pub</code>“命令查看公钥文件内容）：</p>
-<p><img src="http://pic.guoyaohua.com/image/git/1563105973152.png" alt="1563105973152"></p>
+<p><img src="http://pic.guoyaohua.com/image/git/1563105973152.png" alt></p>
 <p>点击“Add SSH Key”之后，就可以看到你的公钥已经加入到了你的Github仓库配置中。</p>
-<p><img src="http://pic.guoyaohua.com/image/git/1563106045201.png" alt="1563106045201"></p>
+<p><img src="http://pic.guoyaohua.com/image/git/1563106045201.png" alt></p>
 <h4 id="添加远程库"><a href="#添加远程库" class="headerlink" title="添加远程库"></a>添加远程库</h4><p>首先，登陆GitHub，然后，在右上角找到“Create a new repo”按钮，创建一个新的仓库：</p>
-<p><img src="http://pic.guoyaohua.com/image/git/1563103995786.png" alt="1563103995786"></p>
+<p><img src="http://pic.guoyaohua.com/image/git/1563103995786.png" alt></p>
 <p>在Repository name填入<code>learngit</code>，其他保持默认设置，点击“Create repository”按钮，就成功地创建了一个新的Git仓库：</p>
-<p><img src="http://pic.guoyaohua.com/image/git/1563104100618.png" alt="1563104100618"></p>
+<p><img src="http://pic.guoyaohua.com/image/git/1563104100618.png" alt></p>
 <p>这样就成功创建了一个空白的远程仓库，那么如何将这个远程仓库与本地仓库进行关联呢？</p>
 <p>我们根据Git所给出的提示可知，可以在本地创建一个新仓库对远程仓库进行关联，也可以对本地已有仓库进行关联。</p>
 <h5 id="关联新仓库"><a href="#关联新仓库" class="headerlink" title="关联新仓库"></a>关联新仓库</h5><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">echo <span class="string">"# learngit"</span> &gt;&gt; README.md</span><br><span class="line">git init</span><br><span class="line">git add README.md</span><br><span class="line">git commit -m <span class="string">"first commit"</span></span><br><span class="line">git remote add origin git@github.com:guoyaohua/learngit.git</span><br><span class="line">git push -u origin master</span><br></pre></td></tr></table></figure>
 <h5 id="关联已有仓库"><a href="#关联已有仓库" class="headerlink" title="关联已有仓库"></a>关联已有仓库</h5><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git remote add origin git@github.com:guoyaohua/learngit.git</span><br><span class="line">git push -u origin master</span><br></pre></td></tr></table></figure>
 <p>我们可以使用上文在本地初始化的“learngit”仓库。<strong>（注意：本地仓库和远程仓库可以不同名，本文只是为了写教程设置为相同名称。）</strong></p>
-<p><img src="http://pic.guoyaohua.com/image/git/1563104810075.png" alt="1563104810075"></p>
+<p><img src="http://pic.guoyaohua.com/image/git/1563104810075.png" alt></p>
 <p>我们再刷新下<code>Github Code</code>界面，发现新加入的<code>README.md</code>文件已经推送到了远程仓库中。</p>
-<p><img src="http://pic.guoyaohua.com/image/git/1563106284174.png" alt="1563106284174"></p>
+<p><img src="http://pic.guoyaohua.com/image/git/1563106284174.png" alt></p>
 <h2 id="版本控制"><a href="#版本控制" class="headerlink" title="版本控制"></a>版本控制</h2><h3 id="工作区和暂存区"><a href="#工作区和暂存区" class="headerlink" title="工作区和暂存区"></a>工作区和暂存区</h3><h4 id="工作区（Working-Directory）"><a href="#工作区（Working-Directory）" class="headerlink" title="工作区（Working Directory）"></a>工作区（Working Directory）</h4><p>就是你在电脑里能看到的目录，比如我们刚刚创建的<code>learngit</code>文件夹就是一个工作区：</p>
-<p><img src="http://pic.guoyaohua.com/image/git/1563106681604.png" alt="1563106681604"></p>
+<p><img src="http://pic.guoyaohua.com/image/git/1563106681604.png" alt></p>
 <h4 id="版本库（Repository）"><a href="#版本库（Repository）" class="headerlink" title="版本库（Repository）"></a>版本库（Repository）</h4><p>工作区有一个隐藏目录<code>.git</code>，这个不算工作区，而是Git的版本库。</p>
 <p>Git的版本库里存了很多东西，其中最重要的就是称为<strong>Stage</strong>（或者叫<strong>Index</strong>）的<strong>暂存区</strong>，还有Git为我们自动创建的第一个分支<code>master</code>，以及指向<code>master</code>的一个指针叫<code>HEAD</code>。</p>
 <p><img src="http://pic.guoyaohua.com/image/git/Repository.jpg" alt="Repository"></p>
@@ -642,13 +654,13 @@
 </ol>
 <h5 id="文件粒度操作"><a href="#文件粒度操作" class="headerlink" title="文件粒度操作"></a>文件粒度操作</h5><p>需要注意的是在<code>mixed</code>模式下进行<code>reset</code>操作时可以是全局性重置，也可以是文件粒度重置，区别在于二者作用域不同，文件粒度只会使对应文件的暂存区状态变为指定commit时该文件的暂存区状态，并且不会改变版本库状态，即HEAD指针不会改变，我们看一下效果。</p>
 <p>首先我们新建两个文件进行两次提交，可以看到目前HEAD指向最新一次提交“text2”。</p>
-<p><img src="http://pic.guoyaohua.com/image/git/1563611168654.png" alt="1563611168654"></p>
+<p><img src="http://pic.guoyaohua.com/image/git/1563611168654.png" alt></p>
 <p>我们对“file1.txt”进行reset操作，令其重置为“text1”状态。</p>
-<p><img src="http://pic.guoyaohua.com/image/git/1563611993505.png" alt="1563611993505"></p>
+<p><img src="http://pic.guoyaohua.com/image/git/1563611993505.png" alt></p>
 <p>并且我们通过git log命令可发现，此时HEAD指针并没有改变，还是指向最新一次提交“Text 2”，可知文件粒度的<code>reset --mixed</code>不改变版本库HEAD指针状态。</p>
-<p><img src="http://pic.guoyaohua.com/image/git/1563612094551.png" alt="1563612094551"></p>
+<p><img src="http://pic.guoyaohua.com/image/git/1563612094551.png" alt></p>
 <p>对于soft和hard模式则无法进行文件粒度操作。</p>
-<p><img src="http://pic.guoyaohua.com/image/git/1563609363728.png" alt="1563609363728"></p>
+<p><img src="http://pic.guoyaohua.com/image/git/1563609363728.png" alt></p>
 <h4 id="Reset-常用示例"><a href="#Reset-常用示例" class="headerlink" title="Reset 常用示例"></a>Reset 常用示例</h4><ul>
 <li>回退add操作</li>
 </ul>
@@ -674,7 +686,7 @@
 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git reset <span class="number">497</span>e350</span><br></pre></td></tr></table></figure>
 <p>当前HEAD会指向“497e350”，暂存区中的状态会恢复到提交“497e350”时暂存区的状态。 </p>
 <h3 id="撤销修改"><a href="#撤销修改" class="headerlink" title="撤销修改"></a>撤销修改</h3><p>当我们因为一些原因想要丢弃工作区某些文件修改时，可以使用“<code>git checkout -- &lt;file&gt;</code>”命令，该命令仅会恢复工作区文件状态，不会对版本库有任何改动。</p>
-<p><img src="http://pic.guoyaohua.com/image/git/1563613938574.png" alt="1563613938574"></p>
+<p><img src="http://pic.guoyaohua.com/image/git/1563613938574.png" alt></p>
 <p>命令<code>git checkout -- file1.txt</code>意思就是，把<code>file1.txt</code>文件在工作区的修改全部撤销，这里有两种情况：</p>
 <ul>
 <li>一种是<code>file1.txt</code>自修改后还没有被放到暂存区，现在，撤销修改就回到和版本库一模一样的状态；</li>
@@ -796,20 +808,20 @@
 <h3 id="状态存储"><a href="#状态存储" class="headerlink" title="状态存储"></a>状态存储</h3><p>当我们在开发过程中，经常遇到这样的情况，我们需要暂时放下手中的工作，切换到其他分支进行开发，例如当我们在dev分支进行程序2.0版本开发时，发现1.0版本的程序出现了bug，必须立刻进行修复，但是在目前的dev分支我们可能已经做了很多修改，暂存区可能有了暂存状态，甚至可能在开发过程中在dev分支进行了多次commit，这时如果我们想切换回master分支，进行bug修复，这时就需要使用到<code>git stash</code>命令存储原分支当前的状态。</p>
 <p>在讲解<code>git stash</code>之前，我们先考虑两种场景：</p>
 <p>第一种就是我们未在dev分支进行任何提交，此时HEAD指针指向dev，dev和master指向同一次commit，如下图：</p>
-<p><img src="http://pic.guoyaohua.com/image/git/1563631355797.png" alt="1563631355797"></p>
+<p><img src="http://pic.guoyaohua.com/image/git/1563631355797.png" alt></p>
 <p>我们可能在dev的工作区做了很多修改，也将部分修改状态加入了暂存区（即进行了<code>git add</code>操作），这时我们尝试一下直接使用<code>git checkout</code>命令切换分支。</p>
 <p>此时，Git状态如下：</p>
-<p><img src="http://pic.guoyaohua.com/image/git/1563631585919.png" alt="1563631585919"></p>
+<p><img src="http://pic.guoyaohua.com/image/git/1563631585919.png" alt></p>
 <p>我们修改“file1.txt”和“file2.txt”的内容，并将“file1.txt”的改动加入暂存区。</p>
-<p><img src="http://pic.guoyaohua.com/image/git/1563631787056.png" alt="1563631787056"></p>
+<p><img src="http://pic.guoyaohua.com/image/git/1563631787056.png" alt></p>
 <p>此时可看出工作区和暂存区就都有改变，但HEAD指针指向的dev与master为同一个commit节点。</p>
 <p>这时我们执行<code>git checkout master</code>命令尝试切换分支。</p>
-<p><img src="http://pic.guoyaohua.com/image/git/1563631937563.png" alt="1563631937563"></p>
+<p><img src="http://pic.guoyaohua.com/image/git/1563631937563.png" alt></p>
 <p>可以看出，成功切换到了master分支上，而且工作区和暂存区的状态依旧保留。</p>
 <p>我们再考虑一个场景，在dev分支开发时，进行了一次提交，此时HEAD指向dev分支，dev分支超前master分支一次commit，具体见下图：</p>
-<p><img src="http://pic.guoyaohua.com/image/git/1563632158366.png" alt="1563632158366"></p>
+<p><img src="http://pic.guoyaohua.com/image/git/1563632158366.png" alt></p>
 <p>如果此时我们工作区或暂存区有未提交更改时，就无法进行分支切换操作（如果没有未提交修改的话当然可以进行分支切换操作）。 </p>
-<p><img src="http://pic.guoyaohua.com/image/git/1563632645976.png" alt="1563632645976"></p>
+<p><img src="http://pic.guoyaohua.com/image/git/1563632645976.png" alt></p>
 <p>我想这时大家就会有一个疑问，为什么两种状态下我们都修改了暂存区和工作区的状态，但是一个可以切换分支并且保留工作区、暂存区状态，而另一种状态就无法切换分支呢？</p>
 <p>我起初在遇到这个问题的时候也是很诧异，在网上搜索了好多资料，依旧没有查到有价值的信息。</p>
 <p>这时我们就应该从Git的原理来进行分析了，<strong>Git在进行版本控制时，记录的并不是文件本身的信息，而是文件的修改状态</strong>，例如我们再一个10000行代码的文件中，新加入了一行代码进行，Git并不是将最新的10001行代码作为备份，而是仅仅记录了新旧文件之间的差异，即在哪个位置修改了什么内容（修改包括：增加、删除、修改等）。</p>
@@ -904,7 +916,7 @@
 <p>当”mywork”分支更新之后，它会指向这些新创建的提交(commit)，而那些老的提交会被丢弃。 如果运行垃圾收集命令(pruning garbage collection)，这些被丢弃的提交就会删除。</p>
 <p><img src="http://pic.guoyaohua.com/image/git/rebase4.png" alt></p>
 <p>现在我们可以看一下用merge和用rebase所产生的历史的区别：</p>
-<p><img src="http://pic.guoyaohua.com/image/git/1563677573806.png" alt="1563677573806"></p>
+<p><img src="http://pic.guoyaohua.com/image/git/1563677573806.png" alt></p>
 <p><img src="http://pic.guoyaohua.com/image/git/rebase2.png" alt></p>
 <p>当我们使用<code>git log</code>来参看commit时，其commit的顺序也有所不同。</p>
 <p>假设C3提交于<code>9:00AM</code>，C5提交于<code>10:00AM</code>，C4提交于<code>11:00AM</code>，C6提交于<code>12:00AM</code>，</p>
@@ -1181,6 +1193,10 @@
 
           <div class="post-nav-prev post-nav-item">
             
+              <a href="/classification-metrics/" rel="prev" title="【机器学习】一文读懂分类算法常用评价指标">
+                【机器学习】一文读懂分类算法常用评价指标 <i class="fa fa-chevron-right"></i>
+              </a>
+            
           </div>
         </div>
       
@@ -1254,7 +1270,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">2</span>
+                    <span class="site-state-item-count">3</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -1275,7 +1291,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">2</span>
+                      
+                    
+                    <span class="site-state-item-count">3</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -1302,7 +1320,27 @@
                     
                       
                     
-                    <span class="site-state-item-count">5</span>
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">15</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>

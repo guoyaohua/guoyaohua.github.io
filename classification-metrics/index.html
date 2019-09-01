@@ -128,17 +128,26 @@
 
 
 
-  <meta name="description" content="深度学习、机器学习领域技术博客">
-<meta name="keywords" content="深度学习、机器学习、人工智能、郭耀华、Deep Learning、DL、ML、NLP、CV">
-<meta property="og:type" content="website">
-<meta property="og:title" content="郭耀华&#39;s Blog">
-<meta property="og:url" content="http://www.guoyaohua.com/index.html">
+  <meta name="description" content="前言评价指标是针对将相同的数据，输入不同的算法模型，或者输入不同参数的同一种算法模型，而给出这个算法或者参数好坏的定量指标。 在模型评估过程中，往往需要使用多种不同的指标进行评估，在诸多的评价指标中，大部分指标只能片面的反应模型的一部分性能，如果不能合理的运用评估指标，不仅不能发现模型本身的问题，而且会得出错误的结论。 最近恰好在做文本分类的工作，所以把机器学习分类任务的评价指标又过了一遍。本文将">
+<meta name="keywords" content="机器学习,深度学习,分类算法,评价指标,分类算法评价指标,准确率、精确率、召回率,P-R曲线,F1指数,ROC,AUC">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【机器学习】一文读懂分类算法常用评价指标">
+<meta property="og:url" content="http://www.guoyaohua.com/classification-metrics/index.html">
 <meta property="og:site_name" content="郭耀华&#39;s Blog">
-<meta property="og:description" content="深度学习、机器学习领域技术博客">
+<meta property="og:description" content="前言评价指标是针对将相同的数据，输入不同的算法模型，或者输入不同参数的同一种算法模型，而给出这个算法或者参数好坏的定量指标。 在模型评估过程中，往往需要使用多种不同的指标进行评估，在诸多的评价指标中，大部分指标只能片面的反应模型的一部分性能，如果不能合理的运用评估指标，不仅不能发现模型本身的问题，而且会得出错误的结论。 最近恰好在做文本分类的工作，所以把机器学习分类任务的评价指标又过了一遍。本文将">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://pic.guoyaohua.com/image/classification_metrics/Precisionrecall.png">
+<meta property="og:image" content="http://pic.guoyaohua.com/image/classification_metrics/PR_Curve.png">
+<meta property="og:image" content="http://pic.guoyaohua.com/image/classification_metrics/ROC.png">
+<meta property="og:image" content="http://pic.guoyaohua.com/image/classification_metrics/ROC-Threshold.gif">
+<meta property="og:image" content="http://pic.guoyaohua.com/image/classification_metrics/ROC-Performance.gif">
+<meta property="og:image" content="http://pic.guoyaohua.com/image/classification_metrics/ROC-Balance.gif">
+<meta property="og:image" content="http://pic.guoyaohua.com/image/classification_metrics/Confusion_Matrix.png">
+<meta property="og:updated_time" content="2019-09-01T05:27:33.164Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="郭耀华&#39;s Blog">
-<meta name="twitter:description" content="深度学习、机器学习领域技术博客">
+<meta name="twitter:title" content="【机器学习】一文读懂分类算法常用评价指标">
+<meta name="twitter:description" content="前言评价指标是针对将相同的数据，输入不同的算法模型，或者输入不同参数的同一种算法模型，而给出这个算法或者参数好坏的定量指标。 在模型评估过程中，往往需要使用多种不同的指标进行评估，在诸多的评价指标中，大部分指标只能片面的反应模型的一部分性能，如果不能合理的运用评估指标，不仅不能发现模型本身的问题，而且会得出错误的结论。 最近恰好在做文本分类的工作，所以把机器学习分类任务的评价指标又过了一遍。本文将">
+<meta name="twitter:image" content="http://pic.guoyaohua.com/image/classification_metrics/Precisionrecall.png">
 
 
 
@@ -147,7 +156,7 @@
 
 
 
-  <link rel="canonical" href="http://www.guoyaohua.com/">
+  <link rel="canonical" href="http://www.guoyaohua.com/classification-metrics/">
 
 
 
@@ -157,7 +166,7 @@
   };
 </script>
 
-  <title>郭耀华's Blog</title>
+  <title>【机器学习】一文读懂分类算法常用评价指标 | 郭耀华's Blog</title>
   
 
 
@@ -205,8 +214,7 @@
     
   
 
-  <div class="container sidebar-position-right 
-  page-home">
+  <div class="container sidebar-position-right page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -248,7 +256,7 @@
         
         
           
-          <li class="menu-item menu-item-home menu-item-active">
+          <li class="menu-item menu-item-home">
 
     
     
@@ -382,9 +390,9 @@
           
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-      
 
   
 
@@ -416,10 +424,8 @@
 
         
         
-          <h2 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/classification-metrics/" class="post-title-link" itemprop="url">【机器学习】一文读懂分类算法常用评价指标</a>
+          <h2 class="post-title" itemprop="name headline">【机器学习】一文读懂分类算法常用评价指标
+
               
             
           </h2>
@@ -483,6 +489,13 @@
           
 
           
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon">
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
 
           
             <div class="post-symbolscount">
@@ -529,29 +542,95 @@
       
 
       
-        
-          
-            <p>
-              前言评价指标是针对将相同的数据，输入不同的算法模型，或者输入不同参数的同一种算法模型，而给出这个算法或者参数好坏的定量指标。
-在模型评估过程中，往往需要使用多种不同的指标进行评估，在诸多的评价指标中，大部分指标只能片面的反应模型的一部分性能，如果不能合理的运用评估指标，不仅不能发现模型本身的问题，而
-              ...
-            </p>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/classification-metrics/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
-        
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>评价指标是针对将相同的数据，输入不同的算法模型，或者输入不同参数的同一种算法模型，而给出这个算法或者参数好坏的定量指标。</p>
+<p>在模型评估过程中，往往需要使用多种不同的指标进行评估，在诸多的评价指标中，大部分指标只能片面的反应模型的一部分性能，如果不能合理的运用评估指标，不仅不能发现模型本身的问题，而且会得出错误的结论。</p>
+<p>最近恰好在做文本分类的工作，所以把机器学习分类任务的评价指标又过了一遍。本文将详细介绍机器学习分类任务的常用评价指标：准确率（Accuracy）、精确率（Precision）、召回率（Recall）、P-R曲线（Precision-Recall Curve）、F1 Score、混淆矩阵（Confuse Matrix）、ROC、AUC。</p>
+<h2 id="准确率（Accuracy）"><a href="#准确率（Accuracy）" class="headerlink" title="准确率（Accuracy）"></a>准确率（Accuracy）</h2><p>准确率是分类问题中最为原始的评价指标，准确率的定义是<strong>预测正确的结果占总样本的百分比</strong>，其公式如下：<br>$$<br>Accuracy = \frac{TP+TN}{TP+TN+FP+FN}<br>$$<br>其中：</p>
+<ul>
+<li>真正例(True Positive, <strong>TP</strong>)：被模型预测为正的正样本；</li>
+<li>假正例(False Positive, <strong>FP</strong>)：被模型预测为正的负样本；</li>
+<li>假负例(False Negative, <strong>FN</strong>)：被模型预测为负的正样本；</li>
+<li>真负例(True Negative, <strong>TN</strong>)：被模型预测为负的负样本；</li>
+</ul>
+<p>但是，准确率评价算法有一个明显的弊端问题，就是在数据的类别不均衡，特别是有极偏的数据存在的情况下，准确率这个评价指标是不能客观评价算法的优劣的。例如下面这个例子：</p>
+<p>在测试集里，有100个sample，99个反例，只有1个正例。如果我的模型不分青红皂白对任意一个sample都预测是反例，那么我的模型的准确率就为0.99，从数值上看是非常不错的，但事实上，这样的算法没有任何的预测能力，于是我们就应该考虑是不是评价指标出了问题，这时就需要使用其他的评价指标综合评判了。</p>
+<h2 id="精确率（Precision）、召回率（Recall）"><a href="#精确率（Precision）、召回率（Recall）" class="headerlink" title="精确率（Precision）、召回率（Recall）"></a>精确率（Precision）、召回率（Recall）</h2><p><strong>精准率</strong>（Precision）又叫<strong>查准率</strong>，它是<strong>针对预测结果</strong>而言的，它的含义是<strong>在所有被预测为正的样本中实际为正的样本的概率</strong>，意思就是在预测为正样本的结果中，我们有多少把握可以预测正确，其公式如下：<br>$$<br>Precision = \frac{TP}{TP+FP}<br>$$</p>
+<p>精准率和准确率看上去有些类似，但是完全不同的两个概念。精准率代表对正样本结果中的预测准确程度，而准确率则代表整体的预测准确程度，既包括正样本，也包括负样本。</p>
+<p><strong>召回率</strong>（Recall）又叫<strong>查全率</strong>，它是<strong>针对原样本</strong>而言的，它的含义是<strong>在实际为正的样本中被预测为正样本的概率</strong>，其公式如下：<br>$$<br>Recall = \frac{TP}{TP+FN}<br>$$</p>
+<p>引用Wiki中的图，帮助说明下二者的关系。</p>
+<p><img src="http://pic.guoyaohua.com/image/classification_metrics/Precisionrecall.png" alt="Precision And Recall"></p>
+<p>在不同的应用场景下，我们的关注点不同，例如，在预测股票的时候，我们更关心精准率，即我们预测升的那些股票里，真的升了有多少，因为那些我们预测升的股票都是我们投钱的。而在预测病患的场景下，我们更关注召回率，即真的患病的那些人里我们预测错了情况应该越少越好。</p>
+<p>精确率和召回率是一对此消彼长的度量。例如在推荐系统中，我们想让推送的内容尽可能用户全都感兴趣，那只能推送我们把握高的内容，这样就漏掉了一些用户感兴趣的内容，召回率就低了；如果想让用户感兴趣的内容都被推送，那只有将所有内容都推送上，宁可错杀一千，不可放过一个，这样准确率就很低了。</p>
+<p>在实际工程中，我们往往需要结合两个指标的结果，去寻找一个平衡点，使综合性能最大化。</p>
+<h2 id="P-R曲线"><a href="#P-R曲线" class="headerlink" title="P-R曲线"></a>P-R曲线</h2><p>P-R曲线（Precision Recall Curve）正是描述精确率、召回率变化的曲线，P-R曲线定义如下：根据学习器的预测结果（一般为一个实值或概率）对测试样本进行排序，将最可能是“正例”的样本排在前面，最不可能是“正例”的排在后面，按此顺序逐个把样本作为“正例”进行预测，每次计算出当前的P值和R值，如下图所示：</p>
+<p><img src="http://pic.guoyaohua.com/image/classification_metrics/PR_Curve.png" alt="Precision Recall Curve"></p>
+<p>P-R曲线如何评估呢？若一个学习器A的P-R曲线被另一个学习器B的P-R曲线完全包住，则称：B的性能优于A。若A和B的曲线发生了交叉，则谁的曲线下的面积大，谁的性能更优。但一般来说，曲线下的面积是很难进行估算的，所以衍生出了“<strong>平衡点</strong>”（Break-Event Point，简称<strong>BEP</strong>），即当P=R时的取值，平衡点的取值越高，性能更优。</p>
+<h2 id="F1-Score"><a href="#F1-Score" class="headerlink" title="F1-Score"></a>F1-Score</h2><p>正如上文所述，Precision和Recall指标有时是此消彼长的，即精准率高了，召回率就下降，在一些场景下要兼顾精准率和召回率，最常见的方法就是F-Measure，又称F-Score。F-Measure是P和R的<strong>加权调和平均</strong>，即：<br>$$<br>\frac{1}{F_{\beta}}=\frac{1}{1+\beta^{2}} \cdot\left(\frac{1}{P}+\frac{\beta^{2}}{R}\right)<br>$$</p>
+<p>$$<br>F_{\beta}=\frac{\left(1+\beta^{2}\right) \times P \times R}{\left(\beta^{2} \times P\right)+R}<br>$$</p>
+<p>特别地，当β=1时，也就是常见的F1-Score，是P和R的调和平均，当F1较高时，模型的性能越好。</p>
+<p>$$<br>\frac{1}{F 1}=\frac{1}{2} \cdot\left(\frac{1}{P}+\frac{1}{R}\right)<br>$$</p>
+<p>$$<br>F1=\frac{2 \times P \times R}{P+R} = \frac{2 \times TP}{样例总数+TP-TN}<br>$$</p>
+<h2 id="ROC曲线"><a href="#ROC曲线" class="headerlink" title="ROC曲线"></a>ROC曲线</h2><p>ROC以及后面要讲到的AUC，是分类任务中非常常用的评价指标，本文将详细阐述。可能有人会有疑问，既然已经这么多评价标准，为什么还要使用ROC和AUC呢？</p>
+<p>因为ROC曲线有个很好的特性：<strong>当测试集中的正负样本的分布变化的时候，ROC曲线能够保持不变。</strong>在实际的数据集中经常会出现类别不平衡（Class Imbalance）现象，即负样本比正样本多很多（或者相反），而且测试数据中的正负样本的分布也可能随着时间变化，ROC以及AUC可以很好的消除样本类别不平衡对指标结果产生的影响。 </p>
+<p>另一个原因是，ROC和上面做提到的P-R曲线一样，是一种不依赖于阈值（Threshold）的评价指标，在输出为概率分布的分类模型中，如果仅使用准确率、精确率、召回率作为评价指标进行模型对比时，都必须时基于某一个给定阈值的，对于不同的阈值，各模型的Metrics结果也会有所不同，这样就很难得出一个很置信的结果。</p>
+<p>在正式介绍ROC之前，我们还要再介绍两个指标，<strong>这两个指标的选择使得ROC可以无视样本的不平衡。</strong>这两个指标分别是：<strong>灵敏度（sensitivity）</strong>和<strong>特异度（specificity）</strong>，也叫做<strong>真正率（TPR）</strong>和<strong>假正率（FPR）</strong>，具体公式如下。</p>
+<ul>
+<li>真正率(True Positive Rate , <strong>TPR</strong>)，又称灵敏度：<br>$$<br>TPR = \frac{正样本预测正确数}{正样本总数} = \frac{TP}{TP+FN}<br>$$<pre><code>其实我们可以发现灵敏度和召回率是一模一样的，只是名字换了而已
+</code></pre></li>
+<li><p>假负率(False Negative Rate , <strong>FNR</strong>) ：<br>$$<br>FNR = \frac{正样本预测错误数}{正样本总数} = \frac{FN}{TP+FN}<br>$$</p>
+</li>
+<li><p>假正率(False Positive Rate , <strong>FPR</strong>) ：<br>$$<br>FPR = \frac{负样本预测错误数}{负样本总数} = \frac{FP}{TN+FP}<br>$$</p>
+</li>
+<li><p>真负率(True Negative Rate , <strong>TNR</strong>)，又称特异度：<br>$$<br>TNR = \frac{负样本预测正确数}{负样本总数} = \frac{TN}{TN+FP}<br>$$</p>
+</li>
+</ul>
+<p>细分析上述公式，我们可以可看出，灵敏度（真正率）TPR是正样本的召回率，特异度（真负率）TNR是负样本的召回率，而假负率$FNR=1-TPR$、假正率$FPR=1-TNR$，上述四个量都是针对单一类别的预测结果而言的，所以对整体样本是否均衡并不敏感。举个例子：假设总样本中，90%是正样本，10%是负样本。在这种情况下我们如果使用准确率进行评价是不科学的，但是用TPR和TNR却是可以的，因为TPR只关注90%正样本中有多少是被预测正确的，而与那10%负样本毫无关系，同理，FPR只关注10%负样本中有多少是被预测错误的，也与那90%正样本毫无关系。这样就避免了样本不平衡的问题。</p>
+<p><strong>ROC（Receiver Operating Characteristic）曲线</strong>，又称接受者操作特征曲线。该曲线最早应用于雷达信号检测领域，用于区分信号与噪声。后来人们将其用于评价模型的预测能力。ROC曲线中的主要两个指标就是<strong>真正率TPR</strong>和<strong>假正率FPR</strong>，上面已经解释了这么选择的好处所在。其中横坐标为假正率（FPR），纵坐标为真正率（TPR），下面就是一个标准的ROC曲线图。</p>
+<p><img src="http://pic.guoyaohua.com/image/classification_metrics/ROC.png" alt="ROC Curve"></p>
+<h3 id="阈值问题"><a href="#阈值问题" class="headerlink" title="阈值问题"></a>阈值问题</h3><p>与前面的P-R曲线类似，ROC曲线也是通过<strong>遍历所有阈值</strong>来绘制整条曲线的。如果我们不断的遍历所有阈值，预测的正样本和负样本是在不断变化的，相应的在ROC曲线图中也会沿着曲线滑动。</p>
+<p><img src="http://pic.guoyaohua.com/image/classification_metrics/ROC-Threshold.gif" alt="ROC-Threshold"></p>
+<p>我们看到改变阈值只是不断地改变预测的正负样本数，即TPR和FPR，但是曲线本身并没有改变。这是有道理的，阈值并不会改变模型的性能。</p>
+<h3 id="判断模型性能"><a href="#判断模型性能" class="headerlink" title="判断模型性能"></a>判断模型性能</h3><p>那么如何判断一个模型的ROC曲线是好的呢？这个还是要回归到我们的目的：FPR表示模型对于负样本误判的程度，而TPR表示模型对正样本召回的程度。我们所希望的当然是：负样本误判的越少越好，正样本召回的越多越好。所以总结一下就是<strong>TPR越高，同时FPR越低（即ROC曲线越陡），那么模型的性能就越好。</strong>参考如下动态图进行理解。</p>
+<p><img src="http://pic.guoyaohua.com/image/classification_metrics/ROC-Performance.gif" alt="ROC Curve Change"></p>
+<p>即：<strong>进行模型的性能比较时，与PR曲线类似，若一个模型A的ROC曲线被另一个模型B的ROC曲线完全包住，则称B的性能优于A。若A和B的曲线发生了交叉，则谁的曲线下的面积大，谁的性能更优。</strong></p>
+<h3 id="无视样本不平衡"><a href="#无视样本不平衡" class="headerlink" title="无视样本不平衡"></a>无视样本不平衡</h3><p>前面已经对ROC曲线为什么可以无视样本不平衡做了解释，下面我们用动态图的形式再次展示一下它是如何工作的。我们发现：<strong>无论红蓝色样本比例如何改变，ROC曲线都没有影响。</strong></p>
+<p><img src="http://pic.guoyaohua.com/image/classification_metrics/ROC-Balance.gif" alt></p>
+<h2 id="AUC"><a href="#AUC" class="headerlink" title="AUC"></a>AUC</h2><p>AUC(Area Under Curve)又称为曲线下面积，是处于ROC Curve下方的那部分面积的大小。上文中我们已经提到，对于ROC曲线下方面积越大表明模型性能越好，于是AUC就是由此产生的评价指标。通常，AUC的值介于0.5到1.0之间，较大的AUC代表了较好的Performance。如果模型是完美的，那么它的AUC = 1，证明所有正例排在了负例的前面，如果模型是个简单的二类随机猜测模型，那么它的AUC = 0.5，如果一个模型好于另一个，则它的曲线下方面积相对较大，对应的AUC值也会较大。</p>
+<h3 id="物理意义"><a href="#物理意义" class="headerlink" title="物理意义"></a>物理意义</h3><p>AUC对所有可能的分类阈值的效果进行综合衡量。首先AUC值是一个概率值，可以理解为随机挑选一个正样本以及一个负样本，分类器判定正样本分值高于负样本分值的概率就是AUC值。简言之，AUC值越大，当前的分类算法越有可能将正样本分值高于负样本分值，即能够更好的分类。</p>
+<h2 id="混淆矩阵"><a href="#混淆矩阵" class="headerlink" title="混淆矩阵"></a>混淆矩阵</h2><p>混淆矩阵（<a href="https://en.wikipedia.org/wiki/Confusion_matrix" target="_blank" rel="noopener">Confusion Matrix</a>）又被称为错误矩阵，通过它可以直观地观察到算法的效果。它的每一列是样本的预测分类，每一行是样本的真实分类（反过来也可以），顾名思义，它反映了分类结果的混淆程度。混淆矩阵$i$行$j$列的原始是原本是类别$i$却被分为类别$j$的样本个数，计算完之后还可以对之进行可视化：</p>
+<p><img src="http://pic.guoyaohua.com/image/classification_metrics/Confusion_Matrix.png" alt="Confusion Matrix Heat Map"></p>
+<h2 id="多分类问题"><a href="#多分类问题" class="headerlink" title="多分类问题"></a>多分类问题</h2><p>对于多分类问题，或者在二分类问题中，我们有时候会有多组混淆矩阵，例如：多次训练或者在多个数据集上训练的结果，那么估算全局性能的方法有两种，分为宏平均（macro-average）和微平均（micro-average）。简单理解，宏平均就是先算出每个混淆矩阵的P值和R值，然后取得平均P值macro-P和平均R值macro-R，再算出$Fβ$或$F1$，而微平均则是计算出混淆矩阵的平均TP、FP、TN、FN，接着进行计算P、R，进而求出$Fβ$或$F1$。其它分类指标同理，均可以通过宏平均/微平均计算得出。<br>$$<br>\operatorname{macro}P=\frac{1}{n} \sum_{i=1}^{n} P_{i}<br>$$</p>
+<p>$$<br>\operatorname{macro}R=\frac{1}{n} \sum_{i=1}^{n} R_{i}<br>$$</p>
+<p>$$<br>\operatorname{macro} F 1=\frac{2 \times \operatorname{macro} P \times \operatorname{macro} R}{\operatorname{macro} P+\operatorname{macro}R}<br>$$</p>
+<p>$$<br>\operatorname{micro} P=\frac{\overline{T P}}{\overline{T P}+\overline{F P}}<br>$$</p>
+<p>$$<br>\operatorname{micro}R=\frac{\overline{T P}}{\overline{T P}+\overline{F N}}<br>$$</p>
+<p>$$<br>\operatorname{micro} F 1=\frac{2 \times \operatorname{micro} P \times \operatorname{micro} R}{\operatorname{micro} P+\operatorname{micro}R}<br>$$</p>
+<p>需要注意的是，在多分类任务场景中，如果非要用一个综合考量的metric的话，<strong>宏平均会比微平均更好一些</strong>，因为宏平均受稀有类别影响更大。宏平均平等对待每一个类别，所以它的值主要受到稀有类别的影响，而微平均平等考虑数据集中的每一个样本，所以它的值受到常见类别的影响比较大。</p>
+
       
     </div>
 
     
 
 	<div>
+	  
+		<div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+		<br>
+		<div style="background: rgb(255,255,204); padding: 10px 10px 10px 10px; border: 1px dashed rgb(0,0,0); color: #000">
+		作者：<a href="http://www.guoyaohua.com/" target="_blank" style="font-weight: bold; font-size: 24px; font-family: 华文行楷">郭耀华</a>
+		<br>
+		出处：<a href="https://www.guoyaohua.com/" target="_blank">http://www.guoyaohua.com</a>
+		<br>
+		邮箱：guo.yaohua@foxmail.com
+		<br>
+		本文版权归作者所有，欢迎转载，转载请标明出处。
+		<br>
+		【如果你觉得本文还不错，对你的学习带来了些许帮助，赞赏是对作者最好的鼓励】
+		</div>
+    
+</div>
 	  
 	</div>
     
@@ -564,448 +643,100 @@
       
     
     
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>一次点赞，年薪百万！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById(&quot;QR&quot;); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.png" alt="郭耀华 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="郭耀华 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
 
     
 
     <footer class="post-footer">
       
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.guoyaohua.com/Git-tutorial/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="郭耀华">
-      <meta itemprop="description" content="深度学习、机器学习领域技术博客">
-      <meta itemprop="image" content="http://pic.guoyaohua.com/o_face_icon.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="郭耀华's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/Git-tutorial/" class="post-title-link" itemprop="url">Git常用操作指南</a>
-              
-            
-          </h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-07-21 15:17:08" itemprop="dateCreated datePublished" datetime="2019-07-21T15:17:08Z">2019-07-21</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2019-09-01 05:20:32" itemprop="dateModified" datetime="2019-09-01T05:20:32Z">2019-09-01</time>
-              
-            
-          </span>
-
+        <div class="post-tags">
           
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Git/" itemprop="url" rel="index"><span itemprop="name">Git</span></a></span>
-
-                
-                
-              
-            </span>
+            <a href="/tags/机器学习/" rel="tag"><i class="fa fa-tag"></i> 机器学习</a>
           
-
+            <a href="/tags/深度学习/" rel="tag"><i class="fa fa-tag"></i> 深度学习</a>
           
-            
-            
+            <a href="/tags/分类算法/" rel="tag"><i class="fa fa-tag"></i> 分类算法</a>
           
-
+            <a href="/tags/评价指标/" rel="tag"><i class="fa fa-tag"></i> 评价指标</a>
           
+            <a href="/tags/分类算法评价指标/" rel="tag"><i class="fa fa-tag"></i> 分类算法评价指标</a>
           
-
+            <a href="/tags/准确率、精确率、召回率/" rel="tag"><i class="fa fa-tag"></i> 准确率、精确率、召回率</a>
           
-
+            <a href="/tags/P-R曲线/" rel="tag"><i class="fa fa-tag"></i> P-R曲线</a>
           
-            <div class="post-symbolscount">
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">本文字数：</span>
-                
-                <span title="本文字数">96k</span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">2:54</span>
-              
-            </div>
+            <a href="/tags/F1指数/" rel="tag"><i class="fa fa-tag"></i> F1指数</a>
           
-
+            <a href="/tags/ROC/" rel="tag"><i class="fa fa-tag"></i> ROC</a>
           
-
+            <a href="/tags/AUC/" rel="tag"><i class="fa fa-tag"></i> AUC</a>
+          
         </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
       
 
       
+      
+        <div class="post-widgets">
         
-          
-            <p>
-              前言因为工作需求，最近又重新温习了一下Git操作，遂总结了一篇Git常用操作指南，方便日后学习查阅，本博客精简提炼了在开发过程中Git经常用到的核心命令，主要参考了《廖雪峰老师的Git教程》，希望对大家学习使用Git能带来帮助。
-Git简介Git是Linux之父Linus的第二个伟大的作品，它最早是
-              ...
-            </p>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/Git-tutorial/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-	<div>
-	  
-	</div>
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.guoyaohua.com/deeplearning-workstation/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="郭耀华">
-      <meta itemprop="description" content="深度学习、机器学习领域技术博客">
-      <meta itemprop="image" content="http://pic.guoyaohua.com/o_face_icon.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="郭耀华's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/deeplearning-workstation/" class="post-title-link" itemprop="url">深度学习工作站攒机指南</a>
-              
-            
-          </h2>
+          <div class="wp_rating">
+            <div id="wpac-rating"></div>
+          </div>
         
 
-        <div class="post-meta">
-          <span class="post-time">
+        
 
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-05-09 03:59:47" itemprop="dateCreated datePublished" datetime="2019-05-09T03:59:47Z">2019-05-09</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2019-06-23 08:39:15" itemprop="dateModified" datetime="2019-06-23T08:39:15Z">2019-06-23</time>
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/DeepLearning/" itemprop="url" rel="index"><span itemprop="name">DeepLearning</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-symbolscount">
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">本文字数：</span>
-                
-                <span title="本文字数">28k</span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">51 分钟</span>
-              
-            </div>
-          
-
-          
-
+        
         </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
       
       
 
       
-        
-          
-            <p>
-              引言接触深度学习已经快两年了，之前一直使用Google Colab和Kaggle Kernel提供的免费GPU（Tesla K80）训练模型（最近Google将Colab的GPU升级为Tesla T4，计算速度又提升了一个档次），不过由于内地网络的原因，Google和Kaggle连接十分不稳定，经常
-              ...
-            </p>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/deeplearning-workstation/#more" rel="contents">
-                阅读全文 &raquo;
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/Git-tutorial/" rel="next" title="Git常用操作指南">
+                <i class="fa fa-chevron-left"></i> Git常用操作指南
               </a>
-            </div>
-          
-          <!--/noindex-->
-        
-      
-    </div>
+            
+          </div>
 
-    
+          <span class="post-nav-divider"></span>
 
-	<div>
-	  
-	</div>
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
       
 
       
-
-      
-
-      
-      
-        <div class="post-eof"></div>
       
     </footer>
   </div>
@@ -1015,14 +746,19 @@ Git简介Git是Linux之父Linus的第二个伟大的作品，它最早是
   </article>
 
 
-    
-  </section>
-
-  
+  </div>
 
 
           </div>
           
+
+  
+    <div class="comments" id="gitalk-container">
+    </div>
+
+  
+
+
 
         </div>
         
@@ -1042,8 +778,17 @@ Git简介Git是Linux之父Linus的第二个伟大的作品，它最早是
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <div class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <div class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -1206,6 +951,23 @@ Git简介Git是Linux之父Linus的第二个伟大的作品，它最早是
         </div>
       </div>
 
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#准确率（Accuracy）"><span class="nav-text">准确率（Accuracy）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#精确率（Precision）、召回率（Recall）"><span class="nav-text">精确率（Precision）、召回率（Recall）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#P-R曲线"><span class="nav-text">P-R曲线</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#F1-Score"><span class="nav-text">F1-Score</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ROC曲线"><span class="nav-text">ROC曲线</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#阈值问题"><span class="nav-text">阈值问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#判断模型性能"><span class="nav-text">判断模型性能</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#无视样本不平衡"><span class="nav-text">无视样本不平衡</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#AUC"><span class="nav-text">AUC</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#物理意义"><span class="nav-text">物理意义</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#混淆矩阵"><span class="nav-text">混淆矩阵</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#多分类问题"><span class="nav-text">多分类问题</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
       
 
       
@@ -1379,6 +1141,10 @@ Git简介Git是Linux之父Linus的第二个伟大的作品，它最早是
 
 
   
+  <script src="/js/src/scrollspy.js?v=7.0.1"></script>
+<script src="/js/src/post-details.js?v=7.0.1"></script>
+
+
 
   
 
@@ -1394,6 +1160,37 @@ Git简介Git是Linux之父Linus的第二个伟大的作品，它最早是
 
   
 
+
+  
+    
+
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+
+
+<script src="//cdn.jsdelivr.net/npm/js-md5@0.7.3/src/md5.min.js"></script>
+
+<script>
+  var gitalk = new Gitalk({
+    clientID: '4c009e072d5529480639',
+    clientSecret: 'e3ecab593b9ac65237423e6802012693e9ee2035',
+    repo: 'guoyaohua.github.io',
+    owner: 'guoyaohua',
+    admin: ['guoyaohua'],
+    id: md5(location.pathname),
+    
+      language: window.navigator.language || window.navigator.userLanguage,
+    
+    distractionFreeMode: 'true'
+  });
+  gitalk.render('gitalk-container');
+</script>
+
+  
 
 
   
@@ -1788,13 +1585,13 @@ Git简介Git是Linux之父Linus的第二个伟大的作品，它最早是
       var articles = db.collection('articles')
 
       //https://hexo.io/docs/variables.html
-      var isPost = ''.length > 0
+      var isPost = '【机器学习】一文读懂分类算法常用评价指标'.length > 0
       var isArchive = '' === 'true'
       var isCategory = ''.length > 0
       var isTag = ''.length > 0
 
       if (isPost) { //is article page
-        var title = ''
+        var title = '【机器学习】一文读懂分类算法常用评价指标'
         var doc = articles.doc(title)
 
         getCount(doc, true).then(appendCountTo($('.post-meta')))
@@ -1802,7 +1599,7 @@ Git简介Git是Linux之父Linus的第二个伟大的作品，它最早是
       else if (!isArchive && !isCategory && !isTag) { //is index page
         var titles = [] //array to titles
 
-        var postsstr = 'titles.push("【机器学习】一文读懂分类算法常用评价指标");titles.push("Git常用操作指南");titles.push("深度学习工作站攒机指南");' //if you have a better way to get titles of posts, please change it
+        var postsstr = '' //if you have a better way to get titles of posts, please change it
         eval(postsstr)
 
         var promises = titles.map(function (title) {
@@ -1825,14 +1622,6 @@ Git简介Git是Linux之父Linus的第二个伟大的作品，它最早是
   
 
   
-  
-    
-      
-    
-      
-    
-      
-    
   
 
   
@@ -1859,6 +1648,25 @@ Git简介Git是Linux之父Linus的第二个伟大的作品，它最早是
   
 
   
+  <script>
+    wpac_init = window.wpac_init || [];
+    wpac_init.push({
+      widget: 'Rating',
+      id: 18391,
+      el: 'wpac-rating',
+      color: 'fc6423'
+    });
+    (function() {
+      if ('WIDGETPACK_LOADED' in window) return;
+      WIDGETPACK_LOADED = true;
+      var mc = document.createElement('script');
+      mc.type = 'text/javascript';
+      mc.async = true;
+      mc.src = '//embed.widgetpack.com/widget.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(mc, s.nextSibling);
+    })();
+  </script>
+
 
   
 
