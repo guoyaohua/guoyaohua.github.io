@@ -143,7 +143,7 @@
 <meta property="og:image" content="http://pic.guoyaohua.com/image/classification_metrics/ROC-Performance.gif">
 <meta property="og:image" content="http://pic.guoyaohua.com/image/classification_metrics/ROC-Balance.gif">
 <meta property="og:image" content="http://pic.guoyaohua.com/image/classification_metrics/Confusion_Matrix.png">
-<meta property="og:updated_time" content="2019-09-01T05:27:33.164Z">
+<meta property="og:updated_time" content="2019-09-01T05:43:03.627Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="【机器学习】一文读懂分类算法常用评价指标">
 <meta name="twitter:description" content="前言评价指标是针对将相同的数据，输入不同的算法模型，或者输入不同参数的同一种算法模型，而给出这个算法或者参数好坏的定量指标。 在模型评估过程中，往往需要使用多种不同的指标进行评估，在诸多的评价指标中，大部分指标只能片面的反应模型的一部分性能，如果不能合理的运用评估指标，不仅不能发现模型本身的问题，而且会得出错误的结论。 最近恰好在做文本分类的工作，所以把机器学习分类任务的评价指标又过了一遍。本文将">
@@ -450,7 +450,7 @@
                 
               
 
-              <time title="创建时间：2019-09-01 13:01:14 / 修改时间：05:27:33" itemprop="dateCreated datePublished" datetime="2019-09-01T13:01:14Z">2019-09-01</time>
+              <time title="创建时间：2019-09-01 13:01:14 / 修改时间：05:43:03" itemprop="dateCreated datePublished" datetime="2019-09-01T13:01:14Z">2019-09-01</time>
             
 
             
@@ -575,15 +575,22 @@
 <p>另一个原因是，ROC和上面做提到的P-R曲线一样，是一种不依赖于阈值（Threshold）的评价指标，在输出为概率分布的分类模型中，如果仅使用准确率、精确率、召回率作为评价指标进行模型对比时，都必须时基于某一个给定阈值的，对于不同的阈值，各模型的Metrics结果也会有所不同，这样就很难得出一个很置信的结果。</p>
 <p>在正式介绍ROC之前，我们还要再介绍两个指标，<strong>这两个指标的选择使得ROC可以无视样本的不平衡。</strong>这两个指标分别是：<strong>灵敏度（sensitivity）</strong>和<strong>特异度（specificity）</strong>，也叫做<strong>真正率（TPR）</strong>和<strong>假正率（FPR）</strong>，具体公式如下。</p>
 <ul>
-<li>真正率(True Positive Rate , <strong>TPR</strong>)，又称灵敏度：<br>$$<br>TPR = \frac{正样本预测正确数}{正样本总数} = \frac{TP}{TP+FN}<br>$$<pre><code>其实我们可以发现灵敏度和召回率是一模一样的，只是名字换了而已
-</code></pre></li>
-<li><p>假负率(False Negative Rate , <strong>FNR</strong>) ：<br>$$<br>FNR = \frac{正样本预测错误数}{正样本总数} = \frac{FN}{TP+FN}<br>$$</p>
-</li>
-<li><p>假正率(False Positive Rate , <strong>FPR</strong>) ：<br>$$<br>FPR = \frac{负样本预测错误数}{负样本总数} = \frac{FP}{TN+FP}<br>$$</p>
-</li>
-<li><p>真负率(True Negative Rate , <strong>TNR</strong>)，又称特异度：<br>$$<br>TNR = \frac{负样本预测正确数}{负样本总数} = \frac{TN}{TN+FP}<br>$$</p>
-</li>
+<li>真正率(True Positive Rate , <strong>TPR</strong>)，又称灵敏度：</li>
 </ul>
+<p>$$<br>TPR = \frac{正样本预测正确数}{正样本总数} = \frac{TP}{TP+FN}<br>$$</p>
+<p>其实我们可以发现灵敏度和召回率是一模一样的，只是名字换了而已</p>
+<ul>
+<li>假负率(False Negative Rate , <strong>FNR</strong>) ：</li>
+</ul>
+<p>$$<br>FNR = \frac{正样本预测错误数}{正样本总数} = \frac{FN}{TP+FN}<br>$$</p>
+<ul>
+<li>假正率(False Positive Rate , <strong>FPR</strong>) ：</li>
+</ul>
+<p>$$<br>FPR = \frac{负样本预测错误数}{负样本总数} = \frac{FP}{TN+FP}<br>$$</p>
+<ul>
+<li>真负率(True Negative Rate , <strong>TNR</strong>)，又称特异度：</li>
+</ul>
+<p>$$<br>TNR = \frac{负样本预测正确数}{负样本总数} = \frac{TN}{TN+FP}<br>$$</p>
 <p>细分析上述公式，我们可以可看出，灵敏度（真正率）TPR是正样本的召回率，特异度（真负率）TNR是负样本的召回率，而假负率$FNR=1-TPR$、假正率$FPR=1-TNR$，上述四个量都是针对单一类别的预测结果而言的，所以对整体样本是否均衡并不敏感。举个例子：假设总样本中，90%是正样本，10%是负样本。在这种情况下我们如果使用准确率进行评价是不科学的，但是用TPR和TNR却是可以的，因为TPR只关注90%正样本中有多少是被预测正确的，而与那10%负样本毫无关系，同理，FPR只关注10%负样本中有多少是被预测错误的，也与那90%正样本毫无关系。这样就避免了样本不平衡的问题。</p>
 <p><strong>ROC（Receiver Operating Characteristic）曲线</strong>，又称接受者操作特征曲线。该曲线最早应用于雷达信号检测领域，用于区分信号与噪声。后来人们将其用于评价模型的预测能力。ROC曲线中的主要两个指标就是<strong>真正率TPR</strong>和<strong>假正率FPR</strong>，上面已经解释了这么选择的好处所在。其中横坐标为假正率（FPR），纵坐标为真正率（TPR），下面就是一个标准的ROC曲线图。</p>
 <p><img src="http://pic.guoyaohua.com/image/classification_metrics/ROC.png" alt="ROC Curve"></p>
@@ -1624,6 +1631,46 @@
   
   
 
+  
+    
+      <script type="text/x-mathjax-config">
+  
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') { next = next.nextSibling }
+        if (next && next.nodeName.toLowerCase() === 'br') { next.parentNode.removeChild(next) }
+      }
+    });
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      document.getElementById(all[i].inputID + '-Frame').parentNode.className += ' has-jax';
+    }
+  });
+</script>
+<script src="//cdn.jsdelivr.net/npm/mathjax@2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+    
   
 
 
