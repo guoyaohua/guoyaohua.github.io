@@ -132,7 +132,7 @@
 <meta name="keywords" content="深度学习、机器学习、人工智能、郭耀华、Deep Learning、DL、ML、NLP、CV">
 <meta property="og:type" content="website">
 <meta property="og:title" content="郭耀华&#39;s Blog">
-<meta property="og:url" content="http://www.guoyaohua.com/categories/DeepLearning/index.html">
+<meta property="og:url" content="http://www.guoyaohua.com/tags/决策树/index.html">
 <meta property="og:site_name" content="郭耀华&#39;s Blog">
 <meta property="og:description" content="深度学习、机器学习领域技术博客">
 <meta property="og:locale" content="zh-CN">
@@ -147,7 +147,7 @@
 
 
 
-  <link rel="canonical" href="http://www.guoyaohua.com/categories/DeepLearning/">
+  <link rel="canonical" href="http://www.guoyaohua.com/tags/决策树/">
 
 
 
@@ -157,7 +157,7 @@
   };
 </script>
 
-  <title>分类: DeepLearning | 郭耀华's Blog</title>
+  <title>标签: 决策树 | 郭耀华's Blog</title>
   
 
 
@@ -264,7 +264,7 @@
         
         
           
-          <li class="menu-item menu-item-tags">
+          <li class="menu-item menu-item-tags menu-item-active">
 
     
     
@@ -281,7 +281,7 @@
         
         
           
-          <li class="menu-item menu-item-categories menu-item-active">
+          <li class="menu-item menu-item-categories">
 
     
     
@@ -404,11 +404,11 @@
   
   
   
-  <div class="post-block category">
+  <div class="post-block tag">
 
     <div id="posts" class="posts-collapse">
       <div class="collection-title">
-        <h2>DeepLearning<small>分类</small>
+        <h2>决策树<small>标签</small>
         </h2>
       </div>
 
@@ -420,17 +420,17 @@
 
       <h3 class="post-title">
         
-          <a class="post-title-link" href="/deeplearning-workstation/" itemprop="url">
+          <a class="post-title-link" href="/decision-tree/" itemprop="url">
             
-              <span itemprop="name">深度学习工作站攒机指南</span>
+              <span itemprop="name">【机器学习】深入理解决策树算法</span>
             
           </a>
         
       </h3>
 
       <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2019-05-09T03:59:47Z" content="2019-05-09">
-          05-09
+        <time class="post-time" itemprop="dateCreated" datetime="2019-11-11T22:38:58Z" content="2019-11-11">
+          11-11
         </time>
       </div>
 
@@ -489,7 +489,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">3</span>
+                    <span class="site-state-item-count">4</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -559,7 +559,23 @@
                     
                       
                     
-                    <span class="site-state-item-count">15</span>
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">23</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
@@ -1219,8 +1235,8 @@
       //https://hexo.io/docs/variables.html
       var isPost = ''.length > 0
       var isArchive = '' === 'true'
-      var isCategory = 'DeepLearning'.length > 0
-      var isTag = ''.length > 0
+      var isCategory = ''.length > 0
+      var isTag = '决策树'.length > 0
 
       if (isPost) { //is article page
         var title = ''
@@ -1231,7 +1247,7 @@
       else if (!isArchive && !isCategory && !isTag) { //is index page
         var titles = [] //array to titles
 
-        var postsstr = 'titles.push("深度学习工作站攒机指南");' //if you have a better way to get titles of posts, please change it
+        var postsstr = 'titles.push("【机器学习】深入理解决策树算法");' //if you have a better way to get titles of posts, please change it
         eval(postsstr)
 
         var promises = titles.map(function (title) {

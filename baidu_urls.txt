@@ -1,3 +1,3 @@
+http://www.guoyaohua.com/decision-tree/
 http://www.guoyaohua.com/classification-metrics/
 http://www.guoyaohua.com/Git-tutorial/
-http://www.guoyaohua.com/deeplearning-workstation/

@@ -572,7 +572,8 @@
         <h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>接触深度学习已经快两年了，之前一直使用<a href="https://colab.research.google.com" target="_blank" rel="noopener">Google Colab</a>和<a href="https://www.kaggle.com/kernels" target="_blank" rel="noopener">Kaggle Kernel</a>提供的免费GPU（Tesla K80）训练模型（最近Google将Colab的GPU升级为<strong>Tesla T4</strong>，计算速度又提升了一个档次），不过由于内地网络的原因，Google和Kaggle连接十分不稳定，经常断线重连，一直是很令人头痛的问题，而且二者均有很多限制，例如Google Colab一个脚本运行的最长时间为12h，Kaggle的为6h，数据集上传也存在问题，需要使用一些Trick才能达成目的，模型的保存、下载等都会耗费很多精力，总之体验不是很好，不过免费的羊毛让大家撸，肯定会有一些限制，也是可以理解的。</p>
 <p>对于租用云服务器，之前也尝试过，租用了一家小平台的GPU服务器，也存在一些操作上的困难，不适合程序调试，而且价格也不便宜。</p>
 <p>很早之前就想要搭建一个自己的深度学习工作站，不过机器成本的昂贵，一直阻碍着我攒机计划的进行。工欲善其事，必先利其器！最近终于下定决心，置办一个深度学习工作站主机。本文将我在这段时间选择、购置硬件的心得体会，分享给大家。</p>
-<h2 id="配置清单"><a href="#配置清单" class="headerlink" title="配置清单"></a>配置清单</h2><table>
+<h2 id="配置清单"><a href="#配置清单" class="headerlink" title="配置清单"></a>配置清单</h2><div class="table-container">
+<table>
 <thead>
 <tr>
 <th style="text-align:center">配件</th>
@@ -662,6 +663,7 @@
 </tr>
 </tbody>
 </table>
+</div>
 <p>以上就是我主机的配置清单，目前只买了一张2070，后期会升级加入多卡，下面将详细分析一下各个配件的选购过程。</p>
 <h2 id="配件选购指南"><a href="#配件选购指南" class="headerlink" title="配件选购指南"></a>配件选购指南</h2><h3 id="主板"><a href="#主板" class="headerlink" title="主板"></a>主板</h3><p>有很多朋友在进行选购主机的时候认为应该先选CPU再选主板，个人认为配件选购的顺序和主机的用途是有关系的，对于搭建深度学习工作站而言，在正式进行硬件选购前，最重要的是需要确认一个问题，到底需要单卡（GPU）主机还是多卡主机，如果只需要搭建单显卡的主机，那么在选购主板的过程中，不需要花费太多精力，大量主板可以满足要求，如果想要搭建双卡、三卡或是四卡主机，则需要在主板上下点功夫，为了日后升级方便，我的目标是使用可支持四显卡的主机，所以在主板选择方面，会很注重PCIE扩展接口数量。</p>
 <p>在初期选择主板时，网上各式各样型号的主板会使小萌新（我）很是懵逼，在网上查找了些资料，了解了些主板的知识。为了保证CPU和主板搭配合理，装到一起能正常工作，首先我们需要了解各主板芯片组和CPU接口的具体含义。例如，下图为京东的主板截图。</p>
@@ -678,7 +680,8 @@
 <p><a href="https://www.asus.com.cn/Motherboards/X99E_WSUSB_31/" target="_blank" rel="noopener">Asus/华硕 X99-E WS/USB 3.1</a><br><img src="http://pic.guoyaohua.com/x99ews.png" alt="Asus/华硕 X99-E WS/USB 3.1"></p>
 <p><a href="https://www.asus.com.cn/Motherboards/RAMPAGE_V_EXTREMEU31/overview/" target="_blank" rel="noopener">Asus/华硕 RAMPAGE V EXTREME/U3.1</a><br><img src="http://pic.guoyaohua.com/R5E.jpg" alt="Asus/华硕 RAMPAGE V EXTREME/U3.1"></p>
 <p><a href="https://cn.msi.com/Motherboard/X99S-GAMING-7.html" target="_blank" rel="noopener">MSI/微星 X99S GAMING 7</a><br><img src="http://pic.guoyaohua.com/gaming7.png" alt="MSI/微星 X99S GAMING 7"></p>
-<h4 id="对比"><a href="#对比" class="headerlink" title="对比"></a>对比</h4><table>
+<h4 id="对比"><a href="#对比" class="headerlink" title="对比"></a>对比</h4><div class="table-container">
+<table>
 <thead>
 <tr>
 <th style="text-align:center">型号名称</th>
@@ -756,6 +759,7 @@
 </tr>
 </tbody>
 </table>
+</div>
 <p>可以看到这三款主板，均为X99芯片组，CPU插槽均为 LGA 2011-v3 ，而且有8个内存插槽，支持四通道，最高128G的内存容量，内存容量这部分个人很喜欢，对于大型数据集数据预处理的过程，对内存容量和CPU要求都很高，而且足够的内存容量使你不用再为多开窗口卡顿现象而担忧。三者都支持多显卡扩展，华硕R5E和华硕X99 E-WS均支持4显卡交火，微星X99S Gaming 7支持3显卡交火，不过显卡交火，对于深度学习计算没有任何的帮助，对游戏确是有一些提升，我们日常所说的多显卡训练模型，也不是用到交火技术，而是Data Parallel或Model Parallel，所以交火与否我们不需要关注，需要关注的时PCIE ×16扩展插槽的有效个数（有的间距太近，无法全插）。</p>
 <p>起初最想购买的是“华硕 X99-E WS”，经典的工作站主板，很多深度学习开发者的首选，支持四路显卡交火，更为优秀的是竟然有7个×16全速PCIE 3.0扩展插槽，但是对于这类主板虽然有如此强大的扩展功能，但在真正插显卡的时候，由于PCIE接口之间的空间限制，你是无法插满插槽的，而且现在显卡都很厚，很可能会造成接口的浪费。这个板子已经停产，不过在天猫的华硕旗舰店仍然有存货，售价“3899元”，还是很贵的。其中有很多功能，对于我们日常使用、训练模型来讲并不是很用得上，会造成没必要的开销。最后我选择了在淘宝购买二手的“华硕 RAMPAGE V EXTREME”，毕竟便宜。如果经费充足的朋友，我仍然建议购买“华硕 X99 E-WS”这个主板。</p>
 <h3 id="CPU"><a href="#CPU" class="headerlink" title="CPU"></a>CPU</h3><p>对于CPU的选取是基于确定主板CPU插槽类型为前提的，例如我们上文中我们选择的X99系列三款主板，CPU插槽类型均为“LGA 2011-v3”，我们就要选与此匹配的CPU，各插槽类型的CPU具体有哪些型号，可以去<a href="http://detail.zol.com.cn/cpu/" target="_blank" rel="noopener">中关村在线</a>查询，里面还有一些性能测评的文章和排行榜信息，值得推荐。</p>
@@ -799,6 +803,7 @@
 <p>经过反复的对比，最终锁定了两款CPU“i7-6850K”和“i7-6950X”，首先首先我先解释一下为什么没有选择最新的九代酷睿系列，目前九代酷睿发布没多久，例如“I9-9900K”也是炒的很火热， 虽然最新系列的CPU单核主频都有所提高，但是核心数并没有太大改善，致使CPU整体性能（多核性能）并不是越新越好，从上方的天梯图我们也可以看出，“I7-6950X”排在”I9-9900K”前面，第二个原因就是，CPU是一个没什么损耗的器件，如果没有变态超频使用的话，全新和二手的U新能没什么区别，对于这些已经停产的CPU，网上流通的都是拆机的二手版本，只要选择正式版（不要<a href="http://www.lotpc.com/yjzs/6996.html" target="_blank" rel="noopener">QS/ES版本</a>），其实都可以的，而且价格便宜，性价比极高，例如我们Intel官网可以看到“i7-6950X”的官方报价为￥11053.74，上万元！</p>
 <p><img src="http://pic.guoyaohua.com/intel6950x.png" alt="6950X官网"></p>
 <p>而在淘宝等渠道购买的正式版I7-6950X散片，只有3400元，价格差距如此之大。对于这种旧款CPU的散片（正式版）性价比还是蛮高的，所以推荐大家购买散片CPU（当然也会有很多朋友担心散片CPU的质量问题，这个确实不能保证每个渠道的U都是好的，看人品吧~）。下面对比一下“i7-6850K”、“I7-6950X”、“i75960X”以及“I7-6900K”这几款CPU。</p>
+<div class="table-container">
 <table>
 <thead>
 <tr>
@@ -896,6 +901,7 @@
 </tr>
 </tbody>
 </table>
+</div>
 <p>可以看到，四者均支持40条直通PCIe通道，当主板支持四路交火时，以“华硕RAMPAGE V EXTREME”为例，四张显卡分别占用（×8，×8，×8，×8）的速度，不会对性能产生太大影响。“I7-5960X”仅支持最高64GB的内存容量，这个对于我们的板子就略显不足了，相比“I7-6850K”和“I7-6900K”，在单核主频方面6850k基本频率为3.60GHz高于6900K的3.20GHz，不过核心数却没有胜出，二者基本属于同一等级的CPU，整体性能6900K略高于6850K，不过从性价比方面来看（散片），6850K的性价比还是略高的，散片售价仅2500元左右。“I7-6950X”是这几款U中性能最强劲的，虽然单核主频只有3.00GHz但是10核心20线程使其整体性能遥遥领先，可以从上文中的CPU天梯图中看到，尽管这个U是16年推出的，不过在当日的排行版也能排列到十几名，表现还是很出色的，唯一的不足就是价格略显昂贵，散片价格为3400元，之前一直想买2500元的6850K，后来一咬牙买了6950X。</p>
 <p><img src="http://pic.guoyaohua.com/6950X_.jpg" alt="I7-6950X散片"></p>
 <p>总之，在选购CPU时，建议需要以下顺序：</p>
@@ -1144,7 +1150,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">3</span>
+                    <span class="site-state-item-count">4</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -1214,7 +1220,23 @@
                     
                       
                     
-                    <span class="site-state-item-count">15</span>
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">23</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
