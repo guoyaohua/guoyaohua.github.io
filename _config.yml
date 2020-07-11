@@ -1,0 +1,130 @@
+# Hexo Configuration
+## Docs: https://hexo.io/docs/configuration.html
+## Source: https://github.com/hexojs/hexo/
+
+# Site
+title: 郭耀华's Blog | 深度学习、机器学习领域技术博客
+subtitle: 欲穷千里目，更上一层楼。
+description: 记录IT成长路上的点点滴滴，分享深度学习、机器学习领域最新技术。
+keywords: 郭耀华,guoyaohua,深度学习,机器学习,人工智能,神经网络,机器智能,deep learning,machine learning,自然语言处理,计算机视觉,NLP,CV,STCA,微软,微软工程师,软件工程师,微软亚洲互联网工程院
+author: 郭耀华
+language: zh-CN
+timezone: UTC
+
+# URL
+## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
+url: https://www.guoyaohua.com
+root: /
+permalink: :title.html
+permalink_defaults:
+
+# Directory
+source_dir: source
+public_dir: public
+tag_dir: tags
+archive_dir: archives
+category_dir: categories
+code_dir: downloads/code
+i18n_dir: :lang
+skip_render: README.md
+
+# Writing
+new_post_name: :title.md # File name of new posts
+default_layout: post
+titlecase: false # Transform title into titlecase
+external_link: true # Open external links in new tab
+filename_case: 0
+render_drafts: true
+post_asset_folder: false
+relative_link: false
+future: true
+highlight:
+  enable: true
+  line_number: true
+  auto_detect: true
+  tab_replace:
+  
+# Home page setting
+# path: Root path for your blogs index page. (default = '')
+# per_page: Posts displayed per page. (0 = disable pagination)
+# order_by: Posts order. (Order by date descending by default)
+index_generator:
+  path: ''
+  per_page: 10
+  order_by: -date
+  
+# Category & Tag
+default_category: uncategorized
+category_map:
+tag_map:
+
+# Date / Time format
+## Hexo uses Moment.js to parse and display date
+## You can customize the date format as defined in
+## http://momentjs.com/docs/#/displaying/format/
+date_format: YYYY-MM-DD
+time_format: HH:mm:ss
+
+# Pagination
+## Set per_page to 0 to disable pagination
+per_page: 20
+pagination_dir: page
+
+# Extensions
+## Plugins: https://hexo.io/plugins/
+Plugins: hexo-generate-feed
+## Themes: https://hexo.io/themes/
+theme: next
+
+search:
+  path: search.xml
+  field: post
+  format: html
+  limit: 10000
+  
+# 阅读时长显示
+symbols_count_time:
+  symbols: true
+  time: true
+  total_symbols: false
+  total_time: false
+  exclude_codeblock: false
+
+baidu_url_submit:
+  count: 30 ## 比如3，代表提交最新的三个链接
+  host: www.guoyaohua.com ## 在百度站长平台中注册的域名
+  token: Kn4izz7KTN6mnKKa ## 请注意这是您的秘钥， 请不要发布在公众仓库里!
+  path: baidu_urls.txt ## 文本文档的地址， 新链接会保存在此文本文档里
+
+sitemap:
+  path: sitemap.xml
+baidusitemap:
+  path: baidusitemap.xml
+
+neat_enable: true  #打开总开关
+neat_html:      
+  enable: true      #打开压缩html文件开关
+  exclude:          #html的排除列表
+
+neat_css:          
+  enable: true      #配置CSS文件开关
+  exclude:
+    - '**.min.css'   #配置排除文件  
+
+neat_js:
+  enable: true       #js压缩开关
+  mangle: true       #是否破坏文件名
+  output:            #是否输出log日志，默认为true
+  compress:
+  exclude:
+    - '*.min.js'     #js文件压缩排除列表
+
+# Deployment
+## Docs: https://hexo.io/docs/deployment.html
+deploy:
+    - type: git
+      repo: git@github.com:guoyaohua/guoyaohua.github.io.git
+      branch: master
+    - type: git
+      repo: git@e.coding.net:guoyaohua/blog.git
+      branch: master
