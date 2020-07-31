@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>郭耀华&#39;s Blog</title>
+  <icon>https://www.guoyaohua.com/icon.png</icon>
+  <subtitle>人工智能领域技术博客</subtitle>
+  <link href="/atom.xml" rel="self"/>
+  
+  <link href="https://www.guoyaohua.com/"/>
+  <updated>2020-07-31T09:57:49.196Z</updated>
+  <id>https://www.guoyaohua.com/</id>
+  
+  <author>
+    <name>郭耀华</name>
+    
+  </author>
+  
+  <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>深度学习工作站攒机指南</title>
+    <link href="https://www.guoyaohua.com/deeplearning-workstation.html"/>
+    <id>https://www.guoyaohua.com/deeplearning-workstation.html</id>
+    <published>2020-07-29T07:30:58.130Z</published>
+    <updated>2020-07-31T09:57:49.196Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h2 id=&quot;引言&quot;&gt;&lt;a class=&quot;markdownIt-Anchor&quot; href=&quot;#引言&quot;&gt;&lt;/a&gt; 引言&lt;/h2&gt;
+&lt;p&gt;接触深度学习已经快两年了，之前一直使用&lt;a href=&quot;https://colab.research.google.com&quot;
+        
+      
+    
+    </summary>
+    
+    
+      <category term="Deep Learning" scheme="https://www.guoyaohua.com/categories/Deep-Learning/"/>
+    
+    
+      <category term="DeepLearning" scheme="https://www.guoyaohua.com/tags/DeepLearning/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Hello World</title>
+    <link href="https://www.guoyaohua.com/hello-world.html"/>
+    <id>https://www.guoyaohua.com/hello-world.html</id>
+    <published>2020-07-27T07:47:45.979Z</published>
+    <updated>2020-07-28T06:06:40.127Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;p&gt;Welcome to &lt;a href=&quot;https://hexo.io/&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Hexo&lt;/a&gt;! This is your very first post. Check &lt;a
+        
+      
+    
+    </summary>
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>【机器学习】深入理解决策树算法</title>
+    <link href="https://www.guoyaohua.com/decision-tree.html"/>
+    <id>https://www.guoyaohua.com/decision-tree.html</id>
+    <published>2019-11-11T22:38:58.000Z</published>
+    <updated>2020-07-31T10:06:46.705Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h2 id=&quot;引言&quot;&gt;&lt;a class=&quot;markdownIt-Anchor&quot; href=&quot;#引言&quot;&gt;&lt;/a&gt; 引言&lt;/h2&gt;
+&lt;p&gt;决策树(Decision
+        
+      
+    
+    </summary>
+    
+    
+      <category term="Machine Learning" scheme="https://www.guoyaohua.com/categories/Machine-Learning/"/>
+    
+    
+      <category term="机器学习" scheme="https://www.guoyaohua.com/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"/>
+    
+      <category term="深度学习" scheme="https://www.guoyaohua.com/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/"/>
+    
+      <category term="决策树" scheme="https://www.guoyaohua.com/tags/%E5%86%B3%E7%AD%96%E6%A0%91/"/>
+    
+      <category term="剪枝" scheme="https://www.guoyaohua.com/tags/%E5%89%AA%E6%9E%9D/"/>
+    
+      <category term="ID3" scheme="https://www.guoyaohua.com/tags/ID3/"/>
+    
+      <category term="C4.5" scheme="https://www.guoyaohua.com/tags/C4-5/"/>
+    
+      <category term="CART树" scheme="https://www.guoyaohua.com/tags/CART%E6%A0%91/"/>
+    
+      <category term="信息熵" scheme="https://www.guoyaohua.com/tags/%E4%BF%A1%E6%81%AF%E7%86%B5/"/>
+    
+      <category term="基尼指数" scheme="https://www.guoyaohua.com/tags/%E5%9F%BA%E5%B0%BC%E6%8C%87%E6%95%B0/"/>
+    
+      <category term="信息增益" scheme="https://www.guoyaohua.com/tags/%E4%BF%A1%E6%81%AF%E5%A2%9E%E7%9B%8A/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>【机器学习】一文读懂分类算法常用评价指标</title>
+    <link href="https://www.guoyaohua.com/classification-metrics.html"/>
+    <id>https://www.guoyaohua.com/classification-metrics.html</id>
+    <published>2019-09-01T13:01:14.000Z</published>
+    <updated>2020-07-31T10:06:25.698Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h2 id=&quot;前言&quot;&gt;&lt;a class=&quot;markdownIt-Anchor&quot; href=&quot;#前言&quot;&gt;&lt;/a&gt;
+        
+      
+    
+    </summary>
+    
+    
+      <category term="Machine Learning" scheme="https://www.guoyaohua.com/categories/Machine-Learning/"/>
+    
+    
+      <category term="机器学习" scheme="https://www.guoyaohua.com/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"/>
+    
+      <category term="深度学习" scheme="https://www.guoyaohua.com/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/"/>
+    
+      <category term="分类算法" scheme="https://www.guoyaohua.com/tags/%E5%88%86%E7%B1%BB%E7%AE%97%E6%B3%95/"/>
+    
+      <category term="评价指标" scheme="https://www.guoyaohua.com/tags/%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87/"/>
+    
+      <category term="分类算法评价指标" scheme="https://www.guoyaohua.com/tags/%E5%88%86%E7%B1%BB%E7%AE%97%E6%B3%95%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87/"/>
+    
+      <category term="准确率、精确率、召回率" scheme="https://www.guoyaohua.com/tags/%E5%87%86%E7%A1%AE%E7%8E%87%E3%80%81%E7%B2%BE%E7%A1%AE%E7%8E%87%E3%80%81%E5%8F%AC%E5%9B%9E%E7%8E%87/"/>
+    
+      <category term="P-R曲线" scheme="https://www.guoyaohua.com/tags/P-R%E6%9B%B2%E7%BA%BF/"/>
+    
+      <category term="F1指数" scheme="https://www.guoyaohua.com/tags/F1%E6%8C%87%E6%95%B0/"/>
+    
+      <category term="ROC" scheme="https://www.guoyaohua.com/tags/ROC/"/>
+    
+      <category term="AUC" scheme="https://www.guoyaohua.com/tags/AUC/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Git常用操作指南</title>
+    <link href="https://www.guoyaohua.com/Git-tutorial.html"/>
+    <id>https://www.guoyaohua.com/Git-tutorial.html</id>
+    <published>2019-07-21T15:17:08.000Z</published>
+    <updated>2020-07-31T09:25:43.599Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h2 id=&quot;前言&quot;&gt;&lt;a class=&quot;markdownIt-Anchor&quot; href=&quot;#前言&quot;&gt;&lt;/a&gt;
+        
+      
+    
+    </summary>
+    
+    
+      <category term="Git" scheme="https://www.guoyaohua.com/categories/Git/"/>
+    
+    
+      <category term="Git" scheme="https://www.guoyaohua.com/tags/Git/"/>
+    
+      <category term="Git教程" scheme="https://www.guoyaohua.com/tags/Git%E6%95%99%E7%A8%8B/"/>
+    
+      <category term="Git常用命令" scheme="https://www.guoyaohua.com/tags/Git%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/"/>
+    
+      <category term="Git常用操作" scheme="https://www.guoyaohua.com/tags/Git%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C/"/>
+    
+  </entry>
+  
+</feed>
