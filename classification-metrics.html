@@ -208,13 +208,13 @@ if (autoChangeMode === '1') {
   clientSecret: 'e3ecab593b9ac65237423e6802012693e9ee2035',
   repo: 'guoyaohua.github.io',
   owner: 'guoyaohua',
-  admin: [''],
+  admin: ['guoyaohua'],
   id: md5(decodeURI(location.pathname)),
   language: 'en',
   perPage: 10,
   distractionFreeMode: false,
   pagerDirection: 'last',
-  createIssueManually: false,
+  createIssueManually: true,
   updateCountCallback: commentCount
 })
 gitalk.render('gitalk-container')
