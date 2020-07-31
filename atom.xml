@@ -45,29 +45,6 @@
   </entry>
   
   <entry>
-    <title>Hello World</title>
-    <link href="https://www.guoyaohua.com/hello-world.html"/>
-    <id>https://www.guoyaohua.com/hello-world.html</id>
-    <published>2020-07-27T07:47:45.979Z</published>
-    <updated>2020-07-28T06:06:40.127Z</updated>
-    
-    <summary type="html">
-    
-      
-      
-        
-        
-          &lt;p&gt;Welcome to &lt;a href=&quot;https://hexo.io/&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Hexo&lt;/a&gt;! This is your very first post. Check &lt;a
-        
-      
-    
-    </summary>
-    
-    
-    
-  </entry>
-  
-  <entry>
     <title>【机器学习】深入理解决策树算法</title>
     <link href="https://www.guoyaohua.com/decision-tree.html"/>
     <id>https://www.guoyaohua.com/decision-tree.html</id>
