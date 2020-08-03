@@ -2,6 +2,27 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://www.guoyaohua.com/decision-tree.html</loc>
+    
+    <lastmod>2020-08-03</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.guoyaohua.com/classification-metrics.html</loc>
+    
+    <lastmod>2020-08-03</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.guoyaohua.com/Git-tutorial.html</loc>
+    
+    <lastmod>2020-08-03</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://www.guoyaohua.com/categories/index.html</loc>
     
     <lastmod>2020-07-31</lastmod>
@@ -23,28 +44,7 @@
   </url>
   
   <url>
-    <loc>https://www.guoyaohua.com/decision-tree.html</loc>
-    
-    <lastmod>2020-07-31</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://www.guoyaohua.com/classification-metrics.html</loc>
-    
-    <lastmod>2020-07-31</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://www.guoyaohua.com/deeplearning-workstation.html</loc>
-    
-    <lastmod>2020-07-31</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://www.guoyaohua.com/Git-tutorial.html</loc>
     
     <lastmod>2020-07-31</lastmod>
     
@@ -58,34 +58,6 @@
     <priority>1.0</priority>
   </url>
 
-  
-  <url>
-    <loc>https://www.guoyaohua.com/tags/Git/</loc>
-    <lastmod>2020-08-03</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.guoyaohua.com/tags/Git%E6%95%99%E7%A8%8B/</loc>
-    <lastmod>2020-08-03</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.guoyaohua.com/tags/Git%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/</loc>
-    <lastmod>2020-08-03</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.guoyaohua.com/tags/Git%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C/</loc>
-    <lastmod>2020-08-03</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
   
   <url>
     <loc>https://www.guoyaohua.com/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/</loc>
@@ -158,7 +130,28 @@
   </url>
   
   <url>
-    <loc>https://www.guoyaohua.com/tags/DeepLearning/</loc>
+    <loc>https://www.guoyaohua.com/tags/Git/</loc>
+    <lastmod>2020-08-03</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.guoyaohua.com/tags/Git%E6%95%99%E7%A8%8B/</loc>
+    <lastmod>2020-08-03</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.guoyaohua.com/tags/Git%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/</loc>
+    <lastmod>2020-08-03</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.guoyaohua.com/tags/Git%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C/</loc>
     <lastmod>2020-08-03</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -220,17 +213,24 @@
     <priority>0.6</priority>
   </url>
   
+  <url>
+    <loc>https://www.guoyaohua.com/tags/DeepLearning/</loc>
+    <lastmod>2020-08-03</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
 
   
   <url>
-    <loc>https://www.guoyaohua.com/categories/Git/</loc>
+    <loc>https://www.guoyaohua.com/categories/Machine-Learning/</loc>
     <lastmod>2020-08-03</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://www.guoyaohua.com/categories/Machine-Learning/</loc>
+    <loc>https://www.guoyaohua.com/categories/Git/</loc>
     <lastmod>2020-08-03</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
