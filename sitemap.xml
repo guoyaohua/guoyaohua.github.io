@@ -60,34 +60,6 @@
 
   
   <url>
-    <loc>https://www.guoyaohua.com/tags/Git/</loc>
-    <lastmod>2020-08-04</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.guoyaohua.com/tags/Git%E6%95%99%E7%A8%8B/</loc>
-    <lastmod>2020-08-04</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.guoyaohua.com/tags/Git%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/</loc>
-    <lastmod>2020-08-04</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.guoyaohua.com/tags/Git%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C/</loc>
-    <lastmod>2020-08-04</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://www.guoyaohua.com/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/</loc>
     <lastmod>2020-08-04</lastmod>
     <changefreq>daily</changefreq>
@@ -96,62 +68,6 @@
   
   <url>
     <loc>https://www.guoyaohua.com/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/</loc>
-    <lastmod>2020-08-04</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.guoyaohua.com/tags/%E5%86%B3%E7%AD%96%E6%A0%91/</loc>
-    <lastmod>2020-08-04</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.guoyaohua.com/tags/%E5%89%AA%E6%9E%9D/</loc>
-    <lastmod>2020-08-04</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.guoyaohua.com/tags/ID3/</loc>
-    <lastmod>2020-08-04</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.guoyaohua.com/tags/C4-5/</loc>
-    <lastmod>2020-08-04</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.guoyaohua.com/tags/CART%E6%A0%91/</loc>
-    <lastmod>2020-08-04</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.guoyaohua.com/tags/%E4%BF%A1%E6%81%AF%E7%86%B5/</loc>
-    <lastmod>2020-08-04</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.guoyaohua.com/tags/%E5%9F%BA%E5%B0%BC%E6%8C%87%E6%95%B0/</loc>
-    <lastmod>2020-08-04</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.guoyaohua.com/tags/%E4%BF%A1%E6%81%AF%E5%A2%9E%E7%9B%8A/</loc>
     <lastmod>2020-08-04</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -220,14 +136,91 @@
     <priority>0.6</priority>
   </url>
   
-
-  
   <url>
-    <loc>https://www.guoyaohua.com/categories/Git/</loc>
+    <loc>https://www.guoyaohua.com/tags/%E5%86%B3%E7%AD%96%E6%A0%91/</loc>
     <lastmod>2020-08-04</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
+  
+  <url>
+    <loc>https://www.guoyaohua.com/tags/%E5%89%AA%E6%9E%9D/</loc>
+    <lastmod>2020-08-04</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.guoyaohua.com/tags/ID3/</loc>
+    <lastmod>2020-08-04</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.guoyaohua.com/tags/C4-5/</loc>
+    <lastmod>2020-08-04</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.guoyaohua.com/tags/CART%E6%A0%91/</loc>
+    <lastmod>2020-08-04</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.guoyaohua.com/tags/%E4%BF%A1%E6%81%AF%E7%86%B5/</loc>
+    <lastmod>2020-08-04</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.guoyaohua.com/tags/%E5%9F%BA%E5%B0%BC%E6%8C%87%E6%95%B0/</loc>
+    <lastmod>2020-08-04</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.guoyaohua.com/tags/%E4%BF%A1%E6%81%AF%E5%A2%9E%E7%9B%8A/</loc>
+    <lastmod>2020-08-04</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.guoyaohua.com/tags/Git/</loc>
+    <lastmod>2020-08-04</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.guoyaohua.com/tags/Git%E6%95%99%E7%A8%8B/</loc>
+    <lastmod>2020-08-04</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.guoyaohua.com/tags/Git%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/</loc>
+    <lastmod>2020-08-04</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.guoyaohua.com/tags/Git%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C/</loc>
+    <lastmod>2020-08-04</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+
   
   <url>
     <loc>https://www.guoyaohua.com/categories/Machine-Learning/</loc>
@@ -238,6 +231,13 @@
   
   <url>
     <loc>https://www.guoyaohua.com/categories/Deep-Learning/</loc>
+    <lastmod>2020-08-04</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.guoyaohua.com/categories/Git/</loc>
     <lastmod>2020-08-04</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
