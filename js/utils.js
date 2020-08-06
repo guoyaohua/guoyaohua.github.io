@@ -1,1 +1,145 @@
-"use strict";function debounce(i,o,a){var r;return function(){var t=this,e=arguments,n=a&&!r;clearTimeout(r),r=setTimeout(function(){r=null,a||i.apply(t,e)},o),n&&i.apply(t,e)}}function throttle(n,i,o){var a,r,c,l=0;o=o||{};function d(){l=!1===o.leading?0:(new Date).getTime(),a=null,n.apply(r,c),a||(r=c=null)}return function(){var t=(new Date).getTime();l||!1!==o.leading||(l=t);var e=i-(t-l);r=this,c=arguments,e<=0||i<e?(a&&(clearTimeout(a),a=null),l=t,n.apply(r,c),a||(r=c=null)):a||!1===o.trailing||(a=setTimeout(d,e))}}function sidebarPaddingR(){var t=window.innerWidth,e=document.body.clientWidth,n=t-e;t!==e&&$("body").css("padding-right",n)}function isIpad(){return"MacIntel"===navigator.platform&&1<navigator.maxTouchPoints}function isTMobile(){var t=navigator.userAgent;return window.screen.width<992&&/iPad|iPhone|iPod|Android|Opera Mini|BlackBerry|webOS|UCWEB|Blazer|PSP|IEMobile|Symbian/g.test(t)}function isMobile(){return this.isIpad()||this.isTMobile()}function isDesktop(){return!this.isMobile()}function scrollToDest(t){var e=1<arguments.length&&void 0!==arguments[1]?arguments[1]:0,n=$(t).offset();$("body,html").animate({scrollTop:n.top-e})}function loadScript(t,e){var n=document.createElement("script");n.type="text/javascript",n.readyState?n.onreadystatechange=function(){"loaded"!==n.readyState&&"complete"!==n.readyState||(n.onreadystatechange=null,e())}:n.onload=function(){e()},n.src=t,document.body.appendChild(n)}function snackbarShow(t,e,n){var i=void 0!==e&&e,o=void 0!==n?n:2e3,a=GLOBAL_CONFIG.Snackbar.position,r="light"===document.documentElement.getAttribute("data-theme")?GLOBAL_CONFIG.Snackbar.bgLight:GLOBAL_CONFIG.Snackbar.bgDark;Snackbar.show({text:t,backgroundColor:r,showAction:i,duration:o,pos:a})}var Cookies={get:function(t){var e="; ".concat(document.cookie).split("; ".concat(t,"="));if(2===e.length)return e.pop().split(";").shift()},set:function(t,e,n){var i,o="";n&&((i=new Date).setTime(i.getTime()+24*n*60*60*1e3),o="; expires="+i.toUTCString()),document.cookie=t+"="+(e||"")+o+"; path=/"}};GLOBAL_CONFIG.islazyload&&(window.lazyLoadOptions={elements_selector:"img",threshold:0});
+function debounce (func, wait, immediate) {
+  var timeout
+  return function () {
+    var context = this
+    var args = arguments
+    var later = function () {
+      timeout = null
+      if (!immediate) func.apply(context, args)
+    }
+    var callNow = immediate && !timeout
+    clearTimeout(timeout)
+    timeout = setTimeout(later, wait)
+    if (callNow) func.apply(context, args)
+  }
+};
+
+function throttle (func, wait, options) {
+  var timeout, context, args
+  var previous = 0
+  if (!options) options = {}
+
+  var later = function () {
+    previous = options.leading === false ? 0 : new Date().getTime()
+    timeout = null
+    func.apply(context, args)
+    if (!timeout) context = args = null
+  }
+
+  var throttled = function () {
+    var now = new Date().getTime()
+    if (!previous && options.leading === false) previous = now
+    var remaining = wait - (now - previous)
+    context = this
+    args = arguments
+    if (remaining <= 0 || remaining > wait) {
+      if (timeout) {
+        clearTimeout(timeout)
+        timeout = null
+      }
+      previous = now
+      func.apply(context, args)
+      if (!timeout) context = args = null
+    } else if (!timeout && options.trailing !== false) {
+      timeout = setTimeout(later, remaining)
+    }
+  }
+
+  return throttled
+}
+
+function sidebarPaddingR () {
+  var innerWidth = window.innerWidth
+  var clientWidth = document.body.clientWidth
+  var paddingRight = innerWidth - clientWidth
+  if (innerWidth !== clientWidth) {
+    $('body').css('padding-right', paddingRight)
+  }
+}
+
+// iPadOS
+function isIpad () {
+  return navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1
+}
+
+function isTMobile () {
+  var ua = navigator.userAgent
+  var pa = /iPad|iPhone|iPod|Android|Opera Mini|BlackBerry|webOS|UCWEB|Blazer|PSP|IEMobile|Symbian/g
+  return window.screen.width < 992 && pa.test(ua)
+}
+
+function isMobile () {
+  return this.isIpad() || this.isTMobile()
+}
+
+function isDesktop () {
+  return !this.isMobile()
+}
+
+function scrollToDest (name, offset = 0) {
+  var scrollOffset = $(name).offset()
+  $('body,html').animate({
+    scrollTop: scrollOffset.top - offset
+  })
+};
+
+function loadScript (url, callback) {
+  var script = document.createElement('script')
+  script.type = 'text/javascript'
+  if (script.readyState) { // IE
+    script.onreadystatechange = function () {
+      if (script.readyState === 'loaded' ||
+        script.readyState === 'complete') {
+        script.onreadystatechange = null
+        callback()
+      }
+    }
+  } else { // Others
+    script.onload = function () {
+      callback()
+    }
+  }
+  script.src = url
+  document.body.appendChild(script)
+};
+
+function snackbarShow (text, showAction, duration) {
+  var a = (typeof showAction !== 'undefined') ? showAction : false
+  var d = (typeof duration !== 'undefined') ? duration : 2000
+  var position = GLOBAL_CONFIG.Snackbar.position
+  var bg = document.documentElement.getAttribute('data-theme') === 'light' ? GLOBAL_CONFIG.Snackbar.bgLight : GLOBAL_CONFIG.Snackbar.bgDark
+  Snackbar.show({
+    text: text,
+    backgroundColor: bg,
+    showAction: a,
+    duration: d,
+    pos: position
+  })
+}
+
+const Cookies = {
+  get: function (name) {
+    const value = `; ${document.cookie}`
+    const parts = value.split(`; ${name}=`)
+    if (parts.length === 2) return parts.pop().split(';').shift()
+  },
+  set: function (name, value, days) {
+    var expires = ''
+    if (days) {
+      var date = new Date()
+      date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000))
+      expires = '; expires=' + date.toUTCString()
+    }
+    document.cookie = name + '=' + (value || '') + expires + '; path=/'
+  }
+}
+
+/**
+ * lazyload
+ */
+if (GLOBAL_CONFIG.islazyload) {
+  window.lazyLoadOptions = {
+    elements_selector: 'img',
+    threshold: 0
+  }
+}

@@ -158,13 +158,6 @@
   </url>
   
   <url>
-    <loc>https://www.guoyaohua.com/tags/DeepLearning/</loc>
-    <lastmod>2020-08-06</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://www.guoyaohua.com/tags/%E5%86%B3%E7%AD%96%E6%A0%91/</loc>
     <lastmod>2020-08-06</lastmod>
     <changefreq>daily</changefreq>
@@ -215,6 +208,13 @@
   
   <url>
     <loc>https://www.guoyaohua.com/tags/%E4%BF%A1%E6%81%AF%E5%A2%9E%E7%9B%8A/</loc>
+    <lastmod>2020-08-06</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.guoyaohua.com/tags/DeepLearning/</loc>
     <lastmod>2020-08-06</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
