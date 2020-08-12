@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://www.guoyaohua.com/"/>
-  <updated>2020-07-31T09:57:49.196Z</updated>
+  <updated>2020-08-12T09:05:35.014Z</updated>
   <id>https://www.guoyaohua.com/</id>
   
   <author>
@@ -15,6 +15,41 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>【异常检测】孤立森林(Isolation Forest)算法简介</title>
+    <link href="https://www.guoyaohua.com/isolation-forest.html"/>
+    <id>https://www.guoyaohua.com/isolation-forest.html</id>
+    <published>2020-08-12T16:09:34.000Z</published>
+    <updated>2020-08-12T09:05:35.014Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h1 id=&quot;简介&quot;&gt;&lt;a class=&quot;markdownIt-Anchor&quot; href=&quot;#简介&quot;&gt;&lt;/a&gt;
+        
+      
+    
+    </summary>
+    
+    
+      <category term="Machine Learning" scheme="https://www.guoyaohua.com/categories/Machine-Learning/"/>
+    
+    
+      <category term="异常检测" scheme="https://www.guoyaohua.com/tags/%E5%BC%82%E5%B8%B8%E6%A3%80%E6%B5%8B/"/>
+    
+      <category term="离群点检测" scheme="https://www.guoyaohua.com/tags/%E7%A6%BB%E7%BE%A4%E7%82%B9%E6%A3%80%E6%B5%8B/"/>
+    
+      <category term="孤立森林" scheme="https://www.guoyaohua.com/tags/%E5%AD%A4%E7%AB%8B%E6%A3%AE%E6%9E%97/"/>
+    
+      <category term="Isolation Forest" scheme="https://www.guoyaohua.com/tags/Isolation-Forest/"/>
+    
+      <category term="机器学习" scheme="https://www.guoyaohua.com/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"/>
+    
+  </entry>
   
   <entry>
     <title>深度学习工作站攒机指南</title>
