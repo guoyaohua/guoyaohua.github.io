@@ -20,6 +20,8 @@
       
         <tags>
             
+            <tag> 机器学习 </tag>
+            
             <tag> 异常检测 </tag>
             
             <tag> 离群点检测 </tag>
@@ -27,8 +29,6 @@
             <tag> 孤立森林 </tag>
             
             <tag> Isolation Forest </tag>
-            
-            <tag> 机器学习 </tag>
             
         </tags>
       
