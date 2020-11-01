@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://www.guoyaohua.com/"/>
-  <updated>2020-08-12T09:05:35.014Z</updated>
+  <updated>2020-11-01T11:56:33.977Z</updated>
   <id>https://www.guoyaohua.com/</id>
   
   <author>
@@ -17,11 +17,11 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>【异常检测】孤立森林(Isolation Forest)算法简介</title>
-    <link href="https://www.guoyaohua.com/isolation-forest.html"/>
-    <id>https://www.guoyaohua.com/isolation-forest.html</id>
-    <published>2020-08-12T16:09:34.000Z</published>
-    <updated>2020-08-12T09:05:35.014Z</updated>
+    <title>Kafka入门简介</title>
+    <link href="https://www.guoyaohua.com/kafka-in-a-nutshell.html"/>
+    <id>https://www.guoyaohua.com/kafka-in-a-nutshell.html</id>
+    <published>2020-10-30T12:21:29.000Z</published>
+    <updated>2020-11-01T11:56:33.977Z</updated>
     
     <summary type="html">
     
@@ -29,7 +29,35 @@
       
         
         
-          &lt;h1 id=&quot;简介&quot;&gt;&lt;a class=&quot;markdownIt-Anchor&quot; href=&quot;#简介&quot;&gt;&lt;/a&gt;
+          &lt;blockquote&gt;
+&lt;p&gt;由于近期工作要接触一些Kafka的内容，所以周末花了些时间查询了一些相关的资料，总结出一篇Kafka入门简介，方便日后的学习，也希望能给未接触过Kafka的同学带来些帮助。本文内容主要翻译自&lt;em&gt;Kevin
+        
+      
+    
+    </summary>
+    
+    
+      <category term="Kafka" scheme="https://www.guoyaohua.com/categories/Kafka/"/>
+    
+    
+      <category term="Kafka" scheme="https://www.guoyaohua.com/tags/Kafka/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>【异常检测】孤立森林(Isolation Forest)算法简介</title>
+    <link href="https://www.guoyaohua.com/isolation-forest.html"/>
+    <id>https://www.guoyaohua.com/isolation-forest.html</id>
+    <published>2020-08-12T16:09:34.000Z</published>
+    <updated>2020-11-01T11:44:31.656Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h2 id=&quot;简介&quot;&gt;&lt;a class=&quot;markdownIt-Anchor&quot; href=&quot;#简介&quot;&gt;&lt;/a&gt;
         
       
     
