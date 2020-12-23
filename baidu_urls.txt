@@ -1,3 +1,4 @@
+https://www.guoyaohua.com/sorting.html
 https://www.guoyaohua.com/kafka-in-a-nutshell.html
 https://www.guoyaohua.com/isolation-forest.html
 https://www.guoyaohua.com/deeplearning-workstation.html
