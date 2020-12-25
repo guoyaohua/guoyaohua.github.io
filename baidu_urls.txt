@@ -1,7 +1,7 @@
-https://www.guoyaohua.com/sorting.html
-https://www.guoyaohua.com/kafka-in-a-nutshell.html
-https://www.guoyaohua.com/isolation-forest.html
-https://www.guoyaohua.com/deeplearning-workstation.html
-https://www.guoyaohua.com/decision-tree.html
-https://www.guoyaohua.com/classification-metrics.html
-https://www.guoyaohua.com/Git-tutorial.html
+http://www.guoyaohua.com/sorting.html
+http://www.guoyaohua.com/kafka-in-a-nutshell.html
+http://www.guoyaohua.com/isolation-forest.html
+http://www.guoyaohua.com/deeplearning-workstation.html
+http://www.guoyaohua.com/decision-tree.html
+http://www.guoyaohua.com/classification-metrics.html
+http://www.guoyaohua.com/Git-tutorial.html

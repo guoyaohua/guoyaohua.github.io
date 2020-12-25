@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
   <title>郭耀华&#39;s Blog</title>
-  <icon>https://www.guoyaohua.com/icon.png</icon>
+  <icon>http://www.guoyaohua.com/icon.png</icon>
   <subtitle>人工智能领域技术博客</subtitle>
   <link href="/atom.xml" rel="self"/>
   
-  <link href="https://www.guoyaohua.com/"/>
+  <link href="http://www.guoyaohua.com/"/>
   <updated>2020-12-23T10:41:09.795Z</updated>
-  <id>https://www.guoyaohua.com/</id>
+  <id>http://www.guoyaohua.com/</id>
   
   <author>
     <name>郭耀华</name>
@@ -18,8 +18,8 @@
   
   <entry>
     <title>十大经典排序算法最强总结（含Java、Python码实现）</title>
-    <link href="https://www.guoyaohua.com/sorting.html"/>
-    <id>https://www.guoyaohua.com/sorting.html</id>
+    <link href="http://www.guoyaohua.com/sorting.html"/>
+    <id>http://www.guoyaohua.com/sorting.html</id>
     <published>2020-12-23T18:00:00.000Z</published>
     <updated>2020-12-23T10:41:09.795Z</updated>
     
@@ -36,37 +36,37 @@
     </summary>
     
     
-      <category term="算法与数据结构" scheme="https://www.guoyaohua.com/categories/%E7%AE%97%E6%B3%95%E4%B8%8E%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/"/>
+      <category term="算法与数据结构" scheme="http://www.guoyaohua.com/categories/%E7%AE%97%E6%B3%95%E4%B8%8E%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/"/>
     
     
-      <category term="排序算法" scheme="https://www.guoyaohua.com/tags/%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/"/>
+      <category term="排序算法" scheme="http://www.guoyaohua.com/tags/%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/"/>
     
-      <category term="冒泡排序" scheme="https://www.guoyaohua.com/tags/%E5%86%92%E6%B3%A1%E6%8E%92%E5%BA%8F/"/>
+      <category term="冒泡排序" scheme="http://www.guoyaohua.com/tags/%E5%86%92%E6%B3%A1%E6%8E%92%E5%BA%8F/"/>
     
-      <category term="选择排序" scheme="https://www.guoyaohua.com/tags/%E9%80%89%E6%8B%A9%E6%8E%92%E5%BA%8F/"/>
+      <category term="选择排序" scheme="http://www.guoyaohua.com/tags/%E9%80%89%E6%8B%A9%E6%8E%92%E5%BA%8F/"/>
     
-      <category term="插入排序" scheme="https://www.guoyaohua.com/tags/%E6%8F%92%E5%85%A5%E6%8E%92%E5%BA%8F/"/>
+      <category term="插入排序" scheme="http://www.guoyaohua.com/tags/%E6%8F%92%E5%85%A5%E6%8E%92%E5%BA%8F/"/>
     
-      <category term="希尔排序" scheme="https://www.guoyaohua.com/tags/%E5%B8%8C%E5%B0%94%E6%8E%92%E5%BA%8F/"/>
+      <category term="希尔排序" scheme="http://www.guoyaohua.com/tags/%E5%B8%8C%E5%B0%94%E6%8E%92%E5%BA%8F/"/>
     
-      <category term="归并排序" scheme="https://www.guoyaohua.com/tags/%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F/"/>
+      <category term="归并排序" scheme="http://www.guoyaohua.com/tags/%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F/"/>
     
-      <category term="快速排序" scheme="https://www.guoyaohua.com/tags/%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F/"/>
+      <category term="快速排序" scheme="http://www.guoyaohua.com/tags/%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F/"/>
     
-      <category term="堆排序" scheme="https://www.guoyaohua.com/tags/%E5%A0%86%E6%8E%92%E5%BA%8F/"/>
+      <category term="堆排序" scheme="http://www.guoyaohua.com/tags/%E5%A0%86%E6%8E%92%E5%BA%8F/"/>
     
-      <category term="计数排序" scheme="https://www.guoyaohua.com/tags/%E8%AE%A1%E6%95%B0%E6%8E%92%E5%BA%8F/"/>
+      <category term="计数排序" scheme="http://www.guoyaohua.com/tags/%E8%AE%A1%E6%95%B0%E6%8E%92%E5%BA%8F/"/>
     
-      <category term="桶排序" scheme="https://www.guoyaohua.com/tags/%E6%A1%B6%E6%8E%92%E5%BA%8F/"/>
+      <category term="桶排序" scheme="http://www.guoyaohua.com/tags/%E6%A1%B6%E6%8E%92%E5%BA%8F/"/>
     
-      <category term="基数排序" scheme="https://www.guoyaohua.com/tags/%E5%9F%BA%E6%95%B0%E6%8E%92%E5%BA%8F/"/>
+      <category term="基数排序" scheme="http://www.guoyaohua.com/tags/%E5%9F%BA%E6%95%B0%E6%8E%92%E5%BA%8F/"/>
     
   </entry>
   
   <entry>
     <title>Kafka入门简介</title>
-    <link href="https://www.guoyaohua.com/kafka-in-a-nutshell.html"/>
-    <id>https://www.guoyaohua.com/kafka-in-a-nutshell.html</id>
+    <link href="http://www.guoyaohua.com/kafka-in-a-nutshell.html"/>
+    <id>http://www.guoyaohua.com/kafka-in-a-nutshell.html</id>
     <published>2020-10-30T12:21:29.000Z</published>
     <updated>2020-12-23T09:23:07.344Z</updated>
     
@@ -84,17 +84,17 @@
     </summary>
     
     
-      <category term="Kafka" scheme="https://www.guoyaohua.com/categories/Kafka/"/>
+      <category term="Kafka" scheme="http://www.guoyaohua.com/categories/Kafka/"/>
     
     
-      <category term="Kafka" scheme="https://www.guoyaohua.com/tags/Kafka/"/>
+      <category term="Kafka" scheme="http://www.guoyaohua.com/tags/Kafka/"/>
     
   </entry>
   
   <entry>
     <title>【异常检测】孤立森林(Isolation Forest)算法简介</title>
-    <link href="https://www.guoyaohua.com/isolation-forest.html"/>
-    <id>https://www.guoyaohua.com/isolation-forest.html</id>
+    <link href="http://www.guoyaohua.com/isolation-forest.html"/>
+    <id>http://www.guoyaohua.com/isolation-forest.html</id>
     <published>2020-08-12T16:09:34.000Z</published>
     <updated>2020-12-23T09:23:21.445Z</updated>
     
@@ -111,25 +111,25 @@
     </summary>
     
     
-      <category term="Machine Learning" scheme="https://www.guoyaohua.com/categories/Machine-Learning/"/>
+      <category term="Machine Learning" scheme="http://www.guoyaohua.com/categories/Machine-Learning/"/>
     
     
-      <category term="机器学习" scheme="https://www.guoyaohua.com/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"/>
+      <category term="异常检测" scheme="http://www.guoyaohua.com/tags/%E5%BC%82%E5%B8%B8%E6%A3%80%E6%B5%8B/"/>
     
-      <category term="异常检测" scheme="https://www.guoyaohua.com/tags/%E5%BC%82%E5%B8%B8%E6%A3%80%E6%B5%8B/"/>
+      <category term="离群点检测" scheme="http://www.guoyaohua.com/tags/%E7%A6%BB%E7%BE%A4%E7%82%B9%E6%A3%80%E6%B5%8B/"/>
     
-      <category term="离群点检测" scheme="https://www.guoyaohua.com/tags/%E7%A6%BB%E7%BE%A4%E7%82%B9%E6%A3%80%E6%B5%8B/"/>
+      <category term="孤立森林" scheme="http://www.guoyaohua.com/tags/%E5%AD%A4%E7%AB%8B%E6%A3%AE%E6%9E%97/"/>
     
-      <category term="孤立森林" scheme="https://www.guoyaohua.com/tags/%E5%AD%A4%E7%AB%8B%E6%A3%AE%E6%9E%97/"/>
+      <category term="Isolation Forest" scheme="http://www.guoyaohua.com/tags/Isolation-Forest/"/>
     
-      <category term="Isolation Forest" scheme="https://www.guoyaohua.com/tags/Isolation-Forest/"/>
+      <category term="机器学习" scheme="http://www.guoyaohua.com/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"/>
     
   </entry>
   
   <entry>
     <title>深度学习工作站攒机指南</title>
-    <link href="https://www.guoyaohua.com/deeplearning-workstation.html"/>
-    <id>https://www.guoyaohua.com/deeplearning-workstation.html</id>
+    <link href="http://www.guoyaohua.com/deeplearning-workstation.html"/>
+    <id>http://www.guoyaohua.com/deeplearning-workstation.html</id>
     <published>2020-07-29T07:30:58.130Z</published>
     <updated>2020-12-23T09:22:48.476Z</updated>
     
@@ -147,17 +147,17 @@
     </summary>
     
     
-      <category term="Deep Learning" scheme="https://www.guoyaohua.com/categories/Deep-Learning/"/>
+      <category term="Deep Learning" scheme="http://www.guoyaohua.com/categories/Deep-Learning/"/>
     
     
-      <category term="DeepLearning" scheme="https://www.guoyaohua.com/tags/DeepLearning/"/>
+      <category term="DeepLearning" scheme="http://www.guoyaohua.com/tags/DeepLearning/"/>
     
   </entry>
   
   <entry>
     <title>【机器学习】深入理解决策树算法</title>
-    <link href="https://www.guoyaohua.com/decision-tree.html"/>
-    <id>https://www.guoyaohua.com/decision-tree.html</id>
+    <link href="http://www.guoyaohua.com/decision-tree.html"/>
+    <id>http://www.guoyaohua.com/decision-tree.html</id>
     <published>2019-11-11T22:38:58.000Z</published>
     <updated>2020-12-23T09:24:21.311Z</updated>
     
@@ -175,35 +175,35 @@
     </summary>
     
     
-      <category term="Machine Learning" scheme="https://www.guoyaohua.com/categories/Machine-Learning/"/>
+      <category term="Machine Learning" scheme="http://www.guoyaohua.com/categories/Machine-Learning/"/>
     
     
-      <category term="机器学习" scheme="https://www.guoyaohua.com/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"/>
+      <category term="机器学习" scheme="http://www.guoyaohua.com/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"/>
     
-      <category term="深度学习" scheme="https://www.guoyaohua.com/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/"/>
+      <category term="深度学习" scheme="http://www.guoyaohua.com/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/"/>
     
-      <category term="决策树" scheme="https://www.guoyaohua.com/tags/%E5%86%B3%E7%AD%96%E6%A0%91/"/>
+      <category term="决策树" scheme="http://www.guoyaohua.com/tags/%E5%86%B3%E7%AD%96%E6%A0%91/"/>
     
-      <category term="剪枝" scheme="https://www.guoyaohua.com/tags/%E5%89%AA%E6%9E%9D/"/>
+      <category term="剪枝" scheme="http://www.guoyaohua.com/tags/%E5%89%AA%E6%9E%9D/"/>
     
-      <category term="ID3" scheme="https://www.guoyaohua.com/tags/ID3/"/>
+      <category term="ID3" scheme="http://www.guoyaohua.com/tags/ID3/"/>
     
-      <category term="C4.5" scheme="https://www.guoyaohua.com/tags/C4-5/"/>
+      <category term="C4.5" scheme="http://www.guoyaohua.com/tags/C4-5/"/>
     
-      <category term="CART树" scheme="https://www.guoyaohua.com/tags/CART%E6%A0%91/"/>
+      <category term="CART树" scheme="http://www.guoyaohua.com/tags/CART%E6%A0%91/"/>
     
-      <category term="信息熵" scheme="https://www.guoyaohua.com/tags/%E4%BF%A1%E6%81%AF%E7%86%B5/"/>
+      <category term="信息熵" scheme="http://www.guoyaohua.com/tags/%E4%BF%A1%E6%81%AF%E7%86%B5/"/>
     
-      <category term="基尼指数" scheme="https://www.guoyaohua.com/tags/%E5%9F%BA%E5%B0%BC%E6%8C%87%E6%95%B0/"/>
+      <category term="基尼指数" scheme="http://www.guoyaohua.com/tags/%E5%9F%BA%E5%B0%BC%E6%8C%87%E6%95%B0/"/>
     
-      <category term="信息增益" scheme="https://www.guoyaohua.com/tags/%E4%BF%A1%E6%81%AF%E5%A2%9E%E7%9B%8A/"/>
+      <category term="信息增益" scheme="http://www.guoyaohua.com/tags/%E4%BF%A1%E6%81%AF%E5%A2%9E%E7%9B%8A/"/>
     
   </entry>
   
   <entry>
     <title>【机器学习】一文读懂分类算法常用评价指标</title>
-    <link href="https://www.guoyaohua.com/classification-metrics.html"/>
-    <id>https://www.guoyaohua.com/classification-metrics.html</id>
+    <link href="http://www.guoyaohua.com/classification-metrics.html"/>
+    <id>http://www.guoyaohua.com/classification-metrics.html</id>
     <published>2019-09-01T13:01:14.000Z</published>
     <updated>2020-12-23T09:24:06.846Z</updated>
     
@@ -220,35 +220,35 @@
     </summary>
     
     
-      <category term="Machine Learning" scheme="https://www.guoyaohua.com/categories/Machine-Learning/"/>
+      <category term="Machine Learning" scheme="http://www.guoyaohua.com/categories/Machine-Learning/"/>
     
     
-      <category term="机器学习" scheme="https://www.guoyaohua.com/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"/>
+      <category term="机器学习" scheme="http://www.guoyaohua.com/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"/>
     
-      <category term="深度学习" scheme="https://www.guoyaohua.com/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/"/>
+      <category term="深度学习" scheme="http://www.guoyaohua.com/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/"/>
     
-      <category term="分类算法" scheme="https://www.guoyaohua.com/tags/%E5%88%86%E7%B1%BB%E7%AE%97%E6%B3%95/"/>
+      <category term="分类算法" scheme="http://www.guoyaohua.com/tags/%E5%88%86%E7%B1%BB%E7%AE%97%E6%B3%95/"/>
     
-      <category term="评价指标" scheme="https://www.guoyaohua.com/tags/%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87/"/>
+      <category term="评价指标" scheme="http://www.guoyaohua.com/tags/%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87/"/>
     
-      <category term="分类算法评价指标" scheme="https://www.guoyaohua.com/tags/%E5%88%86%E7%B1%BB%E7%AE%97%E6%B3%95%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87/"/>
+      <category term="分类算法评价指标" scheme="http://www.guoyaohua.com/tags/%E5%88%86%E7%B1%BB%E7%AE%97%E6%B3%95%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87/"/>
     
-      <category term="准确率、精确率、召回率" scheme="https://www.guoyaohua.com/tags/%E5%87%86%E7%A1%AE%E7%8E%87%E3%80%81%E7%B2%BE%E7%A1%AE%E7%8E%87%E3%80%81%E5%8F%AC%E5%9B%9E%E7%8E%87/"/>
+      <category term="准确率、精确率、召回率" scheme="http://www.guoyaohua.com/tags/%E5%87%86%E7%A1%AE%E7%8E%87%E3%80%81%E7%B2%BE%E7%A1%AE%E7%8E%87%E3%80%81%E5%8F%AC%E5%9B%9E%E7%8E%87/"/>
     
-      <category term="P-R曲线" scheme="https://www.guoyaohua.com/tags/P-R%E6%9B%B2%E7%BA%BF/"/>
+      <category term="P-R曲线" scheme="http://www.guoyaohua.com/tags/P-R%E6%9B%B2%E7%BA%BF/"/>
     
-      <category term="F1指数" scheme="https://www.guoyaohua.com/tags/F1%E6%8C%87%E6%95%B0/"/>
+      <category term="F1指数" scheme="http://www.guoyaohua.com/tags/F1%E6%8C%87%E6%95%B0/"/>
     
-      <category term="ROC" scheme="https://www.guoyaohua.com/tags/ROC/"/>
+      <category term="ROC" scheme="http://www.guoyaohua.com/tags/ROC/"/>
     
-      <category term="AUC" scheme="https://www.guoyaohua.com/tags/AUC/"/>
+      <category term="AUC" scheme="http://www.guoyaohua.com/tags/AUC/"/>
     
   </entry>
   
   <entry>
     <title>Git常用操作指南</title>
-    <link href="https://www.guoyaohua.com/Git-tutorial.html"/>
-    <id>https://www.guoyaohua.com/Git-tutorial.html</id>
+    <link href="http://www.guoyaohua.com/Git-tutorial.html"/>
+    <id>http://www.guoyaohua.com/Git-tutorial.html</id>
     <published>2019-07-21T15:17:08.000Z</published>
     <updated>2020-12-23T09:23:38.986Z</updated>
     
@@ -265,16 +265,16 @@
     </summary>
     
     
-      <category term="Git" scheme="https://www.guoyaohua.com/categories/Git/"/>
+      <category term="Git" scheme="http://www.guoyaohua.com/categories/Git/"/>
     
     
-      <category term="Git" scheme="https://www.guoyaohua.com/tags/Git/"/>
+      <category term="Git" scheme="http://www.guoyaohua.com/tags/Git/"/>
     
-      <category term="Git教程" scheme="https://www.guoyaohua.com/tags/Git%E6%95%99%E7%A8%8B/"/>
+      <category term="Git教程" scheme="http://www.guoyaohua.com/tags/Git%E6%95%99%E7%A8%8B/"/>
     
-      <category term="Git常用命令" scheme="https://www.guoyaohua.com/tags/Git%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/"/>
+      <category term="Git常用命令" scheme="http://www.guoyaohua.com/tags/Git%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/"/>
     
-      <category term="Git常用操作" scheme="https://www.guoyaohua.com/tags/Git%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C/"/>
+      <category term="Git常用操作" scheme="http://www.guoyaohua.com/tags/Git%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C/"/>
     
   </entry>
   
