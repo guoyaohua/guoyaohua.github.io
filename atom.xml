@@ -39,14 +39,14 @@
     </author>
     <category term="Deep Learning" scheme="https://www.guoyaohua.com/categories/Deep-Learning/"/>
     <category term="DeepLearning" scheme="https://www.guoyaohua.com/tags/DeepLearning/"/>
-    <id>https://www.guoyaohua.com/deeplearning-workstation</id>
-    <link href="https://www.guoyaohua.com/deeplearning-workstation"/>
-    <published>2026-03-13T14:02:12.257Z</published>
+    <id>https://www.guoyaohua.com/deeplearning-workstation.html</id>
+    <link href="https://www.guoyaohua.com/deeplearning-workstation.html"/>
+    <published>2026-03-13T14:27:24.714Z</published>
     <summary>
       <![CDATA[<h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>接触深度学习已经快两年了，之前一直使用<a]]>
     </summary>
     <title>深度学习工作站攒机指南</title>
-    <updated>2026-03-13T14:02:12.258Z</updated>
+    <updated>2026-03-13T14:27:24.716Z</updated>
   </entry>
   <entry>
     <author>
@@ -76,14 +76,14 @@
     <category term="信息熵" scheme="https://www.guoyaohua.com/tags/%E4%BF%A1%E6%81%AF%E7%86%B5/"/>
     <category term="基尼指数" scheme="https://www.guoyaohua.com/tags/%E5%9F%BA%E5%B0%BC%E6%8C%87%E6%95%B0/"/>
     <category term="信息增益" scheme="https://www.guoyaohua.com/tags/%E4%BF%A1%E6%81%AF%E5%A2%9E%E7%9B%8A/"/>
-    <id>https://www.guoyaohua.com/decision-tree</id>
-    <link href="https://www.guoyaohua.com/decision-tree"/>
+    <id>https://www.guoyaohua.com/decision-tree.html</id>
+    <link href="https://www.guoyaohua.com/decision-tree.html"/>
     <published>2019-11-11T22:38:58.000Z</published>
     <summary>
       <![CDATA[<h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>决策树(Decision]]>
     </summary>
     <title>【机器学习】深入理解决策树算法</title>
-    <updated>2026-03-13T14:02:12.253Z</updated>
+    <updated>2026-03-13T14:25:28.251Z</updated>
   </entry>
   <entry>
     <author>
@@ -100,14 +100,14 @@
     <category term="F1指数" scheme="https://www.guoyaohua.com/tags/F1%E6%8C%87%E6%95%B0/"/>
     <category term="ROC" scheme="https://www.guoyaohua.com/tags/ROC/"/>
     <category term="AUC" scheme="https://www.guoyaohua.com/tags/AUC/"/>
-    <id>https://www.guoyaohua.com/classification-metrics</id>
-    <link href="https://www.guoyaohua.com/classification-metrics"/>
+    <id>https://www.guoyaohua.com/classification-metrics.html</id>
+    <link href="https://www.guoyaohua.com/classification-metrics.html"/>
     <published>2019-09-01T13:01:14.000Z</published>
     <summary>
       <![CDATA[<h2 id="前言"><a href="#前言" class="headerlink"]]>
     </summary>
     <title>【机器学习】一文读懂分类算法常用评价指标</title>
-    <updated>2026-03-13T14:02:12.248Z</updated>
+    <updated>2026-03-13T14:25:51.878Z</updated>
   </entry>
   <entry>
     <author>
@@ -118,13 +118,13 @@
     <category term="Git教程" scheme="https://www.guoyaohua.com/tags/Git%E6%95%99%E7%A8%8B/"/>
     <category term="Git常用命令" scheme="https://www.guoyaohua.com/tags/Git%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/"/>
     <category term="Git常用操作" scheme="https://www.guoyaohua.com/tags/Git%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C/"/>
-    <id>https://www.guoyaohua.com/Git-tutorial</id>
-    <link href="https://www.guoyaohua.com/Git-tutorial"/>
+    <id>https://www.guoyaohua.com/Git-tutorial.html</id>
+    <link href="https://www.guoyaohua.com/Git-tutorial.html"/>
     <published>2019-07-21T15:17:08.000Z</published>
     <summary>
       <![CDATA[<h2 id="前言"><a href="#前言" class="headerlink"]]>
     </summary>
     <title>Git常用操作指南</title>
-    <updated>2026-03-13T14:02:12.243Z</updated>
+    <updated>2026-03-13T14:26:20.026Z</updated>
   </entry>
 </feed>

@@ -24,63 +24,63 @@
     <meta name="description" content="前言因为工作需求，最近又重新温习了一下Git操作，遂总结了一篇Git常用操作指南，方便日后学习查阅，本博客精简提炼了在开发过程中Git经常用到的核心命令，主要参考了《廖雪峰老师的Git教程》，希望对大家学习使用Git能带来帮助。 Git简介Git是Linux之父Linus的第二个伟大的作品，它最早是在Linux上开发的，被用来管理Linux核心的源代码。后来慢慢地有人将其移植到了Unix、Wind">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Git常用操作指南">
-<meta property="og:url" content="https://www.guoyaohua.com/Git-tutorial">
+<meta property="og:url" content="https://www.guoyaohua.com/Git-tutorial.html">
 <meta property="og:site_name" content="郭耀华&#39;s Blog | 深度学习、机器学习领域技术博客">
 <meta property="og:description" content="前言因为工作需求，最近又重新温习了一下Git操作，遂总结了一篇Git常用操作指南，方便日后学习查阅，本博客精简提炼了在开发过程中Git经常用到的核心命令，主要参考了《廖雪峰老师的Git教程》，希望对大家学习使用Git能带来帮助。 Git简介Git是Linux之父Linus的第二个伟大的作品，它最早是在Linux上开发的，被用来管理Linux核心的源代码。后来慢慢地有人将其移植到了Unix、Wind">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://pic.guoyaohua.com/image/git/1563105584864.png">
-<meta property="og:image" content="http://pic.guoyaohua.com/image/git/1563105973152.png">
-<meta property="og:image" content="http://pic.guoyaohua.com/image/git/1563106045201.png">
-<meta property="og:image" content="http://pic.guoyaohua.com/image/git/1563103995786.png">
-<meta property="og:image" content="http://pic.guoyaohua.com/image/git/1563104100618.png">
-<meta property="og:image" content="http://pic.guoyaohua.com/image/git/1563104810075.png">
-<meta property="og:image" content="http://pic.guoyaohua.com/image/git/1563106284174.png">
-<meta property="og:image" content="http://pic.guoyaohua.com/image/git/1563106681604.png">
-<meta property="og:image" content="http://pic.guoyaohua.com/image/git/Repository.jpg">
-<meta property="og:image" content="http://pic.guoyaohua.com/image/git/1563611168654.png">
-<meta property="og:image" content="http://pic.guoyaohua.com/image/git/1563611993505.png">
-<meta property="og:image" content="http://pic.guoyaohua.com/image/git/1563612094551.png">
-<meta property="og:image" content="http://pic.guoyaohua.com/image/git/1563609363728.png">
-<meta property="og:image" content="http://pic.guoyaohua.com/image/git/1563613938574.png">
-<meta property="og:image" content="http://pic.guoyaohua.com/image/git/0.png">
-<meta property="og:image" content="http://pic.guoyaohua.com/image/git/1.png">
-<meta property="og:image" content="http://pic.guoyaohua.com/image/git/2.png">
-<meta property="og:image" content="http://pic.guoyaohua.com/image/git/3.png">
-<meta property="og:image" content="http://pic.guoyaohua.com/image/git/4.png">
-<meta property="og:image" content="http://pic.guoyaohua.com/image/git/5.png">
-<meta property="og:image" content="http://pic.guoyaohua.com/image/git/6.png">
-<meta property="og:image" content="http://pic.guoyaohua.com/image/git/7.png">
-<meta property="og:image" content="http://pic.guoyaohua.com/image/git/8.png">
-<meta property="og:image" content="http://pic.guoyaohua.com/image/git/9.png">
-<meta property="og:image" content="http://pic.guoyaohua.com/image/git/1563631355797.png">
-<meta property="og:image" content="http://pic.guoyaohua.com/image/git/1563631585919.png">
-<meta property="og:image" content="http://pic.guoyaohua.com/image/git/1563631787056.png">
-<meta property="og:image" content="http://pic.guoyaohua.com/image/git/1563631937563.png">
-<meta property="og:image" content="http://pic.guoyaohua.com/image/git/1563632158366.png">
-<meta property="og:image" content="http://pic.guoyaohua.com/image/git/1563632645976.png">
-<meta property="og:image" content="http://pic.guoyaohua.com/image/git/rebase0.png">
-<meta property="og:image" content="http://pic.guoyaohua.com/image/git/rebase1.png">
-<meta property="og:image" content="http://pic.guoyaohua.com/image/git/rebase2.png">
-<meta property="og:image" content="http://pic.guoyaohua.com/image/git/rebase3.png">
-<meta property="og:image" content="http://pic.guoyaohua.com/image/git/rebase4.png">
-<meta property="og:image" content="http://pic.guoyaohua.com/image/git/1563677573806.png">
-<meta property="og:image" content="http://pic.guoyaohua.com/image/git/rebase2.png">
-<meta property="og:image" content="http://pic.guoyaohua.com/image/git/10.png">
+<meta property="og:image" content="https://www.guoyaohua.com/1563105584864.png">
+<meta property="og:image" content="https://www.guoyaohua.com/1563105973152.png">
+<meta property="og:image" content="https://www.guoyaohua.com/1563106045201.png">
+<meta property="og:image" content="https://www.guoyaohua.com/1563103995786.png">
+<meta property="og:image" content="https://www.guoyaohua.com/1563104100618.png">
+<meta property="og:image" content="https://www.guoyaohua.com/1563104810075.png">
+<meta property="og:image" content="https://www.guoyaohua.com/1563106284174.png">
+<meta property="og:image" content="https://www.guoyaohua.com/1563106681604.png">
+<meta property="og:image" content="https://www.guoyaohua.com/Repository.jpg">
+<meta property="og:image" content="https://www.guoyaohua.com/1563611168654.png">
+<meta property="og:image" content="https://www.guoyaohua.com/1563611993505.png">
+<meta property="og:image" content="https://www.guoyaohua.com/1563612094551.png">
+<meta property="og:image" content="https://www.guoyaohua.com/1563609363728.png">
+<meta property="og:image" content="https://www.guoyaohua.com/1563613938574.png">
+<meta property="og:image" content="https://www.guoyaohua.com/0.png">
+<meta property="og:image" content="https://www.guoyaohua.com/1.png">
+<meta property="og:image" content="https://www.guoyaohua.com/2.png">
+<meta property="og:image" content="https://www.guoyaohua.com/3.png">
+<meta property="og:image" content="https://www.guoyaohua.com/4.png">
+<meta property="og:image" content="https://www.guoyaohua.com/5.png">
+<meta property="og:image" content="https://www.guoyaohua.com/6.png">
+<meta property="og:image" content="https://www.guoyaohua.com/7.png">
+<meta property="og:image" content="https://www.guoyaohua.com/8.png">
+<meta property="og:image" content="https://www.guoyaohua.com/9.png">
+<meta property="og:image" content="https://www.guoyaohua.com/1563631355797.png">
+<meta property="og:image" content="https://www.guoyaohua.com/1563631585919.png">
+<meta property="og:image" content="https://www.guoyaohua.com/1563631787056.png">
+<meta property="og:image" content="https://www.guoyaohua.com/1563631937563.png">
+<meta property="og:image" content="https://www.guoyaohua.com/1563632158366.png">
+<meta property="og:image" content="https://www.guoyaohua.com/1563632645976.png">
+<meta property="og:image" content="https://www.guoyaohua.com/rebase0.png">
+<meta property="og:image" content="https://www.guoyaohua.com/rebase1.png">
+<meta property="og:image" content="https://www.guoyaohua.com/rebase2.png">
+<meta property="og:image" content="https://www.guoyaohua.com/rebase3.png">
+<meta property="og:image" content="https://www.guoyaohua.com/rebase4.png">
+<meta property="og:image" content="https://www.guoyaohua.com/1563677573806.png">
+<meta property="og:image" content="https://www.guoyaohua.com/rebase2.png">
+<meta property="og:image" content="https://www.guoyaohua.com/10.png">
 <meta property="article:published_time" content="2019-07-21T15:17:08.000Z">
-<meta property="article:modified_time" content="2026-03-13T14:02:12.243Z">
+<meta property="article:modified_time" content="2026-03-13T14:26:20.026Z">
 <meta property="article:author" content="郭耀华">
 <meta property="article:tag" content="Git">
 <meta property="article:tag" content="Git常用命令">
 <meta property="article:tag" content="Git常用操作">
 <meta property="article:tag" content="Git教程">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://pic.guoyaohua.com/image/git/1563105584864.png">
+<meta name="twitter:image" content="https://www.guoyaohua.com/1563105584864.png">
 
 
-<link rel="canonical" href="https://www.guoyaohua.com/Git-tutorial">
+<link rel="canonical" href="https://www.guoyaohua.com/Git-tutorial.html">
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.guoyaohua.com/Git-tutorial","path":"/Git-tutorial","title":"Git常用操作指南"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.guoyaohua.com/Git-tutorial.html","path":"/Git-tutorial.html","title":"Git常用操作指南"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
 <title>Git常用操作指南 | 郭耀华's Blog | 深度学习、机器学习领域技术博客</title>
@@ -289,7 +289,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://www.guoyaohua.com/Git-tutorial">
+    <link itemprop="mainEntityOfPage" href="https://www.guoyaohua.com/Git-tutorial.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="http://pic.guoyaohua.com/o_face_icon.jpg">
@@ -325,7 +325,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-03-13 14:02:12" itemprop="dateModified" datetime="2026-03-13T14:02:12Z">2026-03-13</time>
+      <time title="修改时间：2026-03-13 14:26:20" itemprop="dateModified" datetime="2026-03-13T14:26:20Z">2026-03-13</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -392,15 +392,15 @@
 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$</span> ssh<span class="literal">-keygen</span> <span class="literal">-t</span> rsa <span class="literal">-C</span> <span class="string">&quot;youremail@example.com&quot;</span></span><br></pre></td></tr></table></figure>
 
 <p>一路回车即可。执行命令后，我们再进入到”<code>~/.ssh</code>“目录下，运行”<code>ls</code>“命令，可以看到里面有<code>id_rsa</code>和<code>id_rsa.pub</code>两个文件，这两个就是SSH Key的秘钥对，<code>id_rsa</code>是私钥，不能泄露出去，<code>id_rsa.pub</code>是公钥，可以放心地告诉任何人。</p>
-<p><img src="http://pic.guoyaohua.com/image/git/1563105584864.png"></p>
+<p><img src="/1563105584864.png"></p>
 <p>打开“Account settings”，“SSH Keys”页面，然后，点“New SSH Key”，填上任意Title，在Key文本框里粘贴<code>id_rsa.pub</code>文件的内容（Win 10 下可使用”<code>type ~/.ssh/id_rsa.pub</code>“命令查看公钥文件内容）：</p>
-<p><img src="http://pic.guoyaohua.com/image/git/1563105973152.png"></p>
+<p><img src="/1563105973152.png"></p>
 <p>点击“Add SSH Key”之后，就可以看到你的公钥已经加入到了你的Github仓库配置中。</p>
-<p><img src="http://pic.guoyaohua.com/image/git/1563106045201.png"></p>
+<p><img src="/1563106045201.png"></p>
 <h4 id="添加远程库"><a href="#添加远程库" class="headerlink" title="添加远程库"></a>添加远程库</h4><p>首先，登陆GitHub，然后，在右上角找到“Create a new repo”按钮，创建一个新的仓库：</p>
-<p><img src="http://pic.guoyaohua.com/image/git/1563103995786.png"></p>
+<p><img src="/1563103995786.png"></p>
 <p>在Repository name填入<code>learngit</code>，其他保持默认设置，点击“Create repository”按钮，就成功地创建了一个新的Git仓库：</p>
-<p><img src="http://pic.guoyaohua.com/image/git/1563104100618.png"></p>
+<p><img src="/1563104100618.png"></p>
 <p>这样就成功创建了一个空白的远程仓库，那么如何将这个远程仓库与本地仓库进行关联呢？</p>
 <p>我们根据Git所给出的提示可知，可以在本地创建一个新仓库对远程仓库进行关联，也可以对本地已有仓库进行关联。</p>
 <h5 id="关联新仓库"><a href="#关联新仓库" class="headerlink" title="关联新仓库"></a>关联新仓库</h5><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">&quot;# learngit&quot;</span> &gt;&gt; README.md</span><br><span class="line">git init</span><br><span class="line">git add README.md</span><br><span class="line">git commit <span class="literal">-m</span> <span class="string">&quot;first commit&quot;</span></span><br><span class="line">git remote add origin git@github.com:guoyaohua/learngit.git</span><br><span class="line">git push <span class="literal">-u</span> origin master</span><br></pre></td></tr></table></figure>
@@ -408,14 +408,14 @@
 <h5 id="关联已有仓库"><a href="#关联已有仓库" class="headerlink" title="关联已有仓库"></a>关联已有仓库</h5><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git remote add origin git@github.com:guoyaohua/learngit.git</span><br><span class="line">git push <span class="literal">-u</span> origin master</span><br></pre></td></tr></table></figure>
 
 <p>我们可以使用上文在本地初始化的“learngit”仓库。<strong>（注意：本地仓库和远程仓库可以不同名，本文只是为了写教程设置为相同名称。）</strong></p>
-<p><img src="http://pic.guoyaohua.com/image/git/1563104810075.png"></p>
+<p><img src="/1563104810075.png"></p>
 <p>我们再刷新下<code>Github Code</code>界面，发现新加入的<code>README.md</code>文件已经推送到了远程仓库中。</p>
-<p><img src="http://pic.guoyaohua.com/image/git/1563106284174.png"></p>
+<p><img src="/1563106284174.png"></p>
 <h2 id="版本控制"><a href="#版本控制" class="headerlink" title="版本控制"></a>版本控制</h2><h3 id="工作区和暂存区"><a href="#工作区和暂存区" class="headerlink" title="工作区和暂存区"></a>工作区和暂存区</h3><h4 id="工作区（Working-Directory）"><a href="#工作区（Working-Directory）" class="headerlink" title="工作区（Working Directory）"></a>工作区（Working Directory）</h4><p>就是你在电脑里能看到的目录，比如我们刚刚创建的<code>learngit</code>文件夹就是一个工作区：</p>
-<p><img src="http://pic.guoyaohua.com/image/git/1563106681604.png"></p>
+<p><img src="/1563106681604.png"></p>
 <h4 id="版本库（Repository）"><a href="#版本库（Repository）" class="headerlink" title="版本库（Repository）"></a>版本库（Repository）</h4><p>工作区有一个隐藏目录<code>.git</code>，这个不算工作区，而是Git的版本库。</p>
 <p>Git的版本库里存了很多东西，其中最重要的就是称为<strong>Stage</strong>（或者叫<strong>Index</strong>）的<strong>暂存区</strong>，还有Git为我们自动创建的第一个分支<code>master</code>，以及指向<code>master</code>的一个指针叫<code>HEAD</code>。</p>
-<p><img src="http://pic.guoyaohua.com/image/git/Repository.jpg" alt="Repository"></p>
+<p><img src="/Repository.jpg" alt="Repository"></p>
 <p>分支和<code>HEAD</code>的概念本文后面再详细说明。</p>
 <p>我们把文件往Git版本库里添加的时候，是分两步执行的：</p>
 <p>第一步是用<code>git add</code>把文件添加进去，实际上就是把文件修改添加到<strong>暂存区</strong>；</p>
@@ -449,13 +449,13 @@
 </ol>
 <h5 id="文件粒度操作"><a href="#文件粒度操作" class="headerlink" title="文件粒度操作"></a>文件粒度操作</h5><p>需要注意的是在<code>mixed</code>模式下进行<code>reset</code>操作时可以是全局性重置，也可以是文件粒度重置，区别在于二者作用域不同，文件粒度只会使对应文件的暂存区状态变为指定commit时该文件的暂存区状态，并且不会改变版本库状态，即HEAD指针不会改变，我们看一下效果。</p>
 <p>首先我们新建两个文件进行两次提交，可以看到目前HEAD指向最新一次提交“text2”。</p>
-<p><img src="http://pic.guoyaohua.com/image/git/1563611168654.png"></p>
+<p><img src="/1563611168654.png"></p>
 <p>我们对“file1.txt”进行reset操作，令其重置为“text1”状态。</p>
-<p><img src="http://pic.guoyaohua.com/image/git/1563611993505.png"></p>
+<p><img src="/1563611993505.png"></p>
 <p>并且我们通过git log命令可发现，此时HEAD指针并没有改变，还是指向最新一次提交“Text 2”，可知文件粒度的<code>reset --mixed</code>不改变版本库HEAD指针状态。</p>
-<p><img src="http://pic.guoyaohua.com/image/git/1563612094551.png"></p>
+<p><img src="/1563612094551.png"></p>
 <p>对于soft和hard模式则无法进行文件粒度操作。</p>
-<p><img src="http://pic.guoyaohua.com/image/git/1563609363728.png"></p>
+<p><img src="/1563609363728.png"></p>
 <h4 id="Reset-常用示例"><a href="#Reset-常用示例" class="headerlink" title="Reset 常用示例"></a>Reset 常用示例</h4><ul>
 <li>回退add操作</li>
 </ul>
@@ -482,7 +482,7 @@
 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$</span> git reset <span class="number">497</span>e350</span><br></pre></td></tr></table></figure>
 <p>当前HEAD会指向“497e350”，暂存区中的状态会恢复到提交“497e350”时暂存区的状态。 </p>
 <h3 id="撤销修改"><a href="#撤销修改" class="headerlink" title="撤销修改"></a>撤销修改</h3><p>当我们因为一些原因想要丢弃工作区某些文件修改时，可以使用“<code>git checkout -- &lt;file&gt;</code>”命令，该命令仅会恢复工作区文件状态，不会对版本库有任何改动。</p>
-<p><img src="http://pic.guoyaohua.com/image/git/1563613938574.png"></p>
+<p><img src="/1563613938574.png"></p>
 <p>命令<code>git checkout -- file1.txt</code>意思就是，把<code>file1.txt</code>文件在工作区的修改全部撤销，这里有两种情况：</p>
 <ul>
 <li>一种是<code>file1.txt</code>自修改后还没有被放到暂存区，现在，撤销修改就回到和版本库一模一样的状态；</li>
@@ -512,18 +512,18 @@
 </blockquote>
 <h2 id="分支管理"><a href="#分支管理" class="headerlink" title="分支管理"></a>分支管理</h2><h3 id="创建与合并分支"><a href="#创建与合并分支" class="headerlink" title="创建与合并分支"></a>创建与合并分支</h3><p>在上文“版本回退”里，我们已经知道，每次提交，Git都把它们串成一条时间线，这条时间线就是一个分支。截止到目前，只有一条时间线，在Git里，这个分支叫主分支，即<code>master</code>分支。<code>HEAD</code>严格来说不是指向提交，而是指向<code>master</code>，<code>master</code>才是指向提交的，所以，<code>HEAD</code>指向的就是当前分支。</p>
 <p>一开始的时候，<code>master</code>分支是一条线，Git用<code>master</code>指向最新的提交，再用<code>HEAD</code>指向<code>master</code>，就能确定当前分支，以及当前分支的提交点：</p>
-<p><img src="http://pic.guoyaohua.com/image/git/0.png"></p>
+<p><img src="/0.png"></p>
 <p>每次提交，<code>master</code>分支都会向前移动一步，这样，随着你不断提交，<code>master</code>分支的线也越来越长。</p>
 <p>当我们创建新的分支，例如<code>dev</code>时，Git新建了一个指针叫<code>dev</code>，指向<code>master</code>相同的提交，再把<code>HEAD</code>指向<code>dev</code>，就表示当前分支在<code>dev</code>上：</p>
-<p><img src="http://pic.guoyaohua.com/image/git/1.png"></p>
+<p><img src="/1.png"></p>
 <p>Git创建一个分支很快，因为除了增加一个<code>dev</code>指针，改改<code>HEAD</code>的指向，工作区的文件都没有任何变化。</p>
 <p>不过，从现在开始，对工作区的修改和提交就是针对<code>dev</code>分支了，比如新提交一次后，<code>dev</code>指针往前移动一步，而<code>master</code>指针不变：</p>
-<p><img src="http://pic.guoyaohua.com/image/git/2.png"></p>
+<p><img src="/2.png"></p>
 <p>假如我们在<code>dev</code>上的工作完成了，就可以把<code>dev</code>合并到<code>master</code>上。Git怎么合并呢？最简单的方法，就是直接把<code>master</code>指向<code>dev</code>的当前提交，就完成了合并：</p>
-<p><img src="http://pic.guoyaohua.com/image/git/3.png"></p>
+<p><img src="/3.png"></p>
 <p>所以Git合并分支也很快！就改改指针，工作区内容也不变！</p>
 <p>合并完分支后，甚至可以删除<code>dev</code>分支。删除<code>dev</code>分支就是把<code>dev</code>指针给删掉，删掉后，我们就剩下了一条<code>master</code>分支：</p>
-<p><img src="http://pic.guoyaohua.com/image/git/4.png"></p>
+<p><img src="/4.png"></p>
 <p>下面开始实战。</p>
 <p>首先，我们创建<code>dev</code>分支，然后切换到<code>dev</code>分支：</p>
 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$</span> git checkout <span class="literal">-b</span> dev</span><br><span class="line">Switched to a new branch <span class="string">&#x27;dev&#x27;</span></span><br></pre></td></tr></table></figure>
@@ -545,7 +545,7 @@
 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$</span> git checkout master</span><br><span class="line">Switched to branch <span class="string">&#x27;master&#x27;</span></span><br></pre></td></tr></table></figure>
 
 <p>切换回<code>master</code>分支后，再查看一个<code>readme.txt</code>文件，刚才添加的内容不见了！因为那个提交是在<code>dev</code>分支上，而<code>master</code>分支此刻的提交点并没有变：</p>
-<p><img src="http://pic.guoyaohua.com/image/git/5.png"></p>
+<p><img src="/5.png"></p>
 <p>现在，我们把<code>dev</code>分支的工作成果合并到<code>master</code>分支上：</p>
 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$</span> git merge dev</span><br><span class="line">Updating d46f35e..b17d20e</span><br><span class="line">Fast<span class="literal">-forward</span></span><br><span class="line"> readme.txt | <span class="number">1</span> +</span><br><span class="line"> <span class="number">1</span> file changed, <span class="number">1</span> insertion(+)</span><br></pre></td></tr></table></figure>
 
@@ -580,7 +580,7 @@
 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$</span> git add readme.txt </span><br><span class="line"><span class="variable">$</span> git commit <span class="literal">-m</span> <span class="string">&quot;&amp; simple&quot;</span></span><br><span class="line">[<span class="type">master</span> <span class="number">5</span><span class="type">dc6824</span>] &amp; simple</span><br><span class="line"> <span class="number">1</span> file changed, <span class="number">1</span> insertion(+), <span class="number">1</span> deletion(-)</span><br></pre></td></tr></table></figure>
 
 <p>现在，<code>master</code>分支和<code>feature1</code>分支各自都分别有新的提交，变成了这样：</p>
-<p><img src="http://pic.guoyaohua.com/image/git/6.png"></p>
+<p><img src="/6.png"></p>
 <p>这种情况下，Git无法执行“快速合并(Fast-forward)”，只能试图把各自的修改合并起来，但这种合并就可能会有冲突，我们试试看：</p>
 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$</span> git merge feature1</span><br><span class="line">Auto<span class="literal">-merging</span> readme.txt</span><br><span class="line">CONFLICT (content): Merge conflict <span class="keyword">in</span> readme.txt</span><br><span class="line">Automatic merge failed; fix conflicts and then commit the result.</span><br></pre></td></tr></table></figure>
 
@@ -597,7 +597,7 @@
 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$</span> git add readme.txt </span><br><span class="line"><span class="variable">$</span> git commit <span class="literal">-m</span> <span class="string">&quot;conflict fixed&quot;</span></span><br><span class="line">[<span class="type">master</span> <span class="type">cf810e4</span>] conflict fixed</span><br></pre></td></tr></table></figure>
 
 <p>现在，<code>master</code>分支和<code>feature1</code>分支变成了下图所示：</p>
-<p><img src="http://pic.guoyaohua.com/image/git/7.png"></p>
+<p><img src="/7.png"></p>
 <p>用带参数的<code>git log</code>也可以看到分支的合并情况：</p>
 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$</span> git log <span class="literal">--graph</span> <span class="literal">--pretty</span>=oneline <span class="literal">--abbrev-commit</span></span><br><span class="line">*   cf810e4 (HEAD -&gt; master) conflict fixed</span><br><span class="line">|\  </span><br><span class="line">| * <span class="number">14096</span>d0 (feature1) AND simple</span><br><span class="line">* | <span class="number">5</span>dc6824 &amp; simple</span><br><span class="line">|/  </span><br><span class="line">* b17d20e branch test</span><br><span class="line">* d46f35e (origin/master) remove test.txt</span><br><span class="line">* b84166e add test.txt</span><br><span class="line">* <span class="number">519219</span>b git tracks changes</span><br><span class="line">* e43a48b understand how stage works</span><br><span class="line">* <span class="number">1094</span>adb append GPL</span><br><span class="line">* e475afc add distributed</span><br><span class="line">* eaadf4e wrote a readme file</span><br></pre></td></tr></table></figure>
 
@@ -625,30 +625,30 @@
 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$</span> git log <span class="literal">--graph</span> <span class="literal">--pretty</span>=oneline <span class="literal">--abbrev-commit</span></span><br><span class="line">*   e1e9c68 (HEAD -&gt; master) merge with no<span class="literal">-ff</span></span><br><span class="line">|\  </span><br><span class="line">| * f52c633 (dev) add merge</span><br><span class="line">|/  </span><br><span class="line">*   cf810e4 conflict fixed</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
 
 <p>可以看到，不使用<code>Fast forward</code>模式，merge后就像这样：</p>
-<p><img src="http://pic.guoyaohua.com/image/git/8.png"></p>
+<p><img src="/8.png"></p>
 <h4 id="分支策略"><a href="#分支策略" class="headerlink" title="分支策略"></a>分支策略</h4><p>在实际开发中，我们应该按照几个基本原则进行分支管理：</p>
 <p>首先，<code>master</code>分支应该是非常稳定的，也就是仅用来发布新版本，平时不能在上面干活；</p>
 <p>那在哪干活呢？干活都在<code>dev</code>分支上，也就是说，<code>dev</code>分支是不稳定的，到某个时候，比如1.0版本发布时，再把<code>dev</code>分支合并到<code>master</code>上，在<code>master</code>分支发布1.0版本；</p>
 <p>你和团队同事每个人都在<code>dev</code>分支上干活，每个人都有自己的分支，时不时地往<code>dev</code>分支上合并就可以了。</p>
 <p>所以，团队合作的分支看起来就像这样：</p>
-<p><img src="http://pic.guoyaohua.com/image/git/9.png"></p>
+<p><img src="/9.png"></p>
 <h3 id="状态存储"><a href="#状态存储" class="headerlink" title="状态存储"></a>状态存储</h3><p>当我们在开发过程中，经常遇到这样的情况，我们需要暂时放下手中的工作，切换到其他分支进行开发，例如当我们在dev分支进行程序2.0版本开发时，发现1.0版本的程序出现了bug，必须立刻进行修复，但是在目前的dev分支我们可能已经做了很多修改，暂存区可能有了暂存状态，甚至可能在开发过程中在dev分支进行了多次commit，这时如果我们想切换回master分支，进行bug修复，这时就需要使用到<code>git stash</code>命令存储原分支当前的状态。</p>
 <p>在讲解<code>git stash</code>之前，我们先考虑两种场景：</p>
 <p>第一种就是我们未在dev分支进行任何提交，此时HEAD指针指向dev，dev和master指向同一次commit，如下图：</p>
-<p><img src="http://pic.guoyaohua.com/image/git/1563631355797.png"></p>
+<p><img src="/1563631355797.png"></p>
 <p>我们可能在dev的工作区做了很多修改，也将部分修改状态加入了暂存区（即进行了<code>git add</code>操作），这时我们尝试一下直接使用<code>git checkout</code>命令切换分支。</p>
 <p>此时，Git状态如下：</p>
-<p><img src="http://pic.guoyaohua.com/image/git/1563631585919.png"></p>
+<p><img src="/1563631585919.png"></p>
 <p>我们修改“file1.txt”和“file2.txt”的内容，并将“file1.txt”的改动加入暂存区。</p>
-<p><img src="http://pic.guoyaohua.com/image/git/1563631787056.png"></p>
+<p><img src="/1563631787056.png"></p>
 <p>此时可看出工作区和暂存区就都有改变，但HEAD指针指向的dev与master为同一个commit节点。</p>
 <p>这时我们执行<code>git checkout master</code>命令尝试切换分支。</p>
-<p><img src="http://pic.guoyaohua.com/image/git/1563631937563.png"></p>
+<p><img src="/1563631937563.png"></p>
 <p>可以看出，成功切换到了master分支上，而且工作区和暂存区的状态依旧保留。</p>
 <p>我们再考虑一个场景，在dev分支开发时，进行了一次提交，此时HEAD指向dev分支，dev分支超前master分支一次commit，具体见下图：</p>
-<p><img src="http://pic.guoyaohua.com/image/git/1563632158366.png"></p>
+<p><img src="/1563632158366.png"></p>
 <p>如果此时我们工作区或暂存区有未提交更改时，就无法进行分支切换操作（如果没有未提交修改的话当然可以进行分支切换操作）。 </p>
-<p><img src="http://pic.guoyaohua.com/image/git/1563632645976.png"></p>
+<p><img src="/1563632645976.png"></p>
 <p>我想这时大家就会有一个疑问，为什么两种状态下我们都修改了暂存区和工作区的状态，但是一个可以切换分支并且保留工作区、暂存区状态，而另一种状态就无法切换分支呢？</p>
 <p>我起初在遇到这个问题的时候也是很诧异，在网上搜索了好多资料，依旧没有查到有价值的信息。</p>
 <p>这时我们就应该从Git的原理来进行分析了，<strong>Git在进行版本控制时，记录的并不是文件本身的信息，而是文件的修改状态</strong>，例如我们再一个10000行代码的文件中，新加入了一行代码进行，Git并不是将最新的10001行代码作为备份，而是仅仅记录了新旧文件之间的差异，即在哪个位置修改了什么内容（修改包括：增加、删除、修改等）。</p>
@@ -753,22 +753,22 @@
 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$</span> git checkout <span class="literal">-b</span> mywork origin</span><br></pre></td></tr></table></figure>
 
 <p>假设远程分支”origin”已经有了2个提交，如图：</p>
-<p><img src="http://pic.guoyaohua.com/image/git/rebase0.png"></p>
+<p><img src="/rebase0.png"></p>
 <p>现在我们在这个分支做一些修改，然后生成两个提交(commit)。</p>
 <p>但是与此同时，有些人也在”origin”分支上做了一些修改并且做了提交了. 这就意味着”origin”和”mywork”这两个分支各自”前进”了，它们之间”分叉”了。</p>
-<p><img src="http://pic.guoyaohua.com/image/git/rebase1.png"></p>
+<p><img src="/rebase1.png"></p>
 <p>在这里，你可以用“pull”命令把“origin”分支上的修改拉下来并且和你的修改合并； 结果看起来就像一个新的”合并的提交”(merge commit):</p>
-<p><img src="http://pic.guoyaohua.com/image/git/rebase2.png"></p>
+<p><img src="/rebase2.png"></p>
 <p>但是，如果你想让“mywork”分支历史看起来像没有经过任何合并一样，你也许可以用 <code>git rebase</code>：</p>
 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$</span> git checkout mywork</span><br><span class="line"><span class="variable">$</span> git rebase origin</span><br></pre></td></tr></table></figure>
 
 <p>这些命令会把你的”mywork”分支里的每个提交(commit)取消掉，并且把它们临时保存为补丁(patch)(这些补丁放到”.git&#x2F;rebase”目录中)，然后把”mywork”分支更新为最新的”origin”分支，最后把保存的这些补丁应用到”mywork”分支上。</p>
-<p><img src="http://pic.guoyaohua.com/image/git/rebase3.png"></p>
+<p><img src="/rebase3.png"></p>
 <p>当”mywork”分支更新之后，它会指向这些新创建的提交(commit)，而那些老的提交会被丢弃。 如果运行垃圾收集命令(pruning garbage collection)，这些被丢弃的提交就会删除。</p>
-<p><img src="http://pic.guoyaohua.com/image/git/rebase4.png"></p>
+<p><img src="/rebase4.png"></p>
 <p>现在我们可以看一下用merge和用rebase所产生的历史的区别：</p>
-<p><img src="http://pic.guoyaohua.com/image/git/1563677573806.png"></p>
-<p><img src="http://pic.guoyaohua.com/image/git/rebase2.png"></p>
+<p><img src="/1563677573806.png"></p>
+<p><img src="/rebase2.png"></p>
 <p>当我们使用<code>git log</code>来参看commit时，其commit的顺序也有所不同。</p>
 <p>假设C3提交于<code>9:00AM</code>，C5提交于<code>10:00AM</code>，C4提交于<code>11:00AM</code>，C6提交于<code>12:00AM</code>，</p>
 <p>对于使用<code>git merge</code>来合并所看到的commit的顺序（从新到旧）是：</p>
@@ -907,7 +907,7 @@
 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$</span> git config <span class="literal">--global</span> alias.lg <span class="string">&quot;log --color --graph --pretty=format:&#x27;%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)&lt;%an&gt;%Creset&#x27; --abbrev-commit&quot;</span></span><br></pre></td></tr></table></figure>
 
 <p>来看看<code>git lg</code>的效果：</p>
-<p><img src="http://pic.guoyaohua.com/image/git/10.png"></p>
+<p><img src="/10.png"></p>
 <h3 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h3><p>配置Git的时候，加上<code>--global</code>是针对当前用户起作用的，如果不加，那只针对当前的仓库起作用。</p>
 <p>配置文件放哪了？每个仓库的Git配置文件都放在<code>.git/config</code>文件中：</p>
 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$</span> <span class="built_in">type</span> .git/config </span><br><span class="line">[<span class="type">core</span>]</span><br><span class="line">    repositoryformatversion = <span class="number">0</span></span><br><span class="line">    filemode = true</span><br><span class="line">    bare = false</span><br><span class="line">    logallrefupdates = true</span><br><span class="line">    ignorecase = true</span><br><span class="line">    precomposeunicode = true</span><br><span class="line">[<span class="type">remote</span> <span class="string">&quot;origin&quot;</span>]</span><br><span class="line">    url = git@github.com:michaelliao/learngit.git</span><br><span class="line">    fetch = +refs/heads/*:refs/remotes/origin/*</span><br><span class="line">[<span class="type">branch</span> <span class="string">&quot;master&quot;</span>]</span><br><span class="line">    remote = origin</span><br><span class="line">    merge = refs/heads/master</span><br><span class="line">[<span class="type">alias</span>]</span><br><span class="line">    last = log <span class="literal">-1</span></span><br></pre></td></tr></table></figure>
@@ -1002,7 +1002,7 @@
             <div class="post-nav-item">
             </div>
             <div class="post-nav-item">
-                <a href="/classification-metrics" rel="next" title="【机器学习】一文读懂分类算法常用评价指标">
+                <a href="/classification-metrics.html" rel="next" title="【机器学习】一文读懂分类算法常用评价指标">
                   【机器学习】一文读懂分类算法常用评价指标 <i class="fa fa-angle-right"></i>
                 </a>
             </div>
@@ -1072,7 +1072,7 @@
 </noscript>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/gitalk/1.8.0/gitalk.css" integrity="sha256-AJnUHL7dBv6PGaeyPQJcgQPDjt/Hn/PvYZde1iqfp8U=" crossorigin="anonymous">
 
-<script class="next-config" data-name="gitalk" type="application/json">{"enable":true,"github_id":"guoyaohua","repo":"guoyaohua.github.io","client_id":"4c009e072d5529480639","client_secret":"e3ecab593b9ac65237423e6802012693e9ee2035","admin_user":"guoyaohua","distraction_free_mode":true,"proxy":"https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token","language":null,"body":null,"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/gitalk/1.8.0/gitalk.min.js","integrity":"sha256-MVK9MGD/XJaGyIghSVrONSnoXoGh3IFxLw0zfvzpxR4="},"path_md5":"7d88d1e3870fb214e7ff2326d824343f"}</script>
+<script class="next-config" data-name="gitalk" type="application/json">{"enable":true,"github_id":"guoyaohua","repo":"guoyaohua.github.io","client_id":"4c009e072d5529480639","client_secret":"e3ecab593b9ac65237423e6802012693e9ee2035","admin_user":"guoyaohua","distraction_free_mode":true,"proxy":"https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token","language":null,"body":null,"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/gitalk/1.8.0/gitalk.min.js","integrity":"sha256-MVK9MGD/XJaGyIghSVrONSnoXoGh3IFxLw0zfvzpxR4="},"path_md5":"94866c72fb869d9edcb965e34ac9dfe8"}</script>
 <script src="/js/third-party/comments/gitalk.js" defer></script>
 
 </body>

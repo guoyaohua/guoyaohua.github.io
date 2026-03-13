@@ -24,15 +24,15 @@
     <meta name="description" content="引言决策树(Decision Tree)是机器学习中一种经典的分类与回归算法。本文主要讨论用于分类的决策树。决策树模型呈树形结构，在分类问题中，决策树模型可以认为是if-then规则的集合，也可以认为是定义在特征空间与类空间上的条件概率分布。其主要优点是模型具有可读性，分类速度快。决策树学习通常包括3个步骤：特征选择、决策树的生成和决策树的剪枝。 基本原理模型结构决策树由结点(Node)和有向边(">
 <meta property="og:type" content="article">
 <meta property="og:title" content="【机器学习】深入理解决策树算法">
-<meta property="og:url" content="https://www.guoyaohua.com/decision-tree">
+<meta property="og:url" content="https://www.guoyaohua.com/decision-tree.html">
 <meta property="og:site_name" content="郭耀华&#39;s Blog | 深度学习、机器学习领域技术博客">
 <meta property="og:description" content="引言决策树(Decision Tree)是机器学习中一种经典的分类与回归算法。本文主要讨论用于分类的决策树。决策树模型呈树形结构，在分类问题中，决策树模型可以认为是if-then规则的集合，也可以认为是定义在特征空间与类空间上的条件概率分布。其主要优点是模型具有可读性，分类速度快。决策树学习通常包括3个步骤：特征选择、决策树的生成和决策树的剪枝。 基本原理模型结构决策树由结点(Node)和有向边(">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://pic.guoyaohua.com/image/decision-tree/decision-tree-tutorial-animated3.gif">
-<meta property="og:image" content="http://pic.guoyaohua.com/image/decision-tree/Entropy.png">
-<meta property="og:image" content="http://pic.guoyaohua.com/image/decision-tree/Pruning.jpg">
+<meta property="og:image" content="https://www.guoyaohua.com/decision-tree-tutorial-animated3.gif">
+<meta property="og:image" content="https://www.guoyaohua.com/Entropy.png">
+<meta property="og:image" content="https://www.guoyaohua.com/Pruning.jpg">
 <meta property="article:published_time" content="2019-11-11T22:38:58.000Z">
-<meta property="article:modified_time" content="2026-03-13T14:02:12.253Z">
+<meta property="article:modified_time" content="2026-03-13T14:25:28.251Z">
 <meta property="article:author" content="郭耀华">
 <meta property="article:tag" content="C4.5">
 <meta property="article:tag" content="CART树">
@@ -45,13 +45,13 @@
 <meta property="article:tag" content="机器学习">
 <meta property="article:tag" content="深度学习">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://pic.guoyaohua.com/image/decision-tree/decision-tree-tutorial-animated3.gif">
+<meta name="twitter:image" content="https://www.guoyaohua.com/decision-tree-tutorial-animated3.gif">
 
 
-<link rel="canonical" href="https://www.guoyaohua.com/decision-tree">
+<link rel="canonical" href="https://www.guoyaohua.com/decision-tree.html">
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.guoyaohua.com/decision-tree","path":"/decision-tree","title":"【机器学习】深入理解决策树算法"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.guoyaohua.com/decision-tree.html","path":"/decision-tree.html","title":"【机器学习】深入理解决策树算法"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
 <title>【机器学习】深入理解决策树算法 | 郭耀华's Blog | 深度学习、机器学习领域技术博客</title>
@@ -260,7 +260,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://www.guoyaohua.com/decision-tree">
+    <link itemprop="mainEntityOfPage" href="https://www.guoyaohua.com/decision-tree.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="http://pic.guoyaohua.com/o_face_icon.jpg">
@@ -296,7 +296,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-03-13 14:02:12" itemprop="dateModified" datetime="2026-03-13T14:02:12Z">2026-03-13</time>
+      <time title="修改时间：2026-03-13 14:25:28" itemprop="dateModified" datetime="2026-03-13T14:25:28Z">2026-03-13</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -344,7 +344,7 @@
 <p>决策树从根结点到子结点的的有向边代表了一条路径。决策树的路径是互斥并且是完备的。</p>
 <p>用决策树分类时，对样本的某个特征进行测试，根据测试结果将样本分配到树的子结点上。此时每个子结点对应该特征的一个取值。递归地对样本测试，直到该样本被划分叶结点。最后将样本分配为叶结点所属的类。</p>
 <h3 id="条件概率分布"><a href="#条件概率分布" class="headerlink" title="条件概率分布"></a>条件概率分布</h3><p>决策树将特征空间划分为互不相交的单元，在每个单元定义一个类的概率分布，这就构成了一个条件概率分布。</p>
-<p><img src="http://pic.guoyaohua.com/image/decision-tree/decision-tree-tutorial-animated3.gif" alt="Decision Tree"></p>
+<p><img src="/decision-tree-tutorial-animated3.gif" alt="Decision Tree"></p>
 <ul>
 <li>决策树的每一条路径对应于划分中的一个基本单元。</li>
 <li>设某个单元$\mathbb S$内部有$N_S$个样本点，则它定义了一个条件概率分布$p(y\mid \mathbf{\vec x}), \mathbf{\vec x} \in \mathbb S $。</li>
@@ -362,7 +362,7 @@
 <p>通常特征选择的准则是<strong>信息增益</strong>或<strong>信息增益比</strong>。</p>
 <h3 id="信息增益"><a href="#信息增益" class="headerlink" title="信息增益"></a>信息增益</h3><p>为了便于说明，先给出熵与条件熵的定义。</p>
 <p>在信息论与概率统计中，熵(Entropy)是表示随机变量不确定性的度量。设<code>X</code>是一个取有限个值的离散随机变量，其概率分布为：<br>$$<br>P \left {X&#x3D;x_{i}  \right }&#x3D;p_{i},;;;i&#x3D;1,2\cdots ,n<br>$$<br>则随机变量<code>X</code>的熵定义为：<br>$$<br>H(X) &#x3D; - \sum_{i&#x3D;1}^n p_{i} \log p_{i}<br>$$<br>在上式中，若$p_{i}&#x3D;0$，则定义$0\log0&#x3D;0$。通常，式中的对数以2为底或以自然对数<code>e</code>为底，对应熵的单位分别称作比特(Bit)或纳特(Nat)。由定义可知，熵只依赖于<code>X</code>的分布，而与<code>X</code>的取值无关，所以也可将<code>X</code>的熵记作$H(p)$，即：<br>$$<br>H(p) &#x3D; - \sum_{i&#x3D;1}^n p_{i} \log p_{i}<br>$$<br>熵越大，随机变量的不确定性就越大。从定义可验证：<br>$$<br>0 \leq H(p) \leq \log n<br>$$<br>当随机变量只取两个值，例如1、0时，即<code>X</code>的分布为：<br>$$<br>P(X&#x3D;1)&#x3D;p,; ; ; P(X&#x3D;0)&#x3D;1-p,; ; ; 0 \leq p \leq 1<br>$$<br>熵为：<br>$$<br>H(p)&#x3D;-p\log_{2}p-(1 - p)log_{2}(1-p)<br>$$<br>当$p &#x3D; 0$或$p &#x3D; 1$时$H(p) &#x3D; 0$，随机变量完全没有不确定性。当$p&#x3D;0.5$时， $H(p)&#x3D;1$，熵取值最大，随机变量不确定性最大。</p>
-<p><img src="http://pic.guoyaohua.com/image/decision-tree/Entropy.png" alt="二元信源熵函数"></p>
+<p><img src="/Entropy.png" alt="二元信源熵函数"></p>
 <p>设有随机变量<code>(X, Y)</code>，其联合概率分布为：<br>$$<br>P(X &#x3D; x_{i},Y &#x3D; y_{j}) &#x3D; p_{ij};,; ; ;i &#x3D; 1,2,\cdots,n;;;j&#x3D; 1,2,\cdots,m<br>$$<br>条件熵$H(X\mid Y)$表示在己知随机变量<code>X</code>的条件下随机变量<code>Y</code>的不确定性。随机变量<code>X</code>给定的条件下随机变量<code>Y</code>的条件熵(Conditional Entropy) $H(X\mid Y)$，定义为<code>X</code>给定条件下<code>Y</code>的条件概率分布的熵对<code>X</code>的数学期望：<br>$$<br>H(X\mid Y)&#x3D;\sum_{i&#x3D;1}^{n}p_{i}H(Y\mid X&#x3D;X_{i})<br>$$<br>这里，$p_{i}&#x3D;P(X&#x3D;x_{i});,; ; ;i&#x3D;1,2,\cdots,n$。</p>
 <p>当熵和条件熵中的概率由数据估计（特别是极大似然估计）得到时，所对应的熵与条件熵分别称为经验熵(Empirical Entropy)和经验条件熵(Empirical Conditional Entropy)。此时，如果有0概率，令$0\log0 &#x3D; 0$。</p>
 <p>**信息增益(Information Gain)**表示得知特征<code>X</code>的信息而使得类<code>Y</code>的信息的不确定性减少的程度。</p>
@@ -402,7 +402,7 @@
 <p>决策树的剪枝往往通过极小化决策树整体的损失函数(Loss Function)或代价函数(Cost Function)来实现。设树$T$的叶结点个数为$\left | T \right |$，<code>t</code>是树$T$的叶结点，该叶结点有$N_{t}$个样本点，其中<code>k</code>类的样本点有$N_{tk}$个，$k&#x3D;1,2,\cdots ,K$，$H_{t}(T)$为叶结<code>t</code>点上的经验熵，$a\geq 0$为参数，则决策树学习的损失函数可以定义为：<br>$$<br>C_{a}(T)&#x3D;\sum_{t&#x3D;1}^{\left | T \right |}N_{t}H_{t}(T)+a\left | T \right |<br>$$<br>其中经验熵为：<br>$$<br>H_{t}(T)&#x3D;-\sum_{k}\frac{N_{tk}}{N_{t}}\log \frac{N_{tk}}{N_{t}}<br>$$<br>在损失函数中，记：<br>$$<br>C(T)&#x3D;\sum_{t&#x3D;1}^{\left | T \right |}N_{t}H_{t}(T)&#x3D;-\sum_{t&#x3D;1}^{\left | T \right |}\sum_{k&#x3D;1}^{K}N_{tk}\log \frac{N_{tk}}{N_{t}}<br>$$<br>这时有：<br>$$<br>C_{a}(T)&#x3D;C(T)+a|T|<br>$$<br>上式中，$C(T)$表示模型对训练数据的预测误差，即模型与训练数据的拟合程度，$|T|$表示模型复杂度，也称正则项，参数$a&gt;0$控制两者之间的影响。较大的$a$促使选择较简单的模型（树），较小的$a$促使选择较复杂的模型（树）。$a &#x3D; 0$意味着只考虑模型与训练数据的拟合程度，不考虑模型的复杂度。</p>
 <p>剪枝，就是当$a$确定时，选择损失函数最小的模型，即损失函数最小的子树。当$a$值确定时，子树越大，往往与训练数据的拟合越好，但是模型的复杂度就越髙；相反，子树越小，模型的复杂度就越低，但是往往与训练数据的拟合不好。损失函数正好表示了对两者的平衡.</p>
 <p>可以看出，决策树生成只考虑了通过提高信息增益（或信息增益比）对训练数据进行更好的拟合。而决策树剪枝通过优化损失函数还考虑了减小模型复杂度。决策树生成学习局部的模型，而决策树剪枝学习整体的模型。</p>
-<p><img src="http://pic.guoyaohua.com/image/decision-tree/Pruning.jpg" alt="决策树剪枝过程"></p>
+<p><img src="/Pruning.jpg" alt="决策树剪枝过程"></p>
 <p><strong>树的剪枝算法</strong></p>
 <p>​		输入：生成算法产生的整个树$T$，参数$a$：</p>
 <p>​		输出：修剪后的子树$T$。</p>
@@ -502,7 +502,7 @@
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/classification-metrics" rel="prev" title="【机器学习】一文读懂分类算法常用评价指标">
+                <a href="/classification-metrics.html" rel="prev" title="【机器学习】一文读懂分类算法常用评价指标">
                   <i class="fa fa-angle-left"></i> 【机器学习】一文读懂分类算法常用评价指标
                 </a>
             </div>
@@ -577,7 +577,7 @@
 </noscript>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/gitalk/1.8.0/gitalk.css" integrity="sha256-AJnUHL7dBv6PGaeyPQJcgQPDjt/Hn/PvYZde1iqfp8U=" crossorigin="anonymous">
 
-<script class="next-config" data-name="gitalk" type="application/json">{"enable":true,"github_id":"guoyaohua","repo":"guoyaohua.github.io","client_id":"4c009e072d5529480639","client_secret":"e3ecab593b9ac65237423e6802012693e9ee2035","admin_user":"guoyaohua","distraction_free_mode":true,"proxy":"https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token","language":null,"body":null,"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/gitalk/1.8.0/gitalk.min.js","integrity":"sha256-MVK9MGD/XJaGyIghSVrONSnoXoGh3IFxLw0zfvzpxR4="},"path_md5":"cf38a6483cbab67e8f5cb3394f85b419"}</script>
+<script class="next-config" data-name="gitalk" type="application/json">{"enable":true,"github_id":"guoyaohua","repo":"guoyaohua.github.io","client_id":"4c009e072d5529480639","client_secret":"e3ecab593b9ac65237423e6802012693e9ee2035","admin_user":"guoyaohua","distraction_free_mode":true,"proxy":"https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token","language":null,"body":null,"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/gitalk/1.8.0/gitalk.min.js","integrity":"sha256-MVK9MGD/XJaGyIghSVrONSnoXoGh3IFxLw0zfvzpxR4="},"path_md5":"cf16bd7631d2bb7d7d79db5bf8528400"}</script>
 <script src="/js/third-party/comments/gitalk.js" defer></script>
 
 </body>
