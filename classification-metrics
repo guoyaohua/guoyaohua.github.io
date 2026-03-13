@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.ico">
+  <link rel="mask-icon" href="/images/favicon.ico" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.31/fancybox/fancybox.css" integrity="sha256-gkQVf8UKZgQ0HyuxL/VnacadJ+D2Kox2TCEBuNQg5+w=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.guoyaohua.com","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"right","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"flat"},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="前言评价指标是针对将相同的数据，输入不同的算法模型，或者输入不同参数的同一种算法模型，而给出这个算法或者参数好坏的定量指标。 在模型评估过程中，往往需要使用多种不同的指标进行评估，在诸多的评价指标中，大部分指标只能片面的反应模型的一部分性能，如果不能合理的运用评估指标，不仅不能发现模型本身的问题，而且会得出错误的结论。 最近恰好在做文本分类的工作，所以把机器学习分类任务的评价指标又过了一遍。本文将">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【机器学习】一文读懂分类算法常用评价指标">
+<meta property="og:url" content="https://www.guoyaohua.com/classification-metrics">
+<meta property="og:site_name" content="郭耀华&#39;s Blog | 深度学习、机器学习领域技术博客">
+<meta property="og:description" content="前言评价指标是针对将相同的数据，输入不同的算法模型，或者输入不同参数的同一种算法模型，而给出这个算法或者参数好坏的定量指标。 在模型评估过程中，往往需要使用多种不同的指标进行评估，在诸多的评价指标中，大部分指标只能片面的反应模型的一部分性能，如果不能合理的运用评估指标，不仅不能发现模型本身的问题，而且会得出错误的结论。 最近恰好在做文本分类的工作，所以把机器学习分类任务的评价指标又过了一遍。本文将">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://pic.guoyaohua.com/image/classification_metrics/Precisionrecall.png">
+<meta property="og:image" content="http://pic.guoyaohua.com/image/classification_metrics/PR_Curve.png">
+<meta property="og:image" content="http://pic.guoyaohua.com/image/classification_metrics/ROC.png">
+<meta property="og:image" content="http://pic.guoyaohua.com/image/classification_metrics/ROC-Threshold.gif">
+<meta property="og:image" content="http://pic.guoyaohua.com/image/classification_metrics/ROC-Performance.gif">
+<meta property="og:image" content="http://pic.guoyaohua.com/image/classification_metrics/ROC-Balance.gif">
+<meta property="og:image" content="http://pic.guoyaohua.com/image/classification_metrics/Confusion_Matrix.png">
+<meta property="article:published_time" content="2019-09-01T13:01:14.000Z">
+<meta property="article:modified_time" content="2026-03-13T14:02:12.248Z">
+<meta property="article:author" content="郭耀华">
+<meta property="article:tag" content="AUC">
+<meta property="article:tag" content="F1指数">
+<meta property="article:tag" content="P-R曲线">
+<meta property="article:tag" content="ROC">
+<meta property="article:tag" content="准确率、精确率、召回率">
+<meta property="article:tag" content="分类算法">
+<meta property="article:tag" content="分类算法评价指标">
+<meta property="article:tag" content="机器学习">
+<meta property="article:tag" content="深度学习">
+<meta property="article:tag" content="评价指标">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://pic.guoyaohua.com/image/classification_metrics/Precisionrecall.png">
+
+
+<link rel="canonical" href="https://www.guoyaohua.com/classification-metrics">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.guoyaohua.com/classification-metrics","path":"/classification-metrics","title":"【机器学习】一文读懂分类算法常用评价指标"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>【机器学习】一文读懂分类算法常用评价指标 | 郭耀华's Blog | 深度学习、机器学习领域技术博客</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script size="300" alpha="0.6" zIndex="-1" src="https://cdnjs.cloudflare.com/ajax/libs/ribbon.js/1.0.2/ribbon.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.31/fancybox/fancybox.umd.js" integrity="sha256-a+H7FYzJv6oU2hfsfDGM2Ohw/cR9v+hPfxHCLdmCrE8=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+  <script src="/js/third-party/fancybox.js" defer></script>
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="郭耀华's Blog | 深度学习、机器学习领域技术博客" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">郭耀华's Blog | 深度学习、机器学习领域技术博客</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">欲穷千里目，更上一层楼。</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%87%86%E7%A1%AE%E7%8E%87%EF%BC%88Accuracy%EF%BC%89"><span class="nav-text">准确率（Accuracy）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B2%BE%E7%A1%AE%E7%8E%87%EF%BC%88Precision%EF%BC%89%E3%80%81%E5%8F%AC%E5%9B%9E%E7%8E%87%EF%BC%88Recall%EF%BC%89"><span class="nav-text">精确率（Precision）、召回率（Recall）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#P-R%E6%9B%B2%E7%BA%BF"><span class="nav-text">P-R曲线</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#F1-Score"><span class="nav-text">F1-Score</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ROC%E6%9B%B2%E7%BA%BF"><span class="nav-text">ROC曲线</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%98%88%E5%80%BC%E9%97%AE%E9%A2%98"><span class="nav-text">阈值问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%A4%E6%96%AD%E6%A8%A1%E5%9E%8B%E6%80%A7%E8%83%BD"><span class="nav-text">判断模型性能</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%97%A0%E8%A7%86%E6%A0%B7%E6%9C%AC%E4%B8%8D%E5%B9%B3%E8%A1%A1"><span class="nav-text">无视样本不平衡</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#AUC"><span class="nav-text">AUC</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%89%A9%E7%90%86%E6%84%8F%E4%B9%89"><span class="nav-text">物理意义</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B7%B7%E6%B7%86%E7%9F%A9%E9%98%B5"><span class="nav-text">混淆矩阵</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%9A%E5%88%86%E7%B1%BB%E9%97%AE%E9%A2%98"><span class="nav-text">多分类问题</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="郭耀华"
+      src="http://pic.guoyaohua.com/o_face_icon.jpg">
+  <p class="site-author-name" itemprop="name">郭耀华</p>
+  <div class="site-description" itemprop="description">记录IT成长路上的点点滴滴，分享深度学习、机器学习领域最新技术。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">6</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">31</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/guoyaohua" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;guoyaohua" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:guo.yaohua@foxmail.com" title="E-Mail → mailto:guo.yaohua@foxmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+          链接
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="http://jiqizhixin.com/" title="http:&#x2F;&#x2F;jiqizhixin.com" rel="noopener" target="_blank">机器之心</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://www.cnblogs.com/guoyaohua" title="https:&#x2F;&#x2F;www.cnblogs.com&#x2F;guoyaohua" rel="noopener" target="_blank">郭耀华博客园</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.guoyaohua.com/classification-metrics">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="http://pic.guoyaohua.com/o_face_icon.jpg">
+      <meta itemprop="name" content="郭耀华">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="郭耀华's Blog | 深度学习、机器学习领域技术博客">
+      <meta itemprop="description" content="记录IT成长路上的点点滴滴，分享深度学习、机器学习领域最新技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="【机器学习】一文读懂分类算法常用评价指标 | 郭耀华's Blog | 深度学习、机器学习领域技术博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          【机器学习】一文读懂分类算法常用评价指标
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2019-09-01 13:01:14" itemprop="dateCreated datePublished" datetime="2019-09-01T13:01:14Z">2019-09-01</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2026-03-13 14:02:12" itemprop="dateModified" datetime="2026-03-13T14:02:12Z">2026-03-13</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Machine-Learning/" itemprop="url" rel="index"><span itemprop="name">Machine Learning</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>5.7k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>5 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>评价指标是针对将相同的数据，输入不同的算法模型，或者输入不同参数的同一种算法模型，而给出这个算法或者参数好坏的定量指标。</p>
+<p>在模型评估过程中，往往需要使用多种不同的指标进行评估，在诸多的评价指标中，大部分指标只能片面的反应模型的一部分性能，如果不能合理的运用评估指标，不仅不能发现模型本身的问题，而且会得出错误的结论。</p>
+<p>最近恰好在做文本分类的工作，所以把机器学习分类任务的评价指标又过了一遍。本文将详细介绍机器学习分类任务的常用评价指标：准确率（Accuracy）、精确率（Precision）、召回率（Recall）、P-R曲线（Precision-Recall Curve）、F1 Score、混淆矩阵（Confuse Matrix）、ROC、AUC。</p>
+<h2 id="准确率（Accuracy）"><a href="#准确率（Accuracy）" class="headerlink" title="准确率（Accuracy）"></a>准确率（Accuracy）</h2><p>准确率是分类问题中最为原始的评价指标，准确率的定义是<strong>预测正确的结果占总样本的百分比</strong>，其公式如下：<br>$$<br>Accuracy &#x3D; \frac{TP+TN}{TP+TN+FP+FN}<br>$$<br>其中：</p>
+<ul>
+<li>真正例(True Positive, <strong>TP</strong>)：被模型预测为正的正样本；</li>
+<li>假正例(False Positive, <strong>FP</strong>)：被模型预测为正的负样本；</li>
+<li>假负例(False Negative, <strong>FN</strong>)：被模型预测为负的正样本；</li>
+<li>真负例(True Negative, <strong>TN</strong>)：被模型预测为负的负样本；</li>
+</ul>
+<p>但是，准确率评价算法有一个明显的弊端问题，就是在数据的类别不均衡，特别是有极偏的数据存在的情况下，准确率这个评价指标是不能客观评价算法的优劣的。例如下面这个例子：</p>
+<p>在测试集里，有100个sample，99个反例，只有1个正例。如果我的模型不分青红皂白对任意一个sample都预测是反例，那么我的模型的准确率就为0.99，从数值上看是非常不错的，但事实上，这样的算法没有任何的预测能力，于是我们就应该考虑是不是评价指标出了问题，这时就需要使用其他的评价指标综合评判了。</p>
+<h2 id="精确率（Precision）、召回率（Recall）"><a href="#精确率（Precision）、召回率（Recall）" class="headerlink" title="精确率（Precision）、召回率（Recall）"></a>精确率（Precision）、召回率（Recall）</h2><p><strong>精准率</strong>（Precision）又叫<strong>查准率</strong>，它是<strong>针对预测结果</strong>而言的，它的含义是<strong>在所有被预测为正的样本中实际为正的样本的概率</strong>，意思就是在预测为正样本的结果中，我们有多少把握可以预测正确，其公式如下：<br>$$<br>Precision &#x3D; \frac{TP}{TP+FP}<br>$$</p>
+<p>精准率和准确率看上去有些类似，但是完全不同的两个概念。精准率代表对正样本结果中的预测准确程度，而准确率则代表整体的预测准确程度，既包括正样本，也包括负样本。</p>
+<p><strong>召回率</strong>（Recall）又叫<strong>查全率</strong>，它是<strong>针对原样本</strong>而言的，它的含义是<strong>在实际为正的样本中被预测为正样本的概率</strong>，其公式如下：<br>$$<br>Recall &#x3D; \frac{TP}{TP+FN}<br>$$</p>
+<p>引用Wiki中的图，帮助说明下二者的关系。</p>
+<p><img src="http://pic.guoyaohua.com/image/classification_metrics/Precisionrecall.png" alt="Precision And Recall"></p>
+<p>在不同的应用场景下，我们的关注点不同，例如，在预测股票的时候，我们更关心精准率，即我们预测升的那些股票里，真的升了有多少，因为那些我们预测升的股票都是我们投钱的。而在预测病患的场景下，我们更关注召回率，即真的患病的那些人里我们预测错了情况应该越少越好。</p>
+<p>精确率和召回率是一对此消彼长的度量。例如在推荐系统中，我们想让推送的内容尽可能用户全都感兴趣，那只能推送我们把握高的内容，这样就漏掉了一些用户感兴趣的内容，召回率就低了；如果想让用户感兴趣的内容都被推送，那只有将所有内容都推送上，宁可错杀一千，不可放过一个，这样准确率就很低了。</p>
+<p>在实际工程中，我们往往需要结合两个指标的结果，去寻找一个平衡点，使综合性能最大化。</p>
+<h2 id="P-R曲线"><a href="#P-R曲线" class="headerlink" title="P-R曲线"></a>P-R曲线</h2><p>P-R曲线（Precision Recall Curve）正是描述精确率、召回率变化的曲线，P-R曲线定义如下：根据学习器的预测结果（一般为一个实值或概率）对测试样本进行排序，将最可能是“正例”的样本排在前面，最不可能是“正例”的排在后面，按此顺序逐个把样本作为“正例”进行预测，每次计算出当前的P值和R值，如下图所示：</p>
+<p><img src="http://pic.guoyaohua.com/image/classification_metrics/PR_Curve.png" alt="Precision Recall Curve"></p>
+<p>P-R曲线如何评估呢？若一个学习器A的P-R曲线被另一个学习器B的P-R曲线完全包住，则称：B的性能优于A。若A和B的曲线发生了交叉，则谁的曲线下的面积大，谁的性能更优。但一般来说，曲线下的面积是很难进行估算的，所以衍生出了“<strong>平衡点</strong>”（Break-Event Point，简称<strong>BEP</strong>），即当P&#x3D;R时的取值，平衡点的取值越高，性能更优。</p>
+<h2 id="F1-Score"><a href="#F1-Score" class="headerlink" title="F1-Score"></a>F1-Score</h2><p>正如上文所述，Precision和Recall指标有时是此消彼长的，即精准率高了，召回率就下降，在一些场景下要兼顾精准率和召回率，最常见的方法就是F-Measure，又称F-Score。F-Measure是P和R的<strong>加权调和平均</strong>，即：<br>$$<br>\frac{1}{F_{\beta}}&#x3D;\frac{1}{1+\beta^{2}} \cdot\left(\frac{1}{P}+\frac{\beta^{2}}{R}\right)<br>$$</p>
+<p>$$<br>F_{\beta}&#x3D;\frac{\left(1+\beta^{2}\right) \times P \times R}{\left(\beta^{2} \times P\right)+R}<br>$$</p>
+<p>特别地，当β&#x3D;1时，也就是常见的F1-Score，是P和R的调和平均，当F1较高时，模型的性能越好。</p>
+<p>$$<br>\frac{1}{F 1}&#x3D;\frac{1}{2} \cdot\left(\frac{1}{P}+\frac{1}{R}\right)<br>$$</p>
+<p>$$<br>F1&#x3D;\frac{2 \times P \times R}{P+R} &#x3D; \frac{2 \times TP}{样例总数+TP-TN}<br>$$</p>
+<h2 id="ROC曲线"><a href="#ROC曲线" class="headerlink" title="ROC曲线"></a>ROC曲线</h2><p>ROC以及后面要讲到的AUC，是分类任务中非常常用的评价指标，本文将详细阐述。可能有人会有疑问，既然已经这么多评价标准，为什么还要使用ROC和AUC呢？</p>
+<p>因为ROC曲线有个很好的特性：**当测试集中的正负样本的分布变化的时候，ROC曲线能够保持不变。**在实际的数据集中经常会出现类别不平衡（Class Imbalance）现象，即负样本比正样本多很多（或者相反），而且测试数据中的正负样本的分布也可能随着时间变化，ROC以及AUC可以很好的消除样本类别不平衡对指标结果产生的影响。 </p>
+<p>另一个原因是，ROC和上面做提到的P-R曲线一样，是一种不依赖于阈值（Threshold）的评价指标，在输出为概率分布的分类模型中，如果仅使用准确率、精确率、召回率作为评价指标进行模型对比时，都必须时基于某一个给定阈值的，对于不同的阈值，各模型的Metrics结果也会有所不同，这样就很难得出一个很置信的结果。</p>
+<p>在正式介绍ROC之前，我们还要再介绍两个指标，<strong>这两个指标的选择使得ROC可以无视样本的不平衡。<strong>这两个指标分别是：<strong>灵敏度（sensitivity）<strong>和</strong>特异度（specificity）</strong>，也叫做</strong>真正率（TPR）<strong>和</strong>假正率（FPR）</strong>，具体公式如下。</p>
+<ul>
+<li>真正率(True Positive Rate , <strong>TPR</strong>)，又称灵敏度：</li>
+</ul>
+<p>$$<br>TPR &#x3D; \frac{正样本预测正确数}{正样本总数} &#x3D; \frac{TP}{TP+FN}<br>$$</p>
+<p>其实我们可以发现灵敏度和召回率是一模一样的，只是名字换了而已</p>
+<ul>
+<li>假负率(False Negative Rate , <strong>FNR</strong>) ：</li>
+</ul>
+<p>$$<br>FNR &#x3D; \frac{正样本预测错误数}{正样本总数} &#x3D; \frac{FN}{TP+FN}<br>$$</p>
+<ul>
+<li>假正率(False Positive Rate , <strong>FPR</strong>) ：</li>
+</ul>
+<p>$$<br>FPR &#x3D; \frac{负样本预测错误数}{负样本总数} &#x3D; \frac{FP}{TN+FP}<br>$$</p>
+<ul>
+<li>真负率(True Negative Rate , <strong>TNR</strong>)，又称特异度：</li>
+</ul>
+<p>$$<br>TNR &#x3D; \frac{负样本预测正确数}{负样本总数} &#x3D; \frac{TN}{TN+FP}<br>$$</p>
+<p>细分析上述公式，我们可以可看出，灵敏度（真正率）TPR是正样本的召回率，特异度（真负率）TNR是负样本的召回率，而假负率$FNR&#x3D;1-TPR$、假正率$FPR&#x3D;1-TNR$，上述四个量都是针对单一类别的预测结果而言的，所以对整体样本是否均衡并不敏感。举个例子：假设总样本中，90%是正样本，10%是负样本。在这种情况下我们如果使用准确率进行评价是不科学的，但是用TPR和TNR却是可以的，因为TPR只关注90%正样本中有多少是被预测正确的，而与那10%负样本毫无关系，同理，FPR只关注10%负样本中有多少是被预测错误的，也与那90%正样本毫无关系。这样就避免了样本不平衡的问题。</p>
+<p><strong>ROC（Receiver Operating Characteristic）曲线</strong>，又称接受者操作特征曲线。该曲线最早应用于雷达信号检测领域，用于区分信号与噪声。后来人们将其用于评价模型的预测能力。ROC曲线中的主要两个指标就是<strong>真正率TPR</strong>和<strong>假正率FPR</strong>，上面已经解释了这么选择的好处所在。其中横坐标为假正率（FPR），纵坐标为真正率（TPR），下面就是一个标准的ROC曲线图。</p>
+<p><img src="http://pic.guoyaohua.com/image/classification_metrics/ROC.png" alt="ROC Curve"></p>
+<h3 id="阈值问题"><a href="#阈值问题" class="headerlink" title="阈值问题"></a>阈值问题</h3><p>与前面的P-R曲线类似，ROC曲线也是通过<strong>遍历所有阈值</strong>来绘制整条曲线的。如果我们不断的遍历所有阈值，预测的正样本和负样本是在不断变化的，相应的在ROC曲线图中也会沿着曲线滑动。</p>
+<p><img src="http://pic.guoyaohua.com/image/classification_metrics/ROC-Threshold.gif" alt="ROC-Threshold"></p>
+<p>我们看到改变阈值只是不断地改变预测的正负样本数，即TPR和FPR，但是曲线本身并没有改变。这是有道理的，阈值并不会改变模型的性能。</p>
+<h3 id="判断模型性能"><a href="#判断模型性能" class="headerlink" title="判断模型性能"></a>判断模型性能</h3><p>那么如何判断一个模型的ROC曲线是好的呢？这个还是要回归到我们的目的：FPR表示模型对于负样本误判的程度，而TPR表示模型对正样本召回的程度。我们所希望的当然是：负样本误判的越少越好，正样本召回的越多越好。所以总结一下就是**TPR越高，同时FPR越低（即ROC曲线越陡），那么模型的性能就越好。**参考如下动态图进行理解。</p>
+<p><img src="http://pic.guoyaohua.com/image/classification_metrics/ROC-Performance.gif" alt="ROC Curve Change"></p>
+<p>即：<strong>进行模型的性能比较时，与PR曲线类似，若一个模型A的ROC曲线被另一个模型B的ROC曲线完全包住，则称B的性能优于A。若A和B的曲线发生了交叉，则谁的曲线下的面积大，谁的性能更优。</strong></p>
+<h3 id="无视样本不平衡"><a href="#无视样本不平衡" class="headerlink" title="无视样本不平衡"></a>无视样本不平衡</h3><p>前面已经对ROC曲线为什么可以无视样本不平衡做了解释，下面我们用动态图的形式再次展示一下它是如何工作的。我们发现：<strong>无论红蓝色样本比例如何改变，ROC曲线都没有影响。</strong></p>
+<p><img src="http://pic.guoyaohua.com/image/classification_metrics/ROC-Balance.gif"></p>
+<h2 id="AUC"><a href="#AUC" class="headerlink" title="AUC"></a>AUC</h2><p>AUC(Area Under Curve)又称为曲线下面积，是处于ROC Curve下方的那部分面积的大小。上文中我们已经提到，对于ROC曲线下方面积越大表明模型性能越好，于是AUC就是由此产生的评价指标。通常，AUC的值介于0.5到1.0之间，较大的AUC代表了较好的Performance。如果模型是完美的，那么它的AUC &#x3D; 1，证明所有正例排在了负例的前面，如果模型是个简单的二类随机猜测模型，那么它的AUC &#x3D; 0.5，如果一个模型好于另一个，则它的曲线下方面积相对较大，对应的AUC值也会较大。</p>
+<h3 id="物理意义"><a href="#物理意义" class="headerlink" title="物理意义"></a>物理意义</h3><p>AUC对所有可能的分类阈值的效果进行综合衡量。首先AUC值是一个概率值，可以理解为随机挑选一个正样本以及一个负样本，分类器判定正样本分值高于负样本分值的概率就是AUC值。简言之，AUC值越大，当前的分类算法越有可能将正样本分值高于负样本分值，即能够更好的分类。</p>
+<h2 id="混淆矩阵"><a href="#混淆矩阵" class="headerlink" title="混淆矩阵"></a>混淆矩阵</h2><p>混淆矩阵（<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Confusion_matrix">Confusion Matrix</a>）又被称为错误矩阵，通过它可以直观地观察到算法的效果。它的每一列是样本的预测分类，每一行是样本的真实分类（反过来也可以），顾名思义，它反映了分类结果的混淆程度。混淆矩阵$i$行$j$列的原始是原本是类别$i$却被分为类别$j$的样本个数，计算完之后还可以对之进行可视化：</p>
+<p><img src="http://pic.guoyaohua.com/image/classification_metrics/Confusion_Matrix.png" alt="Confusion Matrix Heat Map"></p>
+<h2 id="多分类问题"><a href="#多分类问题" class="headerlink" title="多分类问题"></a>多分类问题</h2><p>对于多分类问题，或者在二分类问题中，我们有时候会有多组混淆矩阵，例如：多次训练或者在多个数据集上训练的结果，那么估算全局性能的方法有两种，分为宏平均（macro-average）和微平均（micro-average）。简单理解，宏平均就是先算出每个混淆矩阵的P值和R值，然后取得平均P值macro-P和平均R值macro-R，再算出$Fβ$或$F1$，而微平均则是计算出混淆矩阵的平均TP、FP、TN、FN，接着进行计算P、R，进而求出$Fβ$或$F1$。其它分类指标同理，均可以通过宏平均&#x2F;微平均计算得出。<br>$$<br>\operatorname{macro}P&#x3D;\frac{1}{n} \sum_{i&#x3D;1}^{n} P_{i}<br>$$</p>
+<p>$$<br>\operatorname{macro}R&#x3D;\frac{1}{n} \sum_{i&#x3D;1}^{n} R_{i}<br>$$</p>
+<p>$$<br>\operatorname{macro} F 1&#x3D;\frac{2 \times \operatorname{macro} P \times \operatorname{macro} R}{\operatorname{macro} P+\operatorname{macro}R}<br>$$</p>
+<p>$$<br>\operatorname{micro} P&#x3D;\frac{\overline{T P}}{\overline{T P}+\overline{F P}}<br>$$</p>
+<p>$$<br>\operatorname{micro}R&#x3D;\frac{\overline{T P}}{\overline{T P}+\overline{F N}}<br>$$</p>
+<p>$$<br>\operatorname{micro} F 1&#x3D;\frac{2 \times \operatorname{micro} P \times \operatorname{micro} R}{\operatorname{micro} P+\operatorname{micro}R}<br>$$</p>
+<p>需要注意的是，在多分类任务场景中，如果非要用一个综合考量的metric的话，<strong>宏平均会比微平均更好一些</strong>，因为宏平均受稀有类别影响更大。宏平均平等对待每一个类别，所以它的值主要受到稀有类别的影响，而微平均平等考虑数据集中的每一个样本，所以它的值受到常见类别的影响比较大。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.png" alt="郭耀华 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="郭耀华 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag"># 机器学习</a>
+              <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" rel="tag"># 深度学习</a>
+              <a href="/tags/%E5%88%86%E7%B1%BB%E7%AE%97%E6%B3%95/" rel="tag"># 分类算法</a>
+              <a href="/tags/%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87/" rel="tag"># 评价指标</a>
+              <a href="/tags/%E5%88%86%E7%B1%BB%E7%AE%97%E6%B3%95%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87/" rel="tag"># 分类算法评价指标</a>
+              <a href="/tags/%E5%87%86%E7%A1%AE%E7%8E%87%E3%80%81%E7%B2%BE%E7%A1%AE%E7%8E%87%E3%80%81%E5%8F%AC%E5%9B%9E%E7%8E%87/" rel="tag"># 准确率、精确率、召回率</a>
+              <a href="/tags/P-R%E6%9B%B2%E7%BA%BF/" rel="tag"># P-R曲线</a>
+              <a href="/tags/F1%E6%8C%87%E6%95%B0/" rel="tag"># F1指数</a>
+              <a href="/tags/ROC/" rel="tag"># ROC</a>
+              <a href="/tags/AUC/" rel="tag"># AUC</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/Git-tutorial" rel="prev" title="Git常用操作指南">
+                  <i class="fa fa-angle-left"></i> Git常用操作指南
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/decision-tree" rel="next" title="【机器学习】深入理解决策树算法">
+                  【机器学习】深入理解决策树算法 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments gitalk-container"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2019 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-user"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">郭耀华</span>
+  </div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/guoyaohua" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/gitalk/1.8.0/gitalk.css" integrity="sha256-AJnUHL7dBv6PGaeyPQJcgQPDjt/Hn/PvYZde1iqfp8U=" crossorigin="anonymous">
+
+<script class="next-config" data-name="gitalk" type="application/json">{"enable":true,"github_id":"guoyaohua","repo":"guoyaohua.github.io","client_id":"4c009e072d5529480639","client_secret":"e3ecab593b9ac65237423e6802012693e9ee2035","admin_user":"guoyaohua","distraction_free_mode":true,"proxy":"https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token","language":null,"body":null,"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/gitalk/1.8.0/gitalk.min.js","integrity":"sha256-MVK9MGD/XJaGyIghSVrONSnoXoGh3IFxLw0zfvzpxR4="},"path_md5":"4718d6254ca9078a1794be06f713dc5c"}</script>
+<script src="/js/third-party/comments/gitalk.js" defer></script>
+
+</body>
+</html>

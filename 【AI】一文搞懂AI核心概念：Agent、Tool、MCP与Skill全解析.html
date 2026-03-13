@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.ico">
+  <link rel="mask-icon" href="/images/favicon.ico" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.31/fancybox/fancybox.css" integrity="sha256-gkQVf8UKZgQ0HyuxL/VnacadJ+D2Kox2TCEBuNQg5+w=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.guoyaohua.com","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"right","width_expanded":320,"width_dual_column":240,"display":"always","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"flat"},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="随着大语言模型（LLM）的爆发式发展，AI 领域涌现了大量新概念：Agent、Tool、MCP、Skill、RAG、Function Calling……这些术语让很多人一头雾水。本文将用最通俗易懂的方式，为你逐一拆解这些概念，并进行详细对比，帮你彻底理清它们之间的关系。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【AI】一文搞懂AI核心概念：Agent、Tool、MCP与Skill全解析">
+<meta property="og:url" content="https://www.guoyaohua.com/%E3%80%90AI%E3%80%91%E4%B8%80%E6%96%87%E6%90%9E%E6%87%82AI%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5%EF%BC%9AAgent%E3%80%81Tool%E3%80%81MCP%E4%B8%8ESkill%E5%85%A8%E8%A7%A3%E6%9E%90.html">
+<meta property="og:site_name" content="郭耀华&#39;s Blog | 深度学习、机器学习领域技术博客">
+<meta property="og:description" content="随着大语言模型（LLM）的爆发式发展，AI 领域涌现了大量新概念：Agent、Tool、MCP、Skill、RAG、Function Calling……这些术语让很多人一头雾水。本文将用最通俗易懂的方式，为你逐一拆解这些概念，并进行详细对比，帮你彻底理清它们之间的关系。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-03-13T21:00:00.000Z">
+<meta property="article:modified_time" content="2026-03-13T14:02:12.559Z">
+<meta property="article:author" content="郭耀华">
+<meta property="article:tag" content="AI">
+<meta property="article:tag" content="Agent">
+<meta property="article:tag" content="LLM">
+<meta property="article:tag" content="MCP">
+<meta property="article:tag" content="Skill">
+<meta property="article:tag" content="Tool">
+<meta property="article:tag" content="人工智能">
+<meta property="article:tag" content="大模型">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.guoyaohua.com/%E3%80%90AI%E3%80%91%E4%B8%80%E6%96%87%E6%90%9E%E6%87%82AI%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5%EF%BC%9AAgent%E3%80%81Tool%E3%80%81MCP%E4%B8%8ESkill%E5%85%A8%E8%A7%A3%E6%9E%90.html">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.guoyaohua.com/%E3%80%90AI%E3%80%91%E4%B8%80%E6%96%87%E6%90%9E%E6%87%82AI%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5%EF%BC%9AAgent%E3%80%81Tool%E3%80%81MCP%E4%B8%8ESkill%E5%85%A8%E8%A7%A3%E6%9E%90.html","path":"【AI】一文搞懂AI核心概念：Agent、Tool、MCP与Skill全解析.html","title":"【AI】一文搞懂AI核心概念：Agent、Tool、MCP与Skill全解析"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>【AI】一文搞懂AI核心概念：Agent、Tool、MCP与Skill全解析 | 郭耀华's Blog | 深度学习、机器学习领域技术博客</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script size="300" alpha="0.6" zIndex="-1" src="https://cdnjs.cloudflare.com/ajax/libs/ribbon.js/1.0.2/ribbon.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.31/fancybox/fancybox.umd.js" integrity="sha256-a+H7FYzJv6oU2hfsfDGM2Ohw/cR9v+hPfxHCLdmCrE8=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+  <script src="/js/third-party/fancybox.js" defer></script>
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="郭耀华's Blog | 深度学习、机器学习领域技术博客" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">郭耀华's Blog | 深度学习、机器学习领域技术博客</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">欲穷千里目，更上一层楼。</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81%E7%90%86%E8%A7%A3%E8%BF%99%E4%BA%9B%E6%A6%82%E5%BF%B5%EF%BC%9F"><span class="nav-text">为什么需要理解这些概念？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5%E9%80%90%E4%B8%80%E6%8B%86%E8%A7%A3"><span class="nav-text">核心概念逐一拆解</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-LLM%EF%BC%88%E5%A4%A7%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B%EF%BC%89%E2%80%94%E2%80%94-AI-%E7%9A%84%E2%80%9D%E5%A4%A7%E8%84%91%E2%80%9D"><span class="nav-text">1. LLM（大语言模型）—— AI 的”大脑”</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Tool%EF%BC%88%E5%B7%A5%E5%85%B7%EF%BC%89%E2%80%94%E2%80%94-AI-%E7%9A%84%E2%80%9D%E5%8F%8C%E6%89%8B%E2%80%9D"><span class="nav-text">2. Tool（工具）—— AI 的”双手”</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-Function-Calling%EF%BC%88%E5%87%BD%E6%95%B0%E8%B0%83%E7%94%A8%EF%BC%89%E2%80%94%E2%80%94-%E8%BF%9E%E6%8E%A5%E5%A4%A7%E8%84%91%E5%92%8C%E5%B7%A5%E5%85%B7%E7%9A%84%E2%80%9D%E7%A5%9E%E7%BB%8F%E2%80%9D"><span class="nav-text">3. Function Calling（函数调用）—— 连接大脑和工具的”神经”</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-Agent%EF%BC%88%E6%99%BA%E8%83%BD%E4%BD%93%EF%BC%89%E2%80%94%E2%80%94-AI-%E7%9A%84%E2%80%9D%E5%AE%8C%E6%95%B4%E4%BA%BA%E6%A0%BC%E2%80%9D"><span class="nav-text">4. Agent（智能体）—— AI 的”完整人格”</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-MCP%EF%BC%88Model-Context-Protocol%EF%BC%89%E2%80%94%E2%80%94-%E5%B7%A5%E5%85%B7%E7%9A%84%E2%80%9DUSB-%E6%8E%A5%E5%8F%A3%E2%80%9D"><span class="nav-text">5. MCP（Model Context Protocol）—— 工具的”USB 接口”</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-Skill%EF%BC%88%E6%8A%80%E8%83%BD%EF%BC%89%E2%80%94%E2%80%94-AI-%E7%9A%84%E2%80%9D%E7%9F%A5%E8%AF%86%E6%8A%80%E8%83%BD%E5%8C%85%E2%80%9D"><span class="nav-text">6. Skill（技能）—— AI 的”知识技能包”</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-RAG%EF%BC%88%E6%A3%80%E7%B4%A2%E5%A2%9E%E5%BC%BA%E7%94%9F%E6%88%90%EF%BC%89%E2%80%94%E2%80%94-AI-%E7%9A%84%E2%80%9D%E5%BC%80%E5%8D%B7%E8%80%83%E8%AF%95%E2%80%9D"><span class="nav-text">7. RAG（检索增强生成）—— AI 的”开卷考试”</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8-Workflow%EF%BC%88%E5%B7%A5%E4%BD%9C%E6%B5%81%EF%BC%89vs-Agent"><span class="nav-text">8. Workflow（工作流）vs Agent</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%A8%E6%99%AF%E5%AF%B9%E6%AF%94%EF%BC%9A%E4%B8%80%E5%BC%A0%E8%A1%A8%E7%9C%8B%E6%87%82%E6%89%80%E6%9C%89%E6%A6%82%E5%BF%B5"><span class="nav-text">全景对比：一张表看懂所有概念</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%83%E4%BB%AC%E4%B9%8B%E9%97%B4%E7%9A%84%E5%85%B3%E7%B3%BB%E5%9B%BE"><span class="nav-text">它们之间的关系图</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%9E%E9%99%85%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-text">实际应用场景</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9C%BA%E6%99%AF%E4%B8%80%EF%BC%9A%E6%99%BA%E8%83%BD%E5%AE%A2%E6%9C%8D"><span class="nav-text">场景一：智能客服</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9C%BA%E6%99%AF%E4%BA%8C%EF%BC%9AAI-%E7%BC%96%E7%A8%8B%E5%8A%A9%E6%89%8B%EF%BC%88%E5%A6%82-Cline%E3%80%81Cursor%EF%BC%89"><span class="nav-text">场景二：AI 编程助手（如 Cline、Cursor）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9C%BA%E6%99%AF%E4%B8%89%EF%BC%9A%E4%BC%81%E4%B8%9A%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90"><span class="nav-text">场景三：企业数据分析</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9C%AA%E6%9D%A5%E8%B6%8B%E5%8A%BF"><span class="nav-text">未来趋势</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-text">总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="nav-text">参考文献</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="郭耀华"
+      src="http://pic.guoyaohua.com/o_face_icon.jpg">
+  <p class="site-author-name" itemprop="name">郭耀华</p>
+  <div class="site-description" itemprop="description">记录IT成长路上的点点滴滴，分享深度学习、机器学习领域最新技术。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">6</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">31</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/guoyaohua" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;guoyaohua" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:guo.yaohua@foxmail.com" title="E-Mail → mailto:guo.yaohua@foxmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+          链接
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="http://jiqizhixin.com/" title="http:&#x2F;&#x2F;jiqizhixin.com" rel="noopener" target="_blank">机器之心</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://www.cnblogs.com/guoyaohua" title="https:&#x2F;&#x2F;www.cnblogs.com&#x2F;guoyaohua" rel="noopener" target="_blank">郭耀华博客园</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.guoyaohua.com/%E3%80%90AI%E3%80%91%E4%B8%80%E6%96%87%E6%90%9E%E6%87%82AI%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5%EF%BC%9AAgent%E3%80%81Tool%E3%80%81MCP%E4%B8%8ESkill%E5%85%A8%E8%A7%A3%E6%9E%90.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="http://pic.guoyaohua.com/o_face_icon.jpg">
+      <meta itemprop="name" content="郭耀华">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="郭耀华's Blog | 深度学习、机器学习领域技术博客">
+      <meta itemprop="description" content="记录IT成长路上的点点滴滴，分享深度学习、机器学习领域最新技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="【AI】一文搞懂AI核心概念：Agent、Tool、MCP与Skill全解析 | 郭耀华's Blog | 深度学习、机器学习领域技术博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          【AI】一文搞懂AI核心概念：Agent、Tool、MCP与Skill全解析
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2026-03-13 21:00:00 / 修改时间：14:02:12" itemprop="dateCreated datePublished" datetime="2026-03-13T21:00:00Z">2026-03-13</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Artificial-Intelligence/" itemprop="url" rel="index"><span itemprop="name">Artificial Intelligence</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>7k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>6 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><center> 随着大语言模型（LLM）的爆发式发展，AI 领域涌现了大量新概念：Agent、Tool、MCP、Skill、RAG、Function Calling……这些术语让很多人一头雾水。本文将用最通俗易懂的方式，为你逐一拆解这些概念，并进行详细对比，帮你彻底理清它们之间的关系。</center>
+
+<span id="more"></span>
+
+<h1 id="为什么需要理解这些概念？"><a href="#为什么需要理解这些概念？" class="headerlink" title="为什么需要理解这些概念？"></a>为什么需要理解这些概念？</h1><p>2023 年以来，以 ChatGPT 为代表的大语言模型（LLM）改变了人们对 AI 的认知。但 LLM 本身只是一个”能说会道的大脑”——它能理解语言、生成文字，却<strong>无法直接操作外部世界</strong>。</p>
+<p>为了让 AI 真正”做事”，而不只是”说话”，业界逐步发展出了 Agent、Tool、MCP、Skill 等一系列概念和架构。它们就像给 AI 装上了<strong>手、脚、工具箱和操作手册</strong>。</p>
+<blockquote>
+<p>一句话概括：<strong>LLM 是大脑，Agent 是有行动力的人，Tool 是手里的工具，MCP 是工具的标准接口，Skill 是学会的技能。</strong></p>
+</blockquote>
+<hr>
+<h1 id="核心概念逐一拆解"><a href="#核心概念逐一拆解" class="headerlink" title="核心概念逐一拆解"></a>核心概念逐一拆解</h1><h2 id="1-LLM（大语言模型）——-AI-的”大脑”"><a href="#1-LLM（大语言模型）——-AI-的”大脑”" class="headerlink" title="1. LLM（大语言模型）—— AI 的”大脑”"></a>1. LLM（大语言模型）—— AI 的”大脑”</h2><p><strong>LLM（Large Language Model）</strong> 是一切的基础。GPT-4、Claude、Gemini、DeepSeek 等都是典型代表。</p>
+<p><strong>类比</strong>：LLM 就像一个博学多才的人——读过海量的书，能回答各种问题，但<strong>只会说话，不会动手</strong>。你问他”帮我订一张机票”，他可以告诉你怎么订，但他自己并不能打开网页去订票。</p>
+<p><strong>核心特点</strong>：</p>
+<ul>
+<li>✅ 理解自然语言</li>
+<li>✅ 生成文本回复</li>
+<li>✅ 推理和分析</li>
+<li>❌ 无法访问实时信息</li>
+<li>❌ 无法执行外部操作</li>
+<li>❌ 知识有截止日期</li>
+</ul>
+<hr>
+<h2 id="2-Tool（工具）——-AI-的”双手”"><a href="#2-Tool（工具）——-AI-的”双手”" class="headerlink" title="2. Tool（工具）—— AI 的”双手”"></a>2. Tool（工具）—— AI 的”双手”</h2><p><strong>Tool</strong> 是指 AI 可以调用的<strong>外部功能或 API</strong>。它让 AI 从”只会说”变成”能动手”。</p>
+<p><strong>类比</strong>：就像人可以使用锤子、计算器、搜索引擎一样，AI 也可以使用”工具”来完成特定任务。</p>
+<p><strong>常见的 Tool 类型</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>工具类型</th>
+<th>功能描述</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>搜索工具</td>
+<td>在互联网上搜索信息</td>
+<td>Google Search API</td>
+</tr>
+<tr>
+<td>代码执行</td>
+<td>运行代码并返回结果</td>
+<td>Python 解释器</td>
+</tr>
+<tr>
+<td>文件操作</td>
+<td>读写文件</td>
+<td>文件系统 API</td>
+</tr>
+<tr>
+<td>数据库查询</td>
+<td>查询数据库</td>
+<td>SQL 执行器</td>
+</tr>
+<tr>
+<td>API 调用</td>
+<td>调用第三方服务</td>
+<td>天气 API、邮件 API</td>
+</tr>
+<tr>
+<td>浏览器操作</td>
+<td>打开网页并交互</td>
+<td>Puppeteer、Selenium</td>
+</tr>
+</tbody></table>
+<p><strong>Tool 的工作流程</strong>：</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">用户: <span class="string">&quot;今天北京天气怎么样？&quot;</span></span><br><span class="line">   ↓</span><br><span class="line">LLM 判断: 我需要调用天气工具</span><br><span class="line">   ↓</span><br><span class="line">调用 Tool: get_weather(<span class="attribute">city</span>=<span class="string">&quot;北京&quot;</span>)</span><br><span class="line">   ↓<span class="built_in"></span></span><br><span class="line"><span class="built_in">Tool </span>返回: &#123;<span class="string">&quot;温度&quot;</span>: <span class="string">&quot;15°C&quot;</span>, <span class="string">&quot;天气&quot;</span>: <span class="string">&quot;晴&quot;</span>&#125;</span><br><span class="line">   ↓</span><br><span class="line">LLM 组织语言: <span class="string">&quot;今天北京天气晴朗，气温15°C，适合出门~&quot;</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="3-Function-Calling（函数调用）——-连接大脑和工具的”神经”"><a href="#3-Function-Calling（函数调用）——-连接大脑和工具的”神经”" class="headerlink" title="3. Function Calling（函数调用）—— 连接大脑和工具的”神经”"></a>3. Function Calling（函数调用）—— 连接大脑和工具的”神经”</h2><p><strong>Function Calling</strong> 是 LLM 调用 Tool 的<strong>标准化接口机制</strong>。它由 OpenAI 率先提出，现在已被大多数 LLM 厂商支持。</p>
+<p><strong>类比</strong>：如果 Tool 是锤子和扳手，那么 Function Calling 就是”知道什么时候用锤子、什么时候用扳手”的判断能力，以及”正确使用它们”的操作标准。</p>
+<p><strong>工作原理</strong>：</p>
+<ol>
+<li>开发者定义可用的函数（名称、参数、描述）</li>
+<li>用户提出请求</li>
+<li>LLM 分析请求，决定是否需要调用函数</li>
+<li>如果需要，LLM 输出结构化的函数调用请求（JSON 格式）</li>
+<li>系统执行函数，将结果返回给 LLM</li>
+<li>LLM 基于结果生成最终回复</li>
+</ol>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// LLM 的 Function Calling 输出示例</span></span><br><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;function&quot;</span><span class="punctuation">:</span> <span class="string">&quot;search_flight&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;arguments&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;from&quot;</span><span class="punctuation">:</span> <span class="string">&quot;北京&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;to&quot;</span><span class="punctuation">:</span> <span class="string">&quot;上海&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;date&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2026-03-15&quot;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="4-Agent（智能体）——-AI-的”完整人格”"><a href="#4-Agent（智能体）——-AI-的”完整人格”" class="headerlink" title="4. Agent（智能体）—— AI 的”完整人格”"></a>4. Agent（智能体）—— AI 的”完整人格”</h2><p><strong>Agent</strong> 是当前 AI 领域最核心的概念之一。它不只是一个”能回答问题的模型”，而是一个<strong>能自主思考、规划、使用工具并完成复杂任务的智能系统</strong>。</p>
+<p><strong>类比</strong>：如果 LLM 是一个”大脑”，那么 Agent 就是一个<strong>完整的人</strong>——它有大脑（LLM）、有手脚（Tool）、有记忆（Memory）、还有做事的方法论（Planning）。</p>
+<p><strong>Agent 的核心组成</strong>：</p>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">┌─────────────────────────────────┐</span><br><span class="line">│            Agent                │</span><br><span class="line">│                                 │</span><br><span class="line">│  ┌─────────┐  ┌──────────────┐ │</span><br><span class="line">│  │  LLM    │  │   Memory     │ │</span><br><span class="line">│  │ (大脑)   │  │  (记忆)      │ │</span><br><span class="line">│  └─────────┘  └──────────────┘ │</span><br><span class="line">│                                 │</span><br><span class="line">│  ┌─────────┐  ┌──────────────┐ │</span><br><span class="line">│  │Planning │  │   Tools      │ │</span><br><span class="line">│  │ (规划)   │  │  (工具)      │ │</span><br><span class="line">│  └─────────┘  └──────────────┘ │</span><br><span class="line">│                                 │</span><br><span class="line">└─────────────────────────────────┘</span><br></pre></td></tr></table></figure>
+
+<p><strong>Agent 的四大要素</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>要素</th>
+<th>说明</th>
+<th>类比</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>LLM</td>
+<td>核心推理引擎</td>
+<td>大脑</td>
+</tr>
+<tr>
+<td>Memory</td>
+<td>短期&#x2F;长期记忆，上下文管理</td>
+<td>记忆力</td>
+</tr>
+<tr>
+<td>Planning</td>
+<td>任务分解、步骤规划、反思纠错</td>
+<td>做事方法</td>
+</tr>
+<tr>
+<td>Tools</td>
+<td>可调用的外部工具和能力</td>
+<td>双手和工具箱</td>
+</tr>
+</tbody></table>
+<p><strong>Agent 的工作方式（以 ReAct 模式为例）</strong>：</p>
+<figure class="highlight sqf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">用户: <span class="string">&quot;帮我分析一下竞品公司 A 的最新财报&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">Agent</span> 思考(Thought): 我需要先搜索公司A的最新财报数据</span><br><span class="line"><span class="built_in">Agent</span> 行动(<span class="built_in">Action</span>): 调用搜索工具，搜索<span class="string">&quot;公司A 2026年财报&quot;</span></span><br><span class="line"><span class="built_in">Agent</span> 观察(Observation): 搜索返回了财报PDF链接</span><br><span class="line"></span><br><span class="line"><span class="built_in">Agent</span> 思考(Thought): 我需要下载并解析这份财报</span><br><span class="line"><span class="built_in">Agent</span> 行动(<span class="built_in">Action</span>): 调用文件下载工具 + PDF解析工具</span><br><span class="line"><span class="built_in">Agent</span> 观察(Observation): 获得了财报的结构化数据</span><br><span class="line"></span><br><span class="line"><span class="built_in">Agent</span> 思考(Thought): 现在我可以进行分析了</span><br><span class="line"><span class="built_in">Agent</span> 行动(<span class="built_in">Action</span>): 分析营收、利润、增长率等关键指标</span><br><span class="line"><span class="built_in">Agent</span> 观察(Observation): 分析完成</span><br><span class="line"></span><br><span class="line"><span class="built_in">Agent</span> 最终输出: 一份完整的竞品财报分析报告</span><br></pre></td></tr></table></figure>
+
+<p><strong>核心区别</strong>：普通的 LLM 对话是一问一答，而 Agent 是<strong>循环式地”思考→行动→观察→再思考”</strong>，直到任务完成。</p>
+<hr>
+<h2 id="5-MCP（Model-Context-Protocol）——-工具的”USB-接口”"><a href="#5-MCP（Model-Context-Protocol）——-工具的”USB-接口”" class="headerlink" title="5. MCP（Model Context Protocol）—— 工具的”USB 接口”"></a>5. MCP（Model Context Protocol）—— 工具的”USB 接口”</h2><p><strong>MCP（模型上下文协议）</strong> 是由 Anthropic 提出的一个<strong>开放标准协议</strong>，它定义了 AI 模型与外部工具&#x2F;数据源之间的通信标准。</p>
+<p><strong>类比</strong>：在 MCP 出现之前，每个 AI 应用要使用不同工具，都需要单独开发连接代码，就像<strong>每个电器都用不同的插头</strong>一样混乱。MCP 就是 AI 世界的”USB 标准”——统一了接口，让任何支持 MCP 的工具都能被任何支持 MCP 的 AI 应用使用。</p>
+<p><strong>为什么需要 MCP？</strong></p>
+<p>在 MCP 之前的困境：</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">AI</span>应用A → 自定义代码 → 工具<span class="number">1</span></span><br><span class="line"><span class="attribute">AI</span>应用A → 自定义代码 → 工具<span class="number">2</span></span><br><span class="line"><span class="attribute">AI</span>应用A → 自定义代码 → 工具<span class="number">3</span></span><br><span class="line"><span class="attribute">AI</span>应用B → 自定义代码 → 工具<span class="number">1</span>  （重复开发！）</span><br><span class="line"><span class="attribute">AI</span>应用B → 自定义代码 → 工具<span class="number">2</span>  （重复开发！）</span><br></pre></td></tr></table></figure>
+
+<p>有了 MCP 之后：</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">AI</span>应用A ─┐                  ┌→ 工具<span class="number">1</span> (MCP Server)</span><br><span class="line"><span class="attribute">AI</span>应用B ─┤── MCP 协议 ──────┼→ 工具<span class="number">2</span> (MCP Server)</span><br><span class="line"><span class="attribute">AI</span>应用C ─┘                  └→ 工具<span class="number">3</span> (MCP Server)</span><br></pre></td></tr></table></figure>
+
+<p><strong>MCP 的核心架构</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>组件</th>
+<th>角色</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>MCP Host</td>
+<td>宿主</td>
+<td>运行 AI 的应用程序（如 Claude Desktop、VS Code）</td>
+</tr>
+<tr>
+<td>MCP Client</td>
+<td>客户端</td>
+<td>在 Host 内部，负责与 Server 通信</td>
+</tr>
+<tr>
+<td>MCP Server</td>
+<td>服务端</td>
+<td>暴露工具&#x2F;数据的服务，可以是本地或远程</td>
+</tr>
+</tbody></table>
+<p><strong>MCP 提供的三大能力</strong>：</p>
+<ol>
+<li><strong>Tools（工具）</strong>：让 AI 可以调用外部函数（如查询数据库、发送邮件）</li>
+<li><strong>Resources（资源）</strong>：让 AI 可以读取外部数据（如文件内容、API 数据）</li>
+<li><strong>Prompts（提示模板）</strong>：预定义的交互模板，方便用户快速使用</li>
+</ol>
+<hr>
+<h2 id="6-Skill（技能）——-AI-的”知识技能包”"><a href="#6-Skill（技能）——-AI-的”知识技能包”" class="headerlink" title="6. Skill（技能）—— AI 的”知识技能包”"></a>6. Skill（技能）—— AI 的”知识技能包”</h2><p><strong>Skill</strong> 是指 Agent 所掌握的<strong>一个完整的能力模块</strong>，通常包含了特定的 Prompt 模板、工具组合和执行逻辑。</p>
+<p><strong>类比</strong>：如果 Agent 是一个人，Tool 是手里的锤子和钉子，那么 Skill 就是”会装修”这个技能——它不只是有工具，还知道<strong>何时用什么工具、按什么步骤操作、怎么判断做得好不好</strong>。</p>
+<p><strong>Skill vs Tool 的区别</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>Tool（工具）</th>
+<th>Skill（技能）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>粒度</td>
+<td>单一功能</td>
+<td>组合能力</td>
+</tr>
+<tr>
+<td>示例</td>
+<td>“调用搜索 API”</td>
+<td>“做一次完整的市场调研”</td>
+</tr>
+<tr>
+<td>包含</td>
+<td>一个 API 或函数</td>
+<td>多个 Tool + 策略 + 流程</td>
+</tr>
+<tr>
+<td>类比</td>
+<td>一把锤子</td>
+<td>会木工活</td>
+</tr>
+<tr>
+<td>复用性</td>
+<td>通用性强</td>
+<td>场景针对性强</td>
+</tr>
+</tbody></table>
+<p><strong>Skill 的内部结构</strong>（通常包含）：</p>
+<figure class="highlight nestedtext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">Skill</span><span class="punctuation">:</span> <span class="string">&quot;撰写技术博客&quot;</span></span><br><span class="line"><span class="attribute">├── 所需 Tools</span><span class="punctuation">:</span> <span class="string">搜索工具, 写作工具, 图片生成工具</span></span><br><span class="line"><span class="attribute">├── 执行流程</span><span class="punctuation">:</span></span><br><span class="line"><span class="attribute">│   1. 搜索主题相关材料</span></span><br><span class="line"><span class="attribute">│   2. 生成大纲</span></span><br><span class="line"><span class="attribute">│   3. 逐章节撰写</span></span><br><span class="line"><span class="attribute">│   4. 生成配图</span></span><br><span class="line"><span class="attribute">│   5. 排版和校对</span></span><br><span class="line"><span class="attribute">├── 提示词模板</span><span class="punctuation">:</span> <span class="string">&quot;你是一个技术博客作者，风格通俗易懂……&quot;</span></span><br><span class="line"><span class="attribute">└── 质量标准</span><span class="punctuation">:</span> <span class="string">字数 &gt; 2000, 包含示例代码, 有总结</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="7-RAG（检索增强生成）——-AI-的”开卷考试”"><a href="#7-RAG（检索增强生成）——-AI-的”开卷考试”" class="headerlink" title="7. RAG（检索增强生成）—— AI 的”开卷考试”"></a>7. RAG（检索增强生成）—— AI 的”开卷考试”</h2><p><strong>RAG（Retrieval-Augmented Generation）</strong> 是一种让 AI 在生成回答时，先从外部知识库中<strong>检索相关信息</strong>，然后结合检索到的内容生成更准确回答的技术。</p>
+<p><strong>类比</strong>：LLM 靠自己回答问题就像”闭卷考试”，而 RAG 就是允许”开卷”——先翻书找到相关内容，再组织答案。</p>
+<p><strong>RAG 的工作流程</strong>：</p>
+<figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">用户提问: <span class="string">&quot;公司今年Q1的销售额是多少？&quot;</span></span><br><span class="line">        ↓</span><br><span class="line">① 检索(Retrieval): </span><br><span class="line">   在知识库中搜索相关文档</span><br><span class="line">   → 找到: <span class="string">&quot;2026年Q1销售报告.pdf&quot;</span></span><br><span class="line">        ↓</span><br><span class="line">② 增强(Augmented): </span><br><span class="line">   将检索到的内容作为上下文提供给<span class="keyword">LLM</span></span><br><span class="line"><span class="keyword"></span>   → <span class="built_in">Context</span>: <span class="string">&quot;根据报告，Q1销售额为5.2亿元……&quot;</span></span><br><span class="line">        ↓</span><br><span class="line">③ 生成(Generation): </span><br><span class="line">   <span class="keyword">LLM </span>结合上下文生成准确回答</span><br><span class="line">   → <span class="string">&quot;公司2026年Q1的销售额为5.2亿元，同比增长18%。&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>RAG vs 微调（Fine-tuning）</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>RAG</th>
+<th>微调</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>知识更新</td>
+<td>更新知识库即可，实时生效</td>
+<td>需要重新训练模型</td>
+</tr>
+<tr>
+<td>成本</td>
+<td>低，无需训练</td>
+<td>高，需要 GPU 算力</td>
+</tr>
+<tr>
+<td>准确性</td>
+<td>可溯源、有依据</td>
+<td>可能产生幻觉</td>
+</tr>
+<tr>
+<td>适用场景</td>
+<td>企业知识问答、文档检索</td>
+<td>风格迁移、领域适配</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="8-Workflow（工作流）vs-Agent"><a href="#8-Workflow（工作流）vs-Agent" class="headerlink" title="8. Workflow（工作流）vs Agent"></a>8. Workflow（工作流）vs Agent</h2><p>这两个概念经常被混淆，但它们有本质区别。</p>
+<p><strong>Workflow（工作流）</strong>：按照<strong>预定义的固定流程</strong>执行任务，每一步是确定的。</p>
+<p><strong>Agent（智能体）</strong>：由 AI <strong>自主决策</strong>下一步该做什么，流程是动态的。</p>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">Workflow</span>（像流水线）:          <span class="selector-tag">Agent</span>（像自由职业者）:</span><br><span class="line">                               </span><br><span class="line">步骤<span class="number">1</span> → 步骤<span class="number">2</span> → 步骤<span class="number">3</span>         思考 → 做<span class="selector-tag">A</span></span><br><span class="line">   ↓                          观察结果</span><br><span class="line">步骤<span class="number">4</span> → 步骤<span class="number">5</span>                  ↓</span><br><span class="line">   ↓                          思考 → 做<span class="selector-tag">C</span>（跳过了<span class="selector-tag">B</span>）</span><br><span class="line">完成                           观察结果</span><br><span class="line">                               ↓</span><br><span class="line">                              思考 → 完成了！</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>Workflow</th>
+<th>Agent</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>流程</td>
+<td>预定义、固定</td>
+<td>动态、自主决策</td>
+</tr>
+<tr>
+<td>灵活性</td>
+<td>低</td>
+<td>高</td>
+</tr>
+<tr>
+<td>可预测性</td>
+<td>高，结果确定</td>
+<td>低，结果可能不同</td>
+</tr>
+<tr>
+<td>适用场景</td>
+<td>标准化流程</td>
+<td>复杂、开放性任务</td>
+</tr>
+<tr>
+<td>出错可能性</td>
+<td>低</td>
+<td>较高，需要监督</td>
+</tr>
+</tbody></table>
+<hr>
+<h1 id="全景对比：一张表看懂所有概念"><a href="#全景对比：一张表看懂所有概念" class="headerlink" title="全景对比：一张表看懂所有概念"></a>全景对比：一张表看懂所有概念</h1><table>
+<thead>
+<tr>
+<th>概念</th>
+<th>一句话定义</th>
+<th>类比</th>
+<th>核心能力</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>LLM</strong></td>
+<td>理解和生成语言的大模型</td>
+<td>大脑</td>
+<td>理解、推理、生成文字</td>
+</tr>
+<tr>
+<td><strong>Tool</strong></td>
+<td>AI 可调用的外部功能</td>
+<td>锤子、扳手</td>
+<td>执行具体操作</td>
+</tr>
+<tr>
+<td><strong>Function Calling</strong></td>
+<td>LLM 调用工具的标准机制</td>
+<td>知道用哪个工具、怎么用</td>
+<td>连接 LLM 和 Tool</td>
+</tr>
+<tr>
+<td><strong>Agent</strong></td>
+<td>能自主规划和执行任务的 AI 系统</td>
+<td>一个完整的人</td>
+<td>思考、规划、行动、记忆</td>
+</tr>
+<tr>
+<td><strong>MCP</strong></td>
+<td>AI 与工具通信的标准协议</td>
+<td>USB 接口</td>
+<td>统一工具接入标准</td>
+</tr>
+<tr>
+<td><strong>Skill</strong></td>
+<td>Agent 掌握的完整能力模块</td>
+<td>会做饭、会编程</td>
+<td>将工具+策略打包成技能</td>
+</tr>
+<tr>
+<td><strong>RAG</strong></td>
+<td>先检索再生成的增强技术</td>
+<td>开卷考试</td>
+<td>结合外部知识回答</td>
+</tr>
+<tr>
+<td><strong>Workflow</strong></td>
+<td>预定义的任务执行流程</td>
+<td>流水线</td>
+<td>按步骤执行</td>
+</tr>
+</tbody></table>
+<hr>
+<h1 id="它们之间的关系图"><a href="#它们之间的关系图" class="headerlink" title="它们之间的关系图"></a>它们之间的关系图</h1><p>用一张图来表示它们的层级关系：</p>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">┌────────────────────────────────────────────┐</span><br><span class="line">│                 Agent (智能体)              │</span><br><span class="line">│                                            │</span><br><span class="line">│   ┌────────┐  ┌────────┐  ┌────────────┐  │</span><br><span class="line">│   │  LLM   │  │Planning│  │  Memory    │  │</span><br><span class="line">│   │ (大脑)  │  │ (规划)  │  │  (记忆)    │  │</span><br><span class="line">│   └────────┘  └────────┘  └────────────┘  │</span><br><span class="line">│                                            │</span><br><span class="line">│   ┌──────────────────────────────────────┐ │</span><br><span class="line">│   │          Skills (技能)                │ │</span><br><span class="line">│   │  ┌──────────┐  ┌──────────────────┐  │ │</span><br><span class="line">│   │  │ Skill <span class="selector-tag">A</span>  │  │    Skill <span class="selector-tag">B</span>       │  │ │</span><br><span class="line">│   │  │写博客技能 │  │  数据分析技能     │  │ │</span><br><span class="line">│   │  └──────────┘  └──────────────────┘  │ │</span><br><span class="line">│   └──────────────────────────────────────┘ │</span><br><span class="line">│                                            │</span><br><span class="line">│   ┌──────────────────────────────────────┐ │</span><br><span class="line">│   │          Tools (工具)                 │ │</span><br><span class="line">│   │                                      │ │</span><br><span class="line">│   │  ┌──────┐ ┌──────┐ ┌──────┐         │ │</span><br><span class="line">│   │  │搜索  │ │代码  │ │文件  │  ......  │ │</span><br><span class="line">│   │  │工具  │ │执行  │ │读写  │         │ │</span><br><span class="line">│   │  └──┬───┘ └──┬───┘ └──┬───┘         │ │</span><br><span class="line">│   │     │        │        │              │ │</span><br><span class="line">│   └─────┼────────┼────────┼──────────────┘ │</span><br><span class="line">│         │        │        │                │</span><br><span class="line">└─────────┼────────┼────────┼────────────────┘</span><br><span class="line">          │        │        │</span><br><span class="line">    ┌─────┴────────┴────────┴──────┐</span><br><span class="line">    │        MCP 协议 (标准接口)     │</span><br><span class="line">    └─────┬────────┬────────┬──────┘</span><br><span class="line">          │        │        │</span><br><span class="line">   ┌──────┴──┐ ┌──┴─────┐ ┌┴───────────┐</span><br><span class="line">   │MCP      │ │MCP     │ │MCP         │</span><br><span class="line">   │Server <span class="selector-tag">A</span> │ │Server <span class="selector-tag">B</span>│ │Server C    │</span><br><span class="line">   │(Google) │ │(GitHub)│ │(Database)  │</span><br><span class="line">   └─────────┘ └────────┘ └────────────┘</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h1 id="实际应用场景"><a href="#实际应用场景" class="headerlink" title="实际应用场景"></a>实际应用场景</h1><h2 id="场景一：智能客服"><a href="#场景一：智能客服" class="headerlink" title="场景一：智能客服"></a>场景一：智能客服</h2><figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">Agent</span> <span class="operator">=</span> 客服人员</span><br><span class="line">├── LLM <span class="operator">=</span> 语言理解和表达能力</span><br><span class="line">├── RAG <span class="operator">=</span> 查找产品手册和FAQ</span><br><span class="line">├── Tool <span class="operator">=</span> 查询订单系统、提交工单</span><br><span class="line">├── Skill <span class="operator">=</span> <span class="string">&quot;处理退款&quot;</span>、<span class="string">&quot;产品推荐&quot;</span></span><br><span class="line">└── MCP <span class="operator">=</span> 连接 CRM、订单系统、物流系统</span><br></pre></td></tr></table></figure>
+
+<h2 id="场景二：AI-编程助手（如-Cline、Cursor）"><a href="#场景二：AI-编程助手（如-Cline、Cursor）" class="headerlink" title="场景二：AI 编程助手（如 Cline、Cursor）"></a>场景二：AI 编程助手（如 Cline、Cursor）</h2><figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">Agent</span> <span class="operator">=</span> 编程助手</span><br><span class="line">├── LLM <span class="operator">=</span> 理解需求、生成代码</span><br><span class="line">├── Tool <span class="operator">=</span> 读写文件、执行命令、搜索代码</span><br><span class="line">├── Skill <span class="operator">=</span> <span class="string">&quot;重构代码&quot;</span>、<span class="string">&quot;修复Bug&quot;</span>、<span class="string">&quot;写测试&quot;</span></span><br><span class="line">└── MCP <span class="operator">=</span> 连接 GitHub、数据库、部署平台</span><br></pre></td></tr></table></figure>
+
+<h2 id="场景三：企业数据分析"><a href="#场景三：企业数据分析" class="headerlink" title="场景三：企业数据分析"></a>场景三：企业数据分析</h2><figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">Agent</span> <span class="operator">=</span> 数据分析师</span><br><span class="line">├── LLM <span class="operator">=</span> 理解分析需求、生成报告</span><br><span class="line">├── RAG <span class="operator">=</span> 检索历史报告和行业数据</span><br><span class="line">├── Tool <span class="operator">=</span> SQL 查询、Python 执行、图表生成</span><br><span class="line">├── Skill <span class="operator">=</span> <span class="string">&quot;月度报告&quot;</span>、<span class="string">&quot;异常检测&quot;</span>、<span class="string">&quot;趋势预测&quot;</span></span><br><span class="line">└── MCP <span class="operator">=</span> 连接数据仓库、BI 工具、邮件系统</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h1 id="未来趋势"><a href="#未来趋势" class="headerlink" title="未来趋势"></a>未来趋势</h1><ol>
+<li><p><strong>Agent 将成为主流交互方式</strong>：未来我们可能不再一条条输入指令，而是给 Agent 一个目标，它自主完成一系列操作。</p>
+</li>
+<li><p><strong>MCP 将统一工具生态</strong>：就像 HTTP 统一了 Web 世界，MCP 正在成为 AI 工具集成的事实标准。</p>
+</li>
+<li><p><strong>Skill 市场将会涌现</strong>：类似于 App Store，未来可能出现 Skill Store，用户可以为自己的 Agent 安装各种技能包。</p>
+</li>
+<li><p><strong>多 Agent 协作将成为趋势</strong>：复杂任务将由多个专业 Agent 协同完成，就像一个团队中有产品经理、设计师、程序员各司其职。</p>
+</li>
+</ol>
+<hr>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><table>
+<thead>
+<tr>
+<th>你想到的问题</th>
+<th>对应概念</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>AI 怎么理解我说的话？</td>
+<td><strong>LLM</strong></td>
+</tr>
+<tr>
+<td>AI 怎么帮我查天气、发邮件？</td>
+<td><strong>Tool</strong></td>
+</tr>
+<tr>
+<td>AI 怎么知道该用哪个工具？</td>
+<td><strong>Function Calling</strong></td>
+</tr>
+<tr>
+<td>AI 怎么完成一个复杂任务？</td>
+<td><strong>Agent</strong></td>
+</tr>
+<tr>
+<td>不同 AI 怎么用同一套工具？</td>
+<td><strong>MCP</strong></td>
+</tr>
+<tr>
+<td>AI 怎么具备某个领域的能力？</td>
+<td><strong>Skill</strong></td>
+</tr>
+<tr>
+<td>AI 怎么回答公司内部的问题？</td>
+<td><strong>RAG</strong></td>
+</tr>
+<tr>
+<td>我想让 AI 按固定步骤干活？</td>
+<td><strong>Workflow</strong></td>
+</tr>
+</tbody></table>
+<p>理解这些概念之间的关系，就像理解一个公司的组织架构：<strong>LLM 是员工的知识素养，Tool 是办公用品，Skill 是岗位技能，Agent 是员工本人，MCP 是公司的 IT 基础设施，RAG 是公司的知识库，Workflow 是标准操作流程。</strong></p>
+<p>希望这篇文章能帮你厘清 AI 世界中这些令人眼花缭乱的概念。AI 的未来不只属于技术专家，理解这些概念，你就能更好地拥抱这个 AI 时代。🚀</p>
+<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><ol>
+<li><a target="_blank" rel="noopener" href="https://modelcontextprotocol.io/">Anthropic MCP Documentation</a></li>
+<li><a target="_blank" rel="noopener" href="https://lilianweng.github.io/posts/2023-06-23-agent/">LLM Powered Autonomous Agents - Lilian Weng</a></li>
+<li><a target="_blank" rel="noopener" href="https://platform.openai.com/docs/guides/function-calling">OpenAI Function Calling Guide</a></li>
+<li><a target="_blank" rel="noopener" href="https://aws.amazon.com/what-is/retrieval-augmented-generation/">Retrieval-Augmented Generation (RAG) - AWS</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.deeplearning.ai/the-batch/how-agents-can-improve-llm-performance/">Andrew Ng - Agentic AI Design Patterns</a></li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.png" alt="郭耀华 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="郭耀华 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/AI/" rel="tag"># AI</a>
+              <a href="/tags/Agent/" rel="tag"># Agent</a>
+              <a href="/tags/Tool/" rel="tag"># Tool</a>
+              <a href="/tags/MCP/" rel="tag"># MCP</a>
+              <a href="/tags/Skill/" rel="tag"># Skill</a>
+              <a href="/tags/LLM/" rel="tag"># LLM</a>
+              <a href="/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B/" rel="tag"># 大模型</a>
+              <a href="/tags/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/" rel="tag"># 人工智能</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/deeplearning-workstation" rel="prev" title="深度学习工作站攒机指南">
+                  <i class="fa fa-angle-left"></i> 深度学习工作站攒机指南
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments gitalk-container"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2019 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-user"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">郭耀华</span>
+  </div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/guoyaohua" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/gitalk/1.8.0/gitalk.css" integrity="sha256-AJnUHL7dBv6PGaeyPQJcgQPDjt/Hn/PvYZde1iqfp8U=" crossorigin="anonymous">
+
+<script class="next-config" data-name="gitalk" type="application/json">{"enable":true,"github_id":"guoyaohua","repo":"guoyaohua.github.io","client_id":"4c009e072d5529480639","client_secret":"e3ecab593b9ac65237423e6802012693e9ee2035","admin_user":"guoyaohua","distraction_free_mode":true,"proxy":"https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token","language":null,"body":null,"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/gitalk/1.8.0/gitalk.min.js","integrity":"sha256-MVK9MGD/XJaGyIghSVrONSnoXoGh3IFxLw0zfvzpxR4="},"path_md5":"9d2766027d3f656d35e7bd6e7a156944"}</script>
+<script src="/js/third-party/comments/gitalk.js" defer></script>
+
+</body>
+</html>

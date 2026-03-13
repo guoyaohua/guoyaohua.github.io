@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <author>
+    <name>郭耀华</name>
+  </author>
+  <generator uri="https://hexo.io/">Hexo</generator>
+  <id>https://www.guoyaohua.com/</id>
+  <link href="https://www.guoyaohua.com/" rel="alternate"/>
+  <link href="https://www.guoyaohua.com/atom.xml" rel="self"/>
+  <rights>All rights reserved 2026, 郭耀华</rights>
+  <subtitle>欲穷千里目，更上一层楼。</subtitle>
+  <title>郭耀华's Blog | 深度学习、机器学习领域技术博客</title>
+  <updated>2026-03-13T14:02:12.559Z</updated>
+  <entry>
+    <author>
+      <name>郭耀华</name>
+    </author>
+    <category term="Artificial Intelligence" scheme="https://www.guoyaohua.com/categories/Artificial-Intelligence/"/>
+    <category term="AI" scheme="https://www.guoyaohua.com/tags/AI/"/>
+    <category term="Agent" scheme="https://www.guoyaohua.com/tags/Agent/"/>
+    <category term="Tool" scheme="https://www.guoyaohua.com/tags/Tool/"/>
+    <category term="MCP" scheme="https://www.guoyaohua.com/tags/MCP/"/>
+    <category term="Skill" scheme="https://www.guoyaohua.com/tags/Skill/"/>
+    <category term="LLM" scheme="https://www.guoyaohua.com/tags/LLM/"/>
+    <category term="大模型" scheme="https://www.guoyaohua.com/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B/"/>
+    <category term="人工智能" scheme="https://www.guoyaohua.com/tags/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/"/>
+    <id>https://www.guoyaohua.com/%E3%80%90AI%E3%80%91%E4%B8%80%E6%96%87%E6%90%9E%E6%87%82AI%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5%EF%BC%9AAgent%E3%80%81Tool%E3%80%81MCP%E4%B8%8ESkill%E5%85%A8%E8%A7%A3%E6%9E%90.html</id>
+    <link href="https://www.guoyaohua.com/%E3%80%90AI%E3%80%91%E4%B8%80%E6%96%87%E6%90%9E%E6%87%82AI%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5%EF%BC%9AAgent%E3%80%81Tool%E3%80%81MCP%E4%B8%8ESkill%E5%85%A8%E8%A7%A3%E6%9E%90.html"/>
+    <published>2026-03-13T21:00:00.000Z</published>
+    <summary>
+      <![CDATA[<center> 随着大语言模型（LLM）的爆发式发展，AI 领域涌现了大量新概念：Agent、Tool、MCP、Skill、RAG、Function Calling……这些术语让很多人一头雾水。本文将用最通俗易懂的方式，为你逐一拆解这些概念，并进行详细对比，帮你彻底理清它们之间的关系。</center>]]>
+    </summary>
+    <title>【AI】一文搞懂AI核心概念：Agent、Tool、MCP与Skill全解析</title>
+    <updated>2026-03-13T14:02:12.559Z</updated>
+  </entry>
+  <entry>
+    <author>
+      <name>郭耀华</name>
+    </author>
+    <category term="Deep Learning" scheme="https://www.guoyaohua.com/categories/Deep-Learning/"/>
+    <category term="DeepLearning" scheme="https://www.guoyaohua.com/tags/DeepLearning/"/>
+    <id>https://www.guoyaohua.com/deeplearning-workstation</id>
+    <link href="https://www.guoyaohua.com/deeplearning-workstation"/>
+    <published>2026-03-13T14:02:12.257Z</published>
+    <summary>
+      <![CDATA[<h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>接触深度学习已经快两年了，之前一直使用<a]]>
+    </summary>
+    <title>深度学习工作站攒机指南</title>
+    <updated>2026-03-13T14:02:12.258Z</updated>
+  </entry>
+  <entry>
+    <author>
+      <name>郭耀华</name>
+    </author>
+    <id>https://www.guoyaohua.com/hello-world.html</id>
+    <link href="https://www.guoyaohua.com/hello-world.html"/>
+    <published>2026-03-13T13:55:46.107Z</published>
+    <summary>
+      <![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a>]]>
+    </summary>
+    <title>Hello World</title>
+    <updated>2026-03-13T13:55:46.107Z</updated>
+  </entry>
+  <entry>
+    <author>
+      <name>郭耀华</name>
+    </author>
+    <category term="Machine Learning" scheme="https://www.guoyaohua.com/categories/Machine-Learning/"/>
+    <category term="机器学习" scheme="https://www.guoyaohua.com/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"/>
+    <category term="深度学习" scheme="https://www.guoyaohua.com/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/"/>
+    <category term="决策树" scheme="https://www.guoyaohua.com/tags/%E5%86%B3%E7%AD%96%E6%A0%91/"/>
+    <category term="剪枝" scheme="https://www.guoyaohua.com/tags/%E5%89%AA%E6%9E%9D/"/>
+    <category term="ID3" scheme="https://www.guoyaohua.com/tags/ID3/"/>
+    <category term="C4.5" scheme="https://www.guoyaohua.com/tags/C4-5/"/>
+    <category term="CART树" scheme="https://www.guoyaohua.com/tags/CART%E6%A0%91/"/>
+    <category term="信息熵" scheme="https://www.guoyaohua.com/tags/%E4%BF%A1%E6%81%AF%E7%86%B5/"/>
+    <category term="基尼指数" scheme="https://www.guoyaohua.com/tags/%E5%9F%BA%E5%B0%BC%E6%8C%87%E6%95%B0/"/>
+    <category term="信息增益" scheme="https://www.guoyaohua.com/tags/%E4%BF%A1%E6%81%AF%E5%A2%9E%E7%9B%8A/"/>
+    <id>https://www.guoyaohua.com/decision-tree</id>
+    <link href="https://www.guoyaohua.com/decision-tree"/>
+    <published>2019-11-11T22:38:58.000Z</published>
+    <summary>
+      <![CDATA[<h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>决策树(Decision]]>
+    </summary>
+    <title>【机器学习】深入理解决策树算法</title>
+    <updated>2026-03-13T14:02:12.253Z</updated>
+  </entry>
+  <entry>
+    <author>
+      <name>郭耀华</name>
+    </author>
+    <category term="Machine Learning" scheme="https://www.guoyaohua.com/categories/Machine-Learning/"/>
+    <category term="机器学习" scheme="https://www.guoyaohua.com/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"/>
+    <category term="深度学习" scheme="https://www.guoyaohua.com/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/"/>
+    <category term="分类算法" scheme="https://www.guoyaohua.com/tags/%E5%88%86%E7%B1%BB%E7%AE%97%E6%B3%95/"/>
+    <category term="评价指标" scheme="https://www.guoyaohua.com/tags/%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87/"/>
+    <category term="分类算法评价指标" scheme="https://www.guoyaohua.com/tags/%E5%88%86%E7%B1%BB%E7%AE%97%E6%B3%95%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87/"/>
+    <category term="准确率、精确率、召回率" scheme="https://www.guoyaohua.com/tags/%E5%87%86%E7%A1%AE%E7%8E%87%E3%80%81%E7%B2%BE%E7%A1%AE%E7%8E%87%E3%80%81%E5%8F%AC%E5%9B%9E%E7%8E%87/"/>
+    <category term="P-R曲线" scheme="https://www.guoyaohua.com/tags/P-R%E6%9B%B2%E7%BA%BF/"/>
+    <category term="F1指数" scheme="https://www.guoyaohua.com/tags/F1%E6%8C%87%E6%95%B0/"/>
+    <category term="ROC" scheme="https://www.guoyaohua.com/tags/ROC/"/>
+    <category term="AUC" scheme="https://www.guoyaohua.com/tags/AUC/"/>
+    <id>https://www.guoyaohua.com/classification-metrics</id>
+    <link href="https://www.guoyaohua.com/classification-metrics"/>
+    <published>2019-09-01T13:01:14.000Z</published>
+    <summary>
+      <![CDATA[<h2 id="前言"><a href="#前言" class="headerlink"]]>
+    </summary>
+    <title>【机器学习】一文读懂分类算法常用评价指标</title>
+    <updated>2026-03-13T14:02:12.248Z</updated>
+  </entry>
+  <entry>
+    <author>
+      <name>郭耀华</name>
+    </author>
+    <category term="Git" scheme="https://www.guoyaohua.com/categories/Git/"/>
+    <category term="Git" scheme="https://www.guoyaohua.com/tags/Git/"/>
+    <category term="Git教程" scheme="https://www.guoyaohua.com/tags/Git%E6%95%99%E7%A8%8B/"/>
+    <category term="Git常用命令" scheme="https://www.guoyaohua.com/tags/Git%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/"/>
+    <category term="Git常用操作" scheme="https://www.guoyaohua.com/tags/Git%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C/"/>
+    <id>https://www.guoyaohua.com/Git-tutorial</id>
+    <link href="https://www.guoyaohua.com/Git-tutorial"/>
+    <published>2019-07-21T15:17:08.000Z</published>
+    <summary>
+      <![CDATA[<h2 id="前言"><a href="#前言" class="headerlink"]]>
+    </summary>
+    <title>Git常用操作指南</title>
+    <updated>2026-03-13T14:02:12.243Z</updated>
+  </entry>
+</feed>
