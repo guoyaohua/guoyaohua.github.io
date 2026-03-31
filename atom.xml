@@ -10,7 +10,37 @@
   <rights>All rights reserved 2026, 郭耀华</rights>
   <subtitle>欲穷千里目，更上一层楼。</subtitle>
   <title>郭耀华's Blog | 深度学习、机器学习领域技术博客</title>
-  <updated>2026-03-13T14:02:12.559Z</updated>
+  <updated>2026-03-31T14:51:35.349Z</updated>
+  <entry>
+    <author>
+      <name>郭耀华</name>
+    </author>
+    <category term="Deep Learning" scheme="https://www.guoyaohua.com/categories/Deep-Learning/"/>
+    <category term="DeepLearning" scheme="https://www.guoyaohua.com/tags/DeepLearning/"/>
+    <id>https://www.guoyaohua.com/deeplearning-workstation.html</id>
+    <link href="https://www.guoyaohua.com/deeplearning-workstation.html"/>
+    <published>2026-03-31T14:51:35.348Z</published>
+    <summary>
+      <![CDATA[<h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>接触深度学习已经快两年了，之前一直使用<a href="https://colab.research.google.com/">Google Colab</a>和<a href="https://www.kaggle.com/kernels">Kaggle Kernel</a>提供的免费GPU（Tesla K80）训练模型（最近Google将Colab的GPU升级为<strong>Tesla T4</strong>，计算速度又提升了一个档次），不过由于内地网络的原因，Google和Kaggle连接十分不稳定，经常断线重连，一直是很令人头痛的问题，而且二者均有很多限制，例如Google Colab一个脚本运行的最长时间为12h，Kaggle的为6h，数据集上传也存在问题，需要使用一些Trick才能达成目的，模型的保存、下载等都会耗费很多精力，总之体验不是很好，不过免费的羊毛让大家撸，肯定会有一些限制，也是可以理解的。</p>
+<p>对于租用云服务器，之前也尝试过，租用了一家小平台的GPU服务器，也存在一些操作上的困难，不适合程序调试，而且价格也不便宜。</p>
+<p>很早之前就想要搭建一个自己的深度学习工作站，不过机器成本的昂贵，一直阻碍着我攒机计划的进行。工欲善其事，必先利其器！最近终于下定决心，置办一个深度学习工作站主机。本文将我在这段时间选择、购置硬件的心得体会，分享给大家。</p>]]>
+    </summary>
+    <title>深度学习工作站攒机指南</title>
+    <updated>2026-03-31T14:51:35.349Z</updated>
+  </entry>
+  <entry>
+    <author>
+      <name>郭耀华</name>
+    </author>
+    <id>https://www.guoyaohua.com/hello-world.html</id>
+    <link href="https://www.guoyaohua.com/hello-world.html"/>
+    <published>2026-03-31T14:51:32.153Z</published>
+    <summary>
+      <![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>]]>
+    </summary>
+    <title>Hello World</title>
+    <updated>2026-03-31T14:51:32.154Z</updated>
+  </entry>
   <entry>
     <author>
       <name>郭耀华</name>
@@ -37,34 +67,6 @@
     <author>
       <name>郭耀华</name>
     </author>
-    <category term="Deep Learning" scheme="https://www.guoyaohua.com/categories/Deep-Learning/"/>
-    <category term="DeepLearning" scheme="https://www.guoyaohua.com/tags/DeepLearning/"/>
-    <id>https://www.guoyaohua.com/deeplearning-workstation.html</id>
-    <link href="https://www.guoyaohua.com/deeplearning-workstation.html"/>
-    <published>2026-03-13T14:35:01.879Z</published>
-    <summary>
-      <![CDATA[<h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>接触深度学习已经快两年了，之前一直使用<a]]>
-    </summary>
-    <title>深度学习工作站攒机指南</title>
-    <updated>2026-03-13T14:35:01.883Z</updated>
-  </entry>
-  <entry>
-    <author>
-      <name>郭耀华</name>
-    </author>
-    <id>https://www.guoyaohua.com/hello-world.html</id>
-    <link href="https://www.guoyaohua.com/hello-world.html"/>
-    <published>2026-03-13T13:55:46.107Z</published>
-    <summary>
-      <![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a>]]>
-    </summary>
-    <title>Hello World</title>
-    <updated>2026-03-13T13:55:46.107Z</updated>
-  </entry>
-  <entry>
-    <author>
-      <name>郭耀华</name>
-    </author>
     <category term="Machine Learning" scheme="https://www.guoyaohua.com/categories/Machine-Learning/"/>
     <category term="机器学习" scheme="https://www.guoyaohua.com/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"/>
     <category term="深度学习" scheme="https://www.guoyaohua.com/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/"/>
@@ -80,10 +82,10 @@
     <link href="https://www.guoyaohua.com/decision-tree.html"/>
     <published>2019-11-11T22:38:58.000Z</published>
     <summary>
-      <![CDATA[<h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>决策树(Decision]]>
+      <![CDATA[<h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>决策树(Decision Tree)是机器学习中一种经典的分类与回归算法。本文主要讨论用于分类的决策树。决策树模型呈树形结构，在分类问题中，决策树模型可以认为是<code>if-then</code>规则的集合，也可以认为是定义在特征空间与类空间上的条件概率分布。其主要优点是模型具有可读性，分类速度快。决策树学习通常包括3个步骤：<strong>特征选择</strong>、<strong>决策树的生成</strong>和<strong>决策树的剪枝</strong>。</p>]]>
     </summary>
     <title>【机器学习】深入理解决策树算法</title>
-    <updated>2026-03-13T14:33:51.545Z</updated>
+    <updated>2026-03-31T14:51:34.299Z</updated>
   </entry>
   <entry>
     <author>
@@ -104,10 +106,12 @@
     <link href="https://www.guoyaohua.com/classification-metrics.html"/>
     <published>2019-09-01T13:01:14.000Z</published>
     <summary>
-      <![CDATA[<h2 id="前言"><a href="#前言" class="headerlink"]]>
+      <![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>评价指标是针对将相同的数据，输入不同的算法模型，或者输入不同参数的同一种算法模型，而给出这个算法或者参数好坏的定量指标。</p>
+<p>在模型评估过程中，往往需要使用多种不同的指标进行评估，在诸多的评价指标中，大部分指标只能片面的反应模型的一部分性能，如果不能合理的运用评估指标，不仅不能发现模型本身的问题，而且会得出错误的结论。</p>
+<p>最近恰好在做文本分类的工作，所以把机器学习分类任务的评价指标又过了一遍。本文将详细介绍机器学习分类任务的常用评价指标：准确率（Accuracy）、精确率（Precision）、召回率（Recall）、P-R曲线（Precision-Recall Curve）、F1 Score、混淆矩阵（Confuse Matrix）、ROC、AUC。</p>]]>
     </summary>
     <title>【机器学习】一文读懂分类算法常用评价指标</title>
-    <updated>2026-03-13T14:34:03.864Z</updated>
+    <updated>2026-03-31T14:51:33.225Z</updated>
   </entry>
   <entry>
     <author>
@@ -122,9 +126,9 @@
     <link href="https://www.guoyaohua.com/Git-tutorial.html"/>
     <published>2019-07-21T15:17:08.000Z</published>
     <summary>
-      <![CDATA[<h2 id="前言"><a href="#前言" class="headerlink"]]>
+      <![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>因为工作需求，最近又重新温习了一下Git操作，遂总结了一篇Git常用操作指南，方便日后学习查阅，本博客精简提炼了在开发过程中Git经常用到的核心命令，主要参考了《<a href="https://www.liaoxuefeng.com/wiki/896043488029600">廖雪峰老师的Git教程</a>》，希望对大家学习使用Git能带来帮助。</p>]]>
     </summary>
     <title>Git常用操作指南</title>
-    <updated>2026-03-13T14:34:43.015Z</updated>
+    <updated>2026-03-31T14:51:31.075Z</updated>
   </entry>
 </feed>
