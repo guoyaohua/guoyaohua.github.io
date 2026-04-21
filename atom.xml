@@ -10,7 +10,7 @@
   <rights>All rights reserved 2026, 郭耀华</rights>
   <subtitle>欲穷千里目，更上一层楼。</subtitle>
   <title>郭耀华's Blog | 深度学习、机器学习领域技术博客</title>
-  <updated>2026-04-21T14:19:41.254Z</updated>
+  <updated>2026-04-21T14:37:23.779Z</updated>
   <entry>
     <author>
       <name>郭耀华</name>
@@ -24,8 +24,8 @@
     <category term="List" scheme="https://www.guoyaohua.com/tags/List/"/>
     <category term="面向接口编程" scheme="https://www.guoyaohua.com/tags/%E9%9D%A2%E5%90%91%E6%8E%A5%E5%8F%A3%E7%BC%96%E7%A8%8B/"/>
     <category term="协变逆变" scheme="https://www.guoyaohua.com/tags/%E5%8D%8F%E5%8F%98%E9%80%86%E5%8F%98/"/>
-    <id>https://www.guoyaohua.com/%E3%80%90C#%E3%80%91IList%E4%B8%8EList%E7%9A%84%E5%8C%BA%E5%88%AB%EF%BC%9A%E4%B8%BA%E4%BB%80%E4%B9%88%E6%8E%A5%E5%8F%A3%E5%92%8C%E5%AE%9E%E7%8E%B0%E7%B1%BB%E4%B8%8D%E8%83%BD%E6%B7%B7%E7%94%A8.html</id>
-    <link href="https://www.guoyaohua.com/%E3%80%90C#%E3%80%91IList%E4%B8%8EList%E7%9A%84%E5%8C%BA%E5%88%AB%EF%BC%9A%E4%B8%BA%E4%BB%80%E4%B9%88%E6%8E%A5%E5%8F%A3%E5%92%8C%E5%AE%9E%E7%8E%B0%E7%B1%BB%E4%B8%8D%E8%83%BD%E6%B7%B7%E7%94%A8.html"/>
+    <id>https://www.guoyaohua.com/csharp-ilist-vs-list.html</id>
+    <link href="https://www.guoyaohua.com/csharp-ilist-vs-list.html"/>
     <published>2026-04-21T22:30:00.000Z</published>
     <summary>
       <![CDATA[<center>很多 C# 开发者都有过灵魂拷问：明明 <code>List&lt;T&gt;</code> 就能搞定一切集合操作，为什么官方框架、开源库、接口规范都偏爱 <code>IList&lt;T&gt;</code>？为什么 <code>List&lt;List&lt;int&gt;&gt;</code> 不能赋给 <code>IList&lt;IList&lt;int&gt;&gt;</code>？本文从 .NET 设计规范、面向接口思想、泛型不变性规则、实战场景四个维度，把两者的本质区别与避坑指南一次性讲透。</center>]]>
@@ -33,7 +33,7 @@
     <title>
       <![CDATA[【C#】IList<T> 与 List<T> 到底有什么区别？为什么接口和实现类不能混用？]]>
     </title>
-    <updated>2026-04-21T14:19:41.254Z</updated>
+    <updated>2026-04-21T14:37:23.779Z</updated>
   </entry>
   <entry>
     <author>

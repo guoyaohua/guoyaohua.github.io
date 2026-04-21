@@ -24,12 +24,12 @@
     <meta name="description" content="很多 C# 开发者都有过灵魂拷问：明明 List&lt;T&gt; 就能搞定一切集合操作，为什么官方框架、开源库、接口规范都偏爱 IList&lt;T&gt;？为什么 List&lt;List&lt;int&gt;&gt; 不能赋给 IList&lt;IList&lt;int&gt;&gt;？本文从 .NET 设计规范、面向接口思想、泛型不变性规则、实战场景四个维度，把两者的本质区别与避坑指南一次">
 <meta property="og:type" content="article">
 <meta property="og:title" content="【C#】IList&lt;T&gt; 与 List&lt;T&gt; 到底有什么区别？为什么接口和实现类不能混用？">
-<meta property="og:url" content="https://www.guoyaohua.com/%E3%80%90C#%E3%80%91IList%E4%B8%8EList%E7%9A%84%E5%8C%BA%E5%88%AB%EF%BC%9A%E4%B8%BA%E4%BB%80%E4%B9%88%E6%8E%A5%E5%8F%A3%E5%92%8C%E5%AE%9E%E7%8E%B0%E7%B1%BB%E4%B8%8D%E8%83%BD%E6%B7%B7%E7%94%A8.html">
+<meta property="og:url" content="https://www.guoyaohua.com/csharp-ilist-vs-list.html">
 <meta property="og:site_name" content="郭耀华&#39;s Blog | 深度学习、机器学习领域技术博客">
 <meta property="og:description" content="很多 C# 开发者都有过灵魂拷问：明明 List&lt;T&gt; 就能搞定一切集合操作，为什么官方框架、开源库、接口规范都偏爱 IList&lt;T&gt;？为什么 List&lt;List&lt;int&gt;&gt; 不能赋给 IList&lt;IList&lt;int&gt;&gt;？本文从 .NET 设计规范、面向接口思想、泛型不变性规则、实战场景四个维度，把两者的本质区别与避坑指南一次">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-04-21T22:30:00.000Z">
-<meta property="article:modified_time" content="2026-04-21T14:19:41.254Z">
+<meta property="article:modified_time" content="2026-04-21T14:37:23.779Z">
 <meta property="article:author" content="郭耀华">
 <meta property="article:tag" content=".NET">
 <meta property="article:tag" content="C#">
@@ -42,10 +42,10 @@
 <meta name="twitter:card" content="summary">
 
 
-<link rel="canonical" href="https://www.guoyaohua.com/%E3%80%90C#%E3%80%91IList%E4%B8%8EList%E7%9A%84%E5%8C%BA%E5%88%AB%EF%BC%9A%E4%B8%BA%E4%BB%80%E4%B9%88%E6%8E%A5%E5%8F%A3%E5%92%8C%E5%AE%9E%E7%8E%B0%E7%B1%BB%E4%B8%8D%E8%83%BD%E6%B7%B7%E7%94%A8.html">
+<link rel="canonical" href="https://www.guoyaohua.com/csharp-ilist-vs-list.html">
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.guoyaohua.com/%E3%80%90C#%E3%80%91IList%E4%B8%8EList%E7%9A%84%E5%8C%BA%E5%88%AB%EF%BC%9A%E4%B8%BA%E4%BB%80%E4%B9%88%E6%8E%A5%E5%8F%A3%E5%92%8C%E5%AE%9E%E7%8E%B0%E7%B1%BB%E4%B8%8D%E8%83%BD%E6%B7%B7%E7%94%A8.html","path":"【C#】IList与List的区别：为什么接口和实现类不能混用.html","title":"【C#】IList\u003cT> 与 List\u003cT> 到底有什么区别？为什么接口和实现类不能混用？"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.guoyaohua.com/csharp-ilist-vs-list.html","path":"/csharp-ilist-vs-list.html","title":"【C#】IList\u003cT> 与 List\u003cT> 到底有什么区别？为什么接口和实现类不能混用？"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
 <title>【C#】IList<T> 与 List<T> 到底有什么区别？为什么接口和实现类不能混用？ | 郭耀华's Blog | 深度学习、机器学习领域技术博客</title>
@@ -252,7 +252,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://www.guoyaohua.com/%E3%80%90C#%E3%80%91IList%E4%B8%8EList%E7%9A%84%E5%8C%BA%E5%88%AB%EF%BC%9A%E4%B8%BA%E4%BB%80%E4%B9%88%E6%8E%A5%E5%8F%A3%E5%92%8C%E5%AE%9E%E7%8E%B0%E7%B1%BB%E4%B8%8D%E8%83%BD%E6%B7%B7%E7%94%A8.html">
+    <link itemprop="mainEntityOfPage" href="https://www.guoyaohua.com/csharp-ilist-vs-list.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="https://github.com/guoyaohua.png">
@@ -282,7 +282,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2026-04-21 22:30:00 / 修改时间：14:19:41" itemprop="dateCreated datePublished" datetime="2026-04-21T22:30:00Z">2026-04-21</time>
+      <time title="创建时间：2026-04-21 22:30:00 / 修改时间：14:37:23" itemprop="dateCreated datePublished" datetime="2026-04-21T22:30:00Z">2026-04-21</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -506,7 +506,7 @@
 </noscript>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/gitalk/1.8.0/gitalk.css" integrity="sha256-AJnUHL7dBv6PGaeyPQJcgQPDjt/Hn/PvYZde1iqfp8U=" crossorigin="anonymous">
 
-<script class="next-config" data-name="gitalk" type="application/json">{"enable":true,"github_id":"guoyaohua","repo":"guoyaohua.github.io","client_id":"4c009e072d5529480639","client_secret":"e3ecab593b9ac65237423e6802012693e9ee2035","admin_user":"guoyaohua","distraction_free_mode":true,"proxy":"https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token","language":null,"body":null,"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/gitalk/1.8.0/gitalk.min.js","integrity":"sha256-MVK9MGD/XJaGyIghSVrONSnoXoGh3IFxLw0zfvzpxR4="},"path_md5":"2d34bc436162e7faeabce4555693f842"}</script>
+<script class="next-config" data-name="gitalk" type="application/json">{"enable":true,"github_id":"guoyaohua","repo":"guoyaohua.github.io","client_id":"4c009e072d5529480639","client_secret":"e3ecab593b9ac65237423e6802012693e9ee2035","admin_user":"guoyaohua","distraction_free_mode":true,"proxy":"https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token","language":null,"body":null,"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/gitalk/1.8.0/gitalk.min.js","integrity":"sha256-MVK9MGD/XJaGyIghSVrONSnoXoGh3IFxLw0zfvzpxR4="},"path_md5":"504cc32e74d022667a5b2ed2441a6e4c"}</script>
 <script src="/js/third-party/comments/gitalk.js" defer></script>
 
 </body>
