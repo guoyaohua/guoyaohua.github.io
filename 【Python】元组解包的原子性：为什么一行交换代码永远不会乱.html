@@ -190,18 +190,18 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">6</span>
+          <span class="site-state-item-count">7</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-count">6</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">38</span>
+        <span class="site-state-item-count">46</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -320,8 +320,10 @@
     <div class="post-body" itemprop="articleBody"><center>在 Python 编程中，`a, b = b, a` 这种简洁的交换写法人人都用，但你是否想过：为什么它永远不会出现"值被中途覆盖"的问题？尤其在处理二叉树节点这种复杂对象时，它依然能稳定运行。本文将以"翻转二叉树"为例，彻底搞懂元组解包的原子性，以及它如何帮我们规避其他语言中常见的坑。</center>
 
 <span id="more"></span>
+
 <h2 id="一、先看一个经典场景：Python-翻转二叉树的简洁写法"><a href="#一、先看一个经典场景：Python-翻转二叉树的简洁写法" class="headerlink" title="一、先看一个经典场景：Python 翻转二叉树的简洁写法"></a>一、先看一个经典场景：Python 翻转二叉树的简洁写法</h2><p>翻转二叉树是 LeetCode 上的经典题目，核心是交换每个节点的左右子节点，并递归处理整个树。在 Python 中，有这样一种极其简洁的写法：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">invertTree</span>(<span class="params">self, root: <span class="type">Optional</span>[TreeNode]</span>) -&gt; <span class="type">Optional</span>[TreeNode]:</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> root:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line">        <span class="comment"># 核心交换代码：一行完成左右子节点的递归交换</span></span><br><span class="line">        root.left, root.right = <span class="variable language_">self</span>.invertTree(root.right), <span class="variable language_">self</span>.invertTree(root.left)</span><br><span class="line">        <span class="keyword">return</span> root</span><br></pre></td></tr></table></figure>
+
 <p>初次看到这行交换代码，很多人会有疑问：</p>
 <blockquote>
 <p>“先执行 <code>self.invertTree(root.right)</code>，会修改 <code>root.right</code> 的值吗？再执行 <code>self.invertTree(root.left)</code> 时，用的是原来的 <code>root.left</code> 还是已经被修改后的值？会不会出现引用混乱，甚至形成循环？”</p>
@@ -330,6 +332,7 @@
 <h2 id="二、什么是元组解包的”原子性”？"><a href="#二、什么是元组解包的”原子性”？" class="headerlink" title="二、什么是元组解包的”原子性”？"></a>二、什么是元组解包的”原子性”？</h2><p>所谓”原子性”，可以理解为：<strong>整个解包和赋值过程，是一个不可分割的整体</strong>。具体来说，Python 执行 <code>a, b = c, d</code> 这样的语句时，会严格遵循两个步骤，且这两个步骤之间不会被任何其他操作打断。</p>
 <h3 id="步骤-1：先计算右侧所有表达式，保存结果"><a href="#步骤-1：先计算右侧所有表达式，保存结果" class="headerlink" title="步骤 1：先计算右侧所有表达式，保存结果"></a>步骤 1：先计算右侧所有表达式，保存结果</h3><p>当执行：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">root.left, root.right = <span class="variable language_">self</span>.invertTree(root.right), <span class="variable language_">self</span>.invertTree(root.left)</span><br></pre></td></tr></table></figure>
+
 <p>Python 会先把右侧的两个递归调用全部执行完毕，得到两个结果，并将这两个结果<strong>临时保存到一个元组中</strong>。</p>
 <p><strong>关键点在于：右侧的两个表达式，使用的都是”赋值前”的旧值。</strong></p>
 <p>也就是说：</p>
@@ -342,16 +345,19 @@
 <p>这个赋值过程是”批量完成”的，不会出现”先赋值 <code>root.left</code>，再用修改后的 <code>root.left</code> 去赋值 <code>root.right</code>“的情况——这就是原子性的核心价值：<strong>避免分步赋值带来的中间状态混乱</strong>。</p>
 <h2 id="三、对比易错点：为什么其他语言分步写会出错？"><a href="#三、对比易错点：为什么其他语言分步写会出错？" class="headerlink" title="三、对比易错点：为什么其他语言分步写会出错？"></a>三、对比易错点：为什么其他语言分步写会出错？</h2><p>为了更直观地理解元组解包原子性的优势，我们可以对比一下用 C# 写翻转二叉树时容易踩的坑（也是很多初学者会犯的错误）。</p>
 <h3 id="错误的-C-代码（会出现循环引用）"><a href="#错误的-C-代码（会出现循环引用）" class="headerlink" title="错误的 C# 代码（会出现循环引用）"></a>错误的 C# 代码（会出现循环引用）</h3><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> TreeNode <span class="title">InvertTree</span>(<span class="params">TreeNode root</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(root == <span class="literal">null</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">var</span> temp = root.left;</span><br><span class="line">    root.left = root.right;</span><br><span class="line">    root.right = root.left; <span class="comment">// 错误：此时 root.left 已经被修改，赋值后左右节点指向同一对象，形成循环</span></span><br><span class="line"></span><br><span class="line">    InvertTree(root.left);</span><br><span class="line">    InvertTree(root.right);</span><br><span class="line">    <span class="keyword">return</span> root;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>这个错误的根源是：<strong>分步赋值，值被中途覆盖</strong>。</p>
 <ol>
 <li>先将 <code>root.left</code> 赋值为 <code>root.right</code>（此时 <code>root.left</code> 已经变成了原来的 <code>root.right</code>）；</li>
 <li>再将 <code>root.right</code> 赋值为 <code>root.left</code>（此时用的是已经被修改后的 <code>root.left</code>，导致左右节点指向同一个对象，形成循环引用）。</li>
 </ol>
 <h3 id="正确的-C-写法需要临时变量"><a href="#正确的-C-写法需要临时变量" class="headerlink" title="正确的 C# 写法需要临时变量"></a>正确的 C# 写法需要临时变量</h3><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> temp = root.left;</span><br><span class="line">root.left = root.right;</span><br><span class="line">root.right = temp; <span class="comment">// 必须用 temp 保存原始值</span></span><br></pre></td></tr></table></figure>
+
 <p>而 Python 的元组解包，正是通过”先计算所有右侧结果，再一次性赋值”的原子性，<strong>完美避免了这个问题，连临时变量都不需要</strong>。</p>
 <h2 id="四、再举一个简单例子，秒懂原子性"><a href="#四、再举一个简单例子，秒懂原子性" class="headerlink" title="四、再举一个简单例子，秒懂原子性"></a>四、再举一个简单例子，秒懂原子性</h2><p>如果觉得二叉树的例子有点复杂，我们用两个普通变量的交换，就能更直观地感受到原子性的作用。</p>
 <p>假设我们有：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">a = <span class="number">10</span></span><br><span class="line">b = <span class="number">20</span></span><br></pre></td></tr></table></figure>
+
 <p>执行 <code>a, b = b, a</code>，Python 的执行过程是：</p>
 <ol>
 <li>先计算右侧 <code>b, a</code>，得到元组 <code>(20, 10)</code>，并临时保存；</li>
@@ -360,11 +366,14 @@
 </ol>
 <p>如果我们强行把它拆分成分步赋值（模拟非原子性操作），就会出错：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">a = <span class="number">10</span></span><br><span class="line">b = <span class="number">20</span></span><br><span class="line">a = b  <span class="comment"># a 变成 20，此时原来的 a（10）已经被覆盖</span></span><br><span class="line">b = a  <span class="comment"># b 变成 20，交换失败！</span></span><br></pre></td></tr></table></figure>
+
 <p>这就是原子性的价值——它把”计算”和”赋值”拆分成两个独立的阶段，避免了中间状态的干扰。</p>
 <h2 id="五、底层原理：从字节码看原子性"><a href="#五、底层原理：从字节码看原子性" class="headerlink" title="五、底层原理：从字节码看原子性"></a>五、底层原理：从字节码看原子性</h2><p>如果你想更深入地理解，可以用 <code>dis</code> 模块查看 <code>a, b = b, a</code> 的字节码：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> dis</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">swap</span>():</span><br><span class="line">    a, b = <span class="number">10</span>, <span class="number">20</span></span><br><span class="line">    a, b = b, a</span><br><span class="line">dis.dis(swap)</span><br></pre></td></tr></table></figure>
+
 <p>关键的字节码片段类似：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">LOAD_FAST    b</span><br><span class="line">LOAD_FAST    a</span><br><span class="line">ROT_TWO              # 将栈顶两个元素交换</span><br><span class="line">STORE_FAST   a</span><br><span class="line">STORE_FAST   b</span><br></pre></td></tr></table></figure>
+
 <p>可以看到，Python 先将右侧的 <code>b</code> 和 <code>a</code> 压入栈，使用 <code>ROT_TWO</code>（或多变量时的 <code>UNPACK_SEQUENCE</code>）完成”打包-解包”，最后才依次 <code>STORE_FAST</code> 赋值给左侧变量。<strong>整个过程在解释器层面就是原子的</strong>，没有任何外部代码可以插入到”读”和”写”之间。</p>
 <h2 id="六、总结：元组解包原子性的核心要点"><a href="#六、总结：元组解包原子性的核心要点" class="headerlink" title="六、总结：元组解包原子性的核心要点"></a>六、总结：元组解包原子性的核心要点</h2><ol>
 <li><strong>执行顺序固定</strong>：先计算右侧所有表达式（用旧值），再一次性赋值给左侧；</li>
@@ -374,6 +383,7 @@
 </ol>
 <h2 id="最后补充一句"><a href="#最后补充一句" class="headerlink" title="最后补充一句"></a>最后补充一句</h2><p>元组解包的原子性，不仅适用于两个变量的交换，也适用于多个变量的解包赋值。比如：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">x, y, z = <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span></span><br><span class="line">x, y, z = z, y, x  <span class="comment"># 交换 x 和 z，y 保持不变</span></span><br><span class="line"><span class="comment"># 结果：x=3, y=2, z=1</span></span><br></pre></td></tr></table></figure>
+
 <p>同样遵循”先算右侧，再一次性赋值”的规则，安全又高效。</p>
 <p>下次再写交换代码时，就可以放心大胆地用 Python 的元组解包啦——它不仅简洁，背后的原子性还能帮你避开很多坑～</p>
 
@@ -403,6 +413,9 @@
                 </a>
             </div>
             <div class="post-nav-item">
+                <a href="/%E3%80%90C#%E3%80%91IList%E4%B8%8EList%E7%9A%84%E5%8C%BA%E5%88%AB%EF%BC%9A%E4%B8%BA%E4%BB%80%E4%B9%88%E6%8E%A5%E5%8F%A3%E5%92%8C%E5%AE%9E%E7%8E%B0%E7%B1%BB%E4%B8%8D%E8%83%BD%E6%B7%B7%E7%94%A8.html" rel="next" title="【C#】IList&lt;T&gt; 与 List&lt;T&gt; 到底有什么区别？为什么接口和实现类不能混用？">
+                  【C#】IList<T> 与 List<T> 到底有什么区别？为什么接口和实现类不能混用？ <i class="fa fa-angle-right"></i>
+                </a>
             </div>
           </div>
     </footer>
