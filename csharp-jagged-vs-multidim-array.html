@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/favicon-32x32-next.png" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.31/fancybox/fancybox.css" integrity="sha256-gkQVf8UKZgQ0HyuxL/VnacadJ+D2Kox2TCEBuNQg5+w=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.guoyaohua.com","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"right","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"flat"},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":true,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="很多 C# 开发者在写动态规划题时会习惯性写出 int[][] dp &#x3D; new int[m+1][n+1]();，然后被编译器一句 CS0178: Invalid rank specifier 当头浇下。这个报错的根源不是手滑，而是混淆了 C# 中两种&quot;二维数组&quot;的本质：交错数组 int[][] 与多维数组 int[,]。本文从这个报错出发，把两者的语法、内存布局、性能、适用场景一次讲透。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【C#】交错数组 int[][] 与多维数组 int[,] 详解：从一个 CS0178 报错说起">
+<meta property="og:url" content="https://www.guoyaohua.com/csharp-jagged-vs-multidim-array.html">
+<meta property="og:site_name" content="郭耀华&#39;s Blog | 深度学习、机器学习领域技术博客">
+<meta property="og:description" content="很多 C# 开发者在写动态规划题时会习惯性写出 int[][] dp &#x3D; new int[m+1][n+1]();，然后被编译器一句 CS0178: Invalid rank specifier 当头浇下。这个报错的根源不是手滑，而是混淆了 C# 中两种&quot;二维数组&quot;的本质：交错数组 int[][] 与多维数组 int[,]。本文从这个报错出发，把两者的语法、内存布局、性能、适用场景一次讲透。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-04-21T23:00:00.000Z">
+<meta property="article:modified_time" content="2026-04-21T14:53:31.580Z">
+<meta property="article:author" content="郭耀华">
+<meta property="article:tag" content=".NET">
+<meta property="article:tag" content="C#">
+<meta property="article:tag" content="Jagged Array">
+<meta property="article:tag" content="交错数组">
+<meta property="article:tag" content="内存布局">
+<meta property="article:tag" content="动态规划">
+<meta property="article:tag" content="多维数组">
+<meta property="article:tag" content="数组">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.guoyaohua.com/csharp-jagged-vs-multidim-array.html">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.guoyaohua.com/csharp-jagged-vs-multidim-array.html","path":"/csharp-jagged-vs-multidim-array.html","title":"【C#】交错数组 int[][] 与多维数组 int[,] 详解：从一个 CS0178 报错说起"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>【C#】交错数组 int[][] 与多维数组 int[,] 详解：从一个 CS0178 报错说起 | 郭耀华's Blog | 深度学习、机器学习领域技术博客</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.31/fancybox/fancybox.umd.js" integrity="sha256-a+H7FYzJv6oU2hfsfDGM2Ohw/cR9v+hPfxHCLdmCrE8=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+  <script src="/js/third-party/fancybox.js" defer></script>
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="郭耀华's Blog | 深度学习、机器学习领域技术博客" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">郭耀华's Blog | 深度学习、机器学习领域技术博客</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">欲穷千里目，更上一层楼。</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E5%85%88%E8%A7%A3%E5%86%B3%E6%8A%A5%E9%94%99%EF%BC%9A%E9%94%99%E8%AF%AF%E4%BB%A3%E7%A0%81%E5%88%B0%E5%BA%95%E9%94%99%E5%9C%A8%E5%93%AA%EF%BC%9F"><span class="nav-text">一、先解决报错：错误代码到底错在哪？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-%E9%94%99%E8%AF%AF%E4%B8%80%EF%BC%9A%E4%BA%A4%E9%94%99%E6%95%B0%E7%BB%84%E6%97%A0%E6%B3%95%E5%9C%A8%E5%A3%B0%E6%98%8E%E6%97%B6%E4%B8%80%E6%AC%A1%E6%80%A7%E6%8C%87%E5%AE%9A%E6%89%80%E6%9C%89%E7%BB%B4%E5%BA%A6"><span class="nav-text">1.1 错误一：交错数组无法在声明时一次性指定所有维度</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-%E9%94%99%E8%AF%AF%E4%BA%8C%EF%BC%9A%E6%95%B0%E7%BB%84%E5%88%9D%E5%A7%8B%E5%8C%96%E6%9C%AB%E5%B0%BE%E4%B8%8D%E8%83%BD%E5%8A%A0"><span class="nav-text">1.2 错误二：数组初始化末尾不能加 ()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-%E6%8A%A5%E9%94%99%E4%BD%8D%E7%BD%AE-Char-35-%E6%98%AF%E6%80%8E%E4%B9%88%E5%AE%9A%E4%BD%8D%E5%87%BA%E6%9D%A5%E7%9A%84%EF%BC%9F"><span class="nav-text">1.3 报错位置 Char 35 是怎么定位出来的？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E4%BA%A4%E9%94%99%E6%95%B0%E7%BB%84-int-%EF%BC%9A%E6%95%B0%E7%BB%84%E7%9A%84%E6%95%B0%E7%BB%84"><span class="nav-text">二、交错数组 int[][]：数组的数组</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-%E4%B8%89%E7%A7%8D%E5%85%B8%E5%9E%8B%E5%88%9D%E5%A7%8B%E5%8C%96%E5%86%99%E6%B3%95"><span class="nav-text">2.1 三种典型初始化写法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-%E8%AE%BF%E9%97%AE%E8%AF%AD%E6%B3%95%EF%BC%9A%E5%8F%8C%E9%87%8D%E6%96%B9%E6%8B%AC%E5%8F%B7"><span class="nav-text">2.2 访问语法：双重方括号</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-%E5%86%85%E5%AD%98%E5%B8%83%E5%B1%80%EF%BC%9A%E5%88%86%E6%95%A3%E5%9C%A8%E5%A0%86%E4%B8%8A%E7%9A%84%E5%A4%9A%E5%9D%97%E5%86%85%E5%AD%98"><span class="nav-text">2.3 内存布局：分散在堆上的多块内存</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E5%A4%9A%E7%BB%B4%E6%95%B0%E7%BB%84-int-%EF%BC%9A%E7%9C%9F%E6%AD%A3%E7%9A%84%E7%9F%A9%E5%BD%A2%E7%9F%A9%E9%98%B5"><span class="nav-text">三、多维数组 int[,]：真正的矩形矩阵</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-%E5%88%9D%E5%A7%8B%E5%8C%96%E6%96%B9%E5%BC%8F"><span class="nav-text">3.1 初始化方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-%E8%AE%BF%E9%97%AE%E8%AF%AD%E6%B3%95%EF%BC%9A%E5%8D%95%E6%96%B9%E6%8B%AC%E5%8F%B7-%E9%80%97%E5%8F%B7"><span class="nav-text">3.2 访问语法：单方括号 + 逗号</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-%E5%86%85%E5%AD%98%E5%B8%83%E5%B1%80%EF%BC%9A%E5%8D%95%E5%9D%97%E8%BF%9E%E7%BB%AD%E5%86%85%E5%AD%98"><span class="nav-text">3.3 内存布局：单块连续内存</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E6%A0%B8%E5%BF%83%E5%8C%BA%E5%88%AB%E4%B8%80%E8%A7%88%E8%A1%A8"><span class="nav-text">四、核心区别一览表</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E6%80%A7%E8%83%BD%E4%B8%8E-JIT%EF%BC%9A%E4%B8%BA%E4%BB%80%E4%B9%88%E5%BE%88%E5%A4%9A%E7%AE%97%E6%B3%95%E9%A2%98%E5%8F%8D%E8%80%8C%E6%8E%A8%E8%8D%90%E4%BA%A4%E9%94%99%E6%95%B0%E7%BB%84%EF%BC%9F"><span class="nav-text">五、性能与 JIT：为什么很多算法题反而推荐交错数组？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E3%80%81%E4%B8%89%E4%B8%AA%E9%AB%98%E9%A2%91%E8%B8%A9%E5%9D%91"><span class="nav-text">六、三个高频踩坑</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9D%91-1%EF%BC%9A%E6%8A%8A%E5%A4%9A%E7%BB%B4%E5%86%99%E6%B3%95%E5%A5%97%E5%88%B0%E4%BA%A4%E9%94%99%E6%95%B0%E7%BB%84%E4%B8%8A"><span class="nav-text">坑 1：把多维写法套到交错数组上</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9D%91-2%EF%BC%9A%E6%95%B0%E7%BB%84%E5%88%9D%E5%A7%8B%E5%8C%96%E5%8A%A0"><span class="nav-text">坑 2：数组初始化加 ()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9D%91-3%EF%BC%9A%E7%B4%A2%E5%BC%95%E8%AF%AD%E6%B3%95%E5%BC%A0%E5%86%A0%E6%9D%8E%E6%88%B4"><span class="nav-text">坑 3：索引语法张冠李戴</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9D%91-4%EF%BC%88%E9%9A%90%E8%97%8F%E5%85%B3%E5%8D%A1%EF%BC%89%EF%BC%9A%E5%A4%9A%E7%BB%B4%E6%95%B0%E7%BB%84%E7%9A%84-Length-%E4%B8%8D%E6%98%AF%E8%A1%8C%E6%95%B0"><span class="nav-text">坑 4（隐藏关卡）：多维数组的 Length 不是行数</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%83%E3%80%81%E5%AE%9E%E6%88%98%E9%80%89%E5%9E%8B%E5%86%B3%E7%AD%96%E6%A0%91"><span class="nav-text">七、实战选型决策树</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AB%E3%80%81%E7%BB%88%E6%9E%81%E6%80%BB%E7%BB%93"><span class="nav-text">八、终极总结</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="郭耀华"
+      src="https://github.com/guoyaohua.png">
+  <p class="site-author-name" itemprop="name">郭耀华</p>
+  <div class="site-description" itemprop="description">记录IT成长路上的点点滴滴，分享深度学习、机器学习领域最新技术。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">8</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">52</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/guoyaohua" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;guoyaohua" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:guo.yaohua@foxmail.com" title="E-Mail → mailto:guo.yaohua@foxmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+          链接
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://jiqizhixin.com/" title="https:&#x2F;&#x2F;jiqizhixin.com" rel="noopener" target="_blank">机器之心</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://www.cnblogs.com/guoyaohua" title="https:&#x2F;&#x2F;www.cnblogs.com&#x2F;guoyaohua" rel="noopener" target="_blank">郭耀华博客园</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.guoyaohua.com/csharp-jagged-vs-multidim-array.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://github.com/guoyaohua.png">
+      <meta itemprop="name" content="郭耀华">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="郭耀华's Blog | 深度学习、机器学习领域技术博客">
+      <meta itemprop="description" content="记录IT成长路上的点点滴滴，分享深度学习、机器学习领域最新技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="【C#】交错数组 int[][] 与多维数组 int[,] 详解：从一个 CS0178 报错说起 | 郭耀华's Blog | 深度学习、机器学习领域技术博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          【C#】交错数组 int[][] 与多维数组 int[,] 详解：从一个 CS0178 报错说起
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2026-04-21 23:00:00 / 修改时间：14:53:31" itemprop="dateCreated datePublished" datetime="2026-04-21T23:00:00Z">2026-04-21</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/C/" itemprop="url" rel="index"><span itemprop="name">C#</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>4.2k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>4 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><center>很多 C# 开发者在写动态规划题时会习惯性写出 <code>int[][] dp = new int[m+1][n+1]();</code>，然后被编译器一句 <strong>CS0178: Invalid rank specifier</strong> 当头浇下。这个报错的根源不是手滑，而是混淆了 C# 中两种"二维数组"的本质：交错数组 <code>int[][]</code> 与多维数组 <code>int[,]</code>。本文从这个报错出发，把两者的语法、内存布局、性能、适用场景一次讲透。</center>
+
+<span id="more"></span>
+
+<h2 id="一、先解决报错：错误代码到底错在哪？"><a href="#一、先解决报错：错误代码到底错在哪？" class="headerlink" title="一、先解决报错：错误代码到底错在哪？"></a>一、先解决报错：错误代码到底错在哪？</h2><p>让我们直面这段经典的错误代码：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">int</span>[][] dp = <span class="keyword">new</span> <span class="built_in">int</span>[m+<span class="number">1</span>][n+<span class="number">1</span>]();</span><br></pre></td></tr></table></figure>
+
+<p>编译器报错：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Line 12: Char 35: error CS0178: Invalid rank specifier:</span><br><span class="line">expected &#x27;,&#x27; or &#x27;]&#x27;</span><br></pre></td></tr></table></figure>
+
+<p>这一行代码同时犯了<strong>两个独立的语法错误</strong>，就算修掉一个，另一个也会让你继续报错。</p>
+<h3 id="1-1-错误一：交错数组无法在声明时一次性指定所有维度"><a href="#1-1-错误一：交错数组无法在声明时一次性指定所有维度" class="headerlink" title="1.1 错误一：交错数组无法在声明时一次性指定所有维度"></a>1.1 错误一：交错数组无法在声明时一次性指定所有维度</h3><p><code>int[][]</code> 在 C# 里是<strong>交错数组</strong>，本质是”数组的数组”——外层数组的每个元素本身又是一个独立的一维数组。所以初始化时只能告诉编译器”我外层有多少行”，每一行具体多长得<strong>之后再单独 new</strong>。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ❌ 错误：交错数组不能一次指定两维</span></span><br><span class="line"><span class="built_in">int</span>[][] dp = <span class="keyword">new</span> <span class="built_in">int</span>[m+<span class="number">1</span>][n+<span class="number">1</span>];</span><br><span class="line"></span><br><span class="line"><span class="comment">// ✅ 正确：先 new 外层，再逐行 new 内层</span></span><br><span class="line"><span class="built_in">int</span>[][] dp = <span class="keyword">new</span> <span class="built_in">int</span>[m+<span class="number">1</span>][];</span><br><span class="line"><span class="keyword">for</span> (<span class="built_in">int</span> i = <span class="number">0</span>; i &lt;= m; i++)</span><br><span class="line">    dp[i] = <span class="keyword">new</span> <span class="built_in">int</span>[n+<span class="number">1</span>];</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-2-错误二：数组初始化末尾不能加"><a href="#1-2-错误二：数组初始化末尾不能加" class="headerlink" title="1.2 错误二：数组初始化末尾不能加 ()"></a>1.2 错误二：数组初始化末尾不能加 <code>()</code></h3><p><code>()</code> 在 C# 里是<strong>调用语法</strong>——用于方法调用、构造函数调用。数组没有”无参构造函数”这一说，<code>new T[5]</code> 已经是完整的实例化表达式了，再加 <code>()</code> 就成了”对一个数组调用空参方法”，编译器自然不接受。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ❌ 多余的括号</span></span><br><span class="line"><span class="built_in">int</span>[] arr = <span class="keyword">new</span> <span class="built_in">int</span>[<span class="number">5</span>]();</span><br><span class="line"><span class="built_in">int</span>[,] grid = <span class="keyword">new</span> <span class="built_in">int</span>[<span class="number">3</span>, <span class="number">3</span>]();</span><br><span class="line"></span><br><span class="line"><span class="comment">// ✅ 正确写法</span></span><br><span class="line"><span class="built_in">int</span>[] arr = <span class="keyword">new</span> <span class="built_in">int</span>[<span class="number">5</span>];</span><br><span class="line"><span class="built_in">int</span>[,] grid = <span class="keyword">new</span> <span class="built_in">int</span>[<span class="number">3</span>, <span class="number">3</span>];</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-3-报错位置-Char-35-是怎么定位出来的？"><a href="#1-3-报错位置-Char-35-是怎么定位出来的？" class="headerlink" title="1.3 报错位置 Char 35 是怎么定位出来的？"></a>1.3 报错位置 <code>Char 35</code> 是怎么定位出来的？</h3><p>编译器从左到右解析 <code>new int[m+1][n+1]</code>，在读完第一个 <code>[m+1]</code> 后期待两种可能的下一个 token：</p>
+<ul>
+<li><code>]</code> —— 表示交错数组的外层维度声明结束</li>
+<li><code>,</code> —— 表示这是多维数组（不过这种情况下你的写法应该是 <code>int[m+1, n+1]</code>）</li>
+</ul>
+<p>但实际上读到的是 <code>[</code>（开始第二个 <code>[n+1]</code>），完全不在期待集合里，于是抛出 <code>CS0178: expected &#39;,&#39; or &#39;]&#39;</code>。</p>
+<h2 id="二、交错数组-int-：数组的数组"><a href="#二、交错数组-int-：数组的数组" class="headerlink" title="二、交错数组 int[][]：数组的数组"></a>二、交错数组 <code>int[][]</code>：数组的数组</h2><p>交错数组（Jagged Array）的官方定义就一句话：<strong>它的每个元素都是一个数组</strong>。可以把它想象成一栋公寓楼——外层数组是楼栋名册，每一项指向一户人家（内层数组），每户人家的房间数（内层数组长度）可以完全不同。</p>
+<h3 id="2-1-三种典型初始化写法"><a href="#2-1-三种典型初始化写法" class="headerlink" title="2.1 三种典型初始化写法"></a>2.1 三种典型初始化写法</h3><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 写法 1：等长二维（最常见的算法题用法）</span></span><br><span class="line"><span class="built_in">int</span>[][] dp = <span class="keyword">new</span> <span class="built_in">int</span>[m + <span class="number">1</span>][];</span><br><span class="line"><span class="keyword">for</span> (<span class="built_in">int</span> i = <span class="number">0</span>; i &lt;= m; i++)</span><br><span class="line">    dp[i] = <span class="keyword">new</span> <span class="built_in">int</span>[n + <span class="number">1</span>];</span><br><span class="line"></span><br><span class="line"><span class="comment">// 写法 2：每行不等长（交错数组真正的优势所在）</span></span><br><span class="line"><span class="built_in">int</span>[][] triangle = <span class="keyword">new</span> <span class="built_in">int</span>[<span class="number">3</span>][];</span><br><span class="line">triangle[<span class="number">0</span>] = <span class="keyword">new</span> <span class="built_in">int</span>[] &#123; <span class="number">1</span> &#125;;</span><br><span class="line">triangle[<span class="number">1</span>] = <span class="keyword">new</span> <span class="built_in">int</span>[] &#123; <span class="number">2</span>, <span class="number">3</span> &#125;;</span><br><span class="line">triangle[<span class="number">2</span>] = <span class="keyword">new</span> <span class="built_in">int</span>[] &#123; <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span> &#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 写法 3：声明即赋值</span></span><br><span class="line"><span class="built_in">int</span>[][] data =</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">new</span>[] &#123; <span class="number">1</span>, <span class="number">2</span> &#125;,</span><br><span class="line">    <span class="keyword">new</span>[] &#123; <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span> &#125;,</span><br><span class="line">    <span class="keyword">new</span>[] &#123; <span class="number">6</span> &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-2-访问语法：双重方括号"><a href="#2-2-访问语法：双重方括号" class="headerlink" title="2.2 访问语法：双重方括号"></a>2.2 访问语法：双重方括号</h3><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">dp[<span class="number">0</span>][<span class="number">0</span>] = <span class="number">1</span>;          <span class="comment">// 写</span></span><br><span class="line"><span class="built_in">int</span> v = dp[<span class="number">1</span>][<span class="number">2</span>];      <span class="comment">// 读</span></span><br><span class="line"><span class="built_in">int</span> rows = dp.Length;  <span class="comment">// 行数</span></span><br><span class="line"><span class="built_in">int</span> cols0 = dp[<span class="number">0</span>].Length; <span class="comment">// 第 0 行的列数（每行可能不同！）</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="2-3-内存布局：分散在堆上的多块内存"><a href="#2-3-内存布局：分散在堆上的多块内存" class="headerlink" title="2.3 内存布局：分散在堆上的多块内存"></a>2.3 内存布局：分散在堆上的多块内存</h3><p>交错数组的内存是<strong>非连续</strong>的：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">栈：dp ──┐</span><br><span class="line">         ↓</span><br><span class="line">堆：[ref0][ref1][ref2][ref3]   ← 外层数组（只存引用）</span><br><span class="line">       │     │     │     │</span><br><span class="line">       ↓     ↓     ↓     ↓</span><br><span class="line">     [a,b][c,d,e][f][g,h,i,j]  ← 每行各自独立分配</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>优点</strong>：每行独立分配，可以”按需供给”，避免空间浪费；可以单独替换&#x2F;排序某一行。</li>
+<li><strong>缺点</strong>：访问 <code>dp[i][j]</code> 需要两次寻址（先取外层引用，再取内层元素），CPU 缓存命中率较低。</li>
+</ul>
+<h2 id="三、多维数组-int-：真正的矩形矩阵"><a href="#三、多维数组-int-：真正的矩形矩阵" class="headerlink" title="三、多维数组 int[,]：真正的矩形矩阵"></a>三、多维数组 <code>int[,]</code>：真正的矩形矩阵</h2><p>多维数组（Multidimensional Array）才是大多数人脑海中”二维数组”的样子——一块<strong>单一的连续内存</strong>，按行优先（row-major）顺序铺开，所有行长度严格一致。</p>
+<h3 id="3-1-初始化方式"><a href="#3-1-初始化方式" class="headerlink" title="3.1 初始化方式"></a>3.1 初始化方式</h3><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 写法 1：指定大小</span></span><br><span class="line"><span class="built_in">int</span>[,] dp = <span class="keyword">new</span> <span class="built_in">int</span>[m + <span class="number">1</span>, n + <span class="number">1</span>];</span><br><span class="line"></span><br><span class="line"><span class="comment">// 写法 2：指定大小 + 初始值</span></span><br><span class="line"><span class="built_in">int</span>[,] grid = <span class="keyword">new</span> <span class="built_in">int</span>[<span class="number">2</span>, <span class="number">3</span>] &#123; &#123; <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span> &#125;, &#123; <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span> &#125; &#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 写法 3：编译器自动推断维度</span></span><br><span class="line"><span class="built_in">int</span>[,] grid2 = &#123; &#123; <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span> &#125;, &#123; <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span> &#125; &#125;;</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-2-访问语法：单方括号-逗号"><a href="#3-2-访问语法：单方括号-逗号" class="headerlink" title="3.2 访问语法：单方括号 + 逗号"></a>3.2 访问语法：单方括号 + 逗号</h3><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">dp[<span class="number">0</span>, <span class="number">0</span>] = <span class="number">1</span>;</span><br><span class="line"><span class="built_in">int</span> v = dp[<span class="number">1</span>, <span class="number">2</span>];</span><br><span class="line"></span><br><span class="line"><span class="built_in">int</span> rows = dp.GetLength(<span class="number">0</span>); <span class="comment">// 第 0 维长度（行数）</span></span><br><span class="line"><span class="built_in">int</span> cols = dp.GetLength(<span class="number">1</span>); <span class="comment">// 第 1 维长度（列数）</span></span><br><span class="line"><span class="built_in">int</span> total = dp.Length;      <span class="comment">// 总元素数 = rows * cols</span></span><br></pre></td></tr></table></figure>
+
+<p>注意：多维数组<strong>不能用 <code>dp.Length</code> 拿到行数</strong>，必须用 <code>GetLength(dim)</code>。</p>
+<h3 id="3-3-内存布局：单块连续内存"><a href="#3-3-内存布局：单块连续内存" class="headerlink" title="3.3 内存布局：单块连续内存"></a>3.3 内存布局：单块连续内存</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">栈：dp ──┐</span><br><span class="line">         ↓</span><br><span class="line">堆：[a,b,c,d,e,f,g,h,i]  ← 单一连续内存块（行优先排布）</span><br><span class="line">     └──row0──┘└──row1──┘└──row2──┘</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>优点</strong>：访问 <code>dp[i, j]</code> 只需一次地址计算（<code>base + (i * cols + j) * sizeof(int)</code>），缓存友好，遍历快。</li>
+<li><strong>缺点</strong>：所有行必须等长；扩容只能整体重建。</li>
+</ul>
+<h2 id="四、核心区别一览表"><a href="#四、核心区别一览表" class="headerlink" title="四、核心区别一览表"></a>四、核心区别一览表</h2><table>
+<thead>
+<tr>
+<th>维度</th>
+<th>交错数组 <code>int[][]</code></th>
+<th>多维数组 <code>int[,]</code></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>本质</td>
+<td>数组的数组（引用集合）</td>
+<td>单一连续内存块</td>
+</tr>
+<tr>
+<td>声明语法</td>
+<td><code>int[][]</code> 双方括号</td>
+<td><code>int[,]</code> 单方括号 + 逗号</td>
+</tr>
+<tr>
+<td>初始化</td>
+<td>分步：先外层，后内层</td>
+<td>一步：一次给出所有维度</td>
+</tr>
+<tr>
+<td>行长度</td>
+<td>每行可不同</td>
+<td>所有行强制等长</td>
+</tr>
+<tr>
+<td>索引语法</td>
+<td><code>arr[i][j]</code></td>
+<td><code>arr[i, j]</code></td>
+</tr>
+<tr>
+<td>内存布局</td>
+<td>分散，多块堆内存</td>
+<td>连续，单块堆内存</td>
+</tr>
+<tr>
+<td>寻址次数</td>
+<td>两次（外层 + 内层）</td>
+<td>一次</td>
+</tr>
+<tr>
+<td>访问性能</td>
+<td>略慢，缓存不友好</td>
+<td>快，缓存友好</td>
+</tr>
+<tr>
+<td><code>LINQ</code> &#x2F; <code>foreach</code></td>
+<td>完整支持</td>
+<td>支持但需 <code>Cast&lt;T&gt;()</code> 等转换</td>
+</tr>
+<tr>
+<td><code>Length</code> 含义</td>
+<td>行数</td>
+<td>总元素数（不是行数！）</td>
+</tr>
+</tbody></table>
+<h2 id="五、性能与-JIT：为什么很多算法题反而推荐交错数组？"><a href="#五、性能与-JIT：为什么很多算法题反而推荐交错数组？" class="headerlink" title="五、性能与 JIT：为什么很多算法题反而推荐交错数组？"></a>五、性能与 JIT：为什么很多算法题反而推荐交错数组？</h2><p>很多人想当然地以为”连续内存&#x3D;快”，所以多维数组一定胜过交错数组。但在 .NET 上<strong>实测往往相反</strong>——尤其是密集的 <code>dp[i][j]</code> 风格访问，<strong>交错数组反而更快</strong>。原因有两点：</p>
+<ol>
+<li><strong>JIT 对一维数组的优化更激进</strong>：CLR 对 <code>T[]</code> 的边界检查、向量化、内联做了大量优化。<code>int[][]</code> 的内层就是普通 <code>int[]</code>，全程吃尽这套红利；而 <code>int[,]</code> 走的是另一套 IL 指令（<code>Array.GetValue</code> &#x2F; <code>SetValue</code> 风格的封装），优化没有那么彻底。</li>
+<li><strong>行级局部性其实够用</strong>：动态规划往往是”逐行扫描”，交错数组只要每一行内部连续就够了，外层那次额外寻址在循环中可以被 JIT 提到行外。</li>
+</ol>
+<p>所以经验法则是：<strong>追求极致性能的密集数值计算</strong>（深度学习张量、图像像素）请用 <code>int[,]</code> 配合 <code>unsafe</code> 或 <code>Span&lt;T&gt;</code>；<strong>日常业务和算法题</strong>优先用 <code>int[][]</code>，简单又快。</p>
+<h2 id="六、三个高频踩坑"><a href="#六、三个高频踩坑" class="headerlink" title="六、三个高频踩坑"></a>六、三个高频踩坑</h2><h3 id="坑-1：把多维写法套到交错数组上"><a href="#坑-1：把多维写法套到交错数组上" class="headerlink" title="坑 1：把多维写法套到交错数组上"></a>坑 1：把多维写法套到交错数组上</h3><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ❌</span></span><br><span class="line"><span class="built_in">int</span>[][] dp = <span class="keyword">new</span> <span class="built_in">int</span>[m + <span class="number">1</span>][n + <span class="number">1</span>];</span><br><span class="line"><span class="comment">// ✅</span></span><br><span class="line"><span class="built_in">int</span>[][] dp = <span class="keyword">new</span> <span class="built_in">int</span>[m + <span class="number">1</span>][];</span><br><span class="line"><span class="keyword">for</span> (<span class="built_in">int</span> i = <span class="number">0</span>; i &lt;= m; i++) dp[i] = <span class="keyword">new</span> <span class="built_in">int</span>[n + <span class="number">1</span>];</span><br></pre></td></tr></table></figure>
+
+<h3 id="坑-2：数组初始化加"><a href="#坑-2：数组初始化加" class="headerlink" title="坑 2：数组初始化加 ()"></a>坑 2：数组初始化加 <code>()</code></h3><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ❌</span></span><br><span class="line"><span class="built_in">int</span>[,] dp = <span class="keyword">new</span> <span class="built_in">int</span>[m + <span class="number">1</span>, n + <span class="number">1</span>]();</span><br><span class="line"><span class="comment">// ✅</span></span><br><span class="line"><span class="built_in">int</span>[,] dp = <span class="keyword">new</span> <span class="built_in">int</span>[m + <span class="number">1</span>, n + <span class="number">1</span>];</span><br></pre></td></tr></table></figure>
+
+<h3 id="坑-3：索引语法张冠李戴"><a href="#坑-3：索引语法张冠李戴" class="headerlink" title="坑 3：索引语法张冠李戴"></a>坑 3：索引语法张冠李戴</h3><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">int</span>[][] a = ...;</span><br><span class="line"><span class="built_in">int</span>[,]  b = ...;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ❌ 编译错</span></span><br><span class="line"><span class="built_in">int</span> x = a[i, j];</span><br><span class="line"><span class="built_in">int</span> y = b[i][j];</span><br><span class="line"></span><br><span class="line"><span class="comment">// ✅</span></span><br><span class="line"><span class="built_in">int</span> x = a[i][j];</span><br><span class="line"><span class="built_in">int</span> y = b[i, j];</span><br></pre></td></tr></table></figure>
+
+<h3 id="坑-4（隐藏关卡）：多维数组的-Length-不是行数"><a href="#坑-4（隐藏关卡）：多维数组的-Length-不是行数" class="headerlink" title="坑 4（隐藏关卡）：多维数组的 Length 不是行数"></a>坑 4（隐藏关卡）：多维数组的 <code>Length</code> 不是行数</h3><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">int</span>[,] grid = <span class="keyword">new</span> <span class="built_in">int</span>[<span class="number">3</span>, <span class="number">4</span>];</span><br><span class="line">Console.WriteLine(grid.Length);          <span class="comment">// 输出 12，不是 3！</span></span><br><span class="line">Console.WriteLine(grid.GetLength(<span class="number">0</span>));    <span class="comment">// 输出 3，这才是行数</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="七、实战选型决策树"><a href="#七、实战选型决策树" class="headerlink" title="七、实战选型决策树"></a>七、实战选型决策树</h2><p>遇到”二维数组”需求时，按这套流程判断即可：</p>
+<ol>
+<li><strong>每行长度都一样吗？</strong><ul>
+<li>不一样 → <strong>交错数组</strong> <code>int[][]</code>，没得选。</li>
+<li>一样 → 进入第 2 步。</li>
+</ul>
+</li>
+<li><strong>是否做密集数值计算（图像、矩阵乘、张量）？</strong><ul>
+<li>是 → <strong>多维数组</strong> <code>int[,]</code>（或更进一步 <code>Span&lt;T&gt;</code> &#x2F; <code>Memory&lt;T&gt;</code>）。</li>
+<li>否 → 进入第 3 步。</li>
+</ul>
+</li>
+<li><strong>是否需要把”某一行”作为整体传递、替换、排序？</strong><ul>
+<li>是 → <strong>交错数组</strong> <code>int[][]</code>，每一行就是独立的 <code>int[]</code>，可以直接传给任何接受 <code>int[]</code> 的方法。</li>
+<li>否 → 两者皆可，<strong>算法题首选 <code>int[][]</code></strong>（写起来短、JIT 友好），矩阵运算首选 <code>int[,]</code>。</li>
+</ul>
+</li>
+</ol>
+<h2 id="八、终极总结"><a href="#八、终极总结" class="headerlink" title="八、终极总结"></a>八、终极总结</h2><ol>
+<li><strong><code>int[][]</code> 是数组的数组，分两步 new；<code>int[,]</code> 是矩形矩阵，一步 new 到位。</strong></li>
+<li><strong>索引语法不能混</strong>：交错数组 <code>a[i][j]</code>，多维数组 <code>b[i, j]</code>。</li>
+<li><strong>数组初始化绝对不要在末尾加 <code>()</code></strong>——那是构造函数的语法。</li>
+<li><strong><code>int[,].Length</code> 是总元素数</strong>，要拿行数请用 <code>GetLength(0)</code>。</li>
+<li><strong>算法题和日常业务优先 <code>int[][]</code></strong>，密集数值计算才考虑 <code>int[,]</code>。</li>
+</ol>
+<p>下次再写出 <code>new int[m+1][n+1]()</code> 时，希望你能立刻反应过来：交错？多维？括号？——三个问题问完，自然就不会再被 CS0178 拦下了。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/C/" rel="tag"># C#</a>
+              <a href="/tags/NET/" rel="tag"># .NET</a>
+              <a href="/tags/%E6%95%B0%E7%BB%84/" rel="tag"># 数组</a>
+              <a href="/tags/%E4%BA%A4%E9%94%99%E6%95%B0%E7%BB%84/" rel="tag"># 交错数组</a>
+              <a href="/tags/%E5%A4%9A%E7%BB%B4%E6%95%B0%E7%BB%84/" rel="tag"># 多维数组</a>
+              <a href="/tags/Jagged-Array/" rel="tag"># Jagged Array</a>
+              <a href="/tags/%E5%86%85%E5%AD%98%E5%B8%83%E5%B1%80/" rel="tag"># 内存布局</a>
+              <a href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" rel="tag"># 动态规划</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/csharp-ilist-vs-list.html" rel="prev" title="【C#】IList&lt;T&gt; 与 List&lt;T&gt; 到底有什么区别？为什么接口和实现类不能混用？">
+                  <i class="fa fa-angle-left"></i> 【C#】IList<T> 与 List<T> 到底有什么区别？为什么接口和实现类不能混用？
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments gitalk-container"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2019 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">郭耀华</span>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/guoyaohua" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/gitalk/1.8.0/gitalk.css" integrity="sha256-AJnUHL7dBv6PGaeyPQJcgQPDjt/Hn/PvYZde1iqfp8U=" crossorigin="anonymous">
+
+<script class="next-config" data-name="gitalk" type="application/json">{"enable":true,"github_id":"guoyaohua","repo":"guoyaohua.github.io","client_id":"4c009e072d5529480639","client_secret":"e3ecab593b9ac65237423e6802012693e9ee2035","admin_user":"guoyaohua","distraction_free_mode":true,"proxy":"https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token","language":null,"body":null,"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/gitalk/1.8.0/gitalk.min.js","integrity":"sha256-MVK9MGD/XJaGyIghSVrONSnoXoGh3IFxLw0zfvzpxR4="},"path_md5":"2e01e46743ac75ace599c13c89633d98"}</script>
+<script src="/js/third-party/comments/gitalk.js" defer></script>
+
+</body>
+</html>
