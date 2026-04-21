@@ -10,7 +10,28 @@
   <rights>All rights reserved 2026, 郭耀华</rights>
   <subtitle>欲穷千里目，更上一层楼。</subtitle>
   <title>郭耀华's Blog | 深度学习、机器学习领域技术博客</title>
-  <updated>2026-03-31T14:51:35.349Z</updated>
+  <updated>2026-04-21T14:14:21.872Z</updated>
+  <entry>
+    <author>
+      <name>郭耀华</name>
+    </author>
+    <category term="Python" scheme="https://www.guoyaohua.com/categories/Python/"/>
+    <category term="Python" scheme="https://www.guoyaohua.com/tags/Python/"/>
+    <category term="元组解包" scheme="https://www.guoyaohua.com/tags/%E5%85%83%E7%BB%84%E8%A7%A3%E5%8C%85/"/>
+    <category term="Tuple Unpacking" scheme="https://www.guoyaohua.com/tags/Tuple-Unpacking/"/>
+    <category term="原子性" scheme="https://www.guoyaohua.com/tags/%E5%8E%9F%E5%AD%90%E6%80%A7/"/>
+    <category term="二叉树" scheme="https://www.guoyaohua.com/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/"/>
+    <category term="算法" scheme="https://www.guoyaohua.com/tags/%E7%AE%97%E6%B3%95/"/>
+    <category term="编程技巧" scheme="https://www.guoyaohua.com/tags/%E7%BC%96%E7%A8%8B%E6%8A%80%E5%B7%A7/"/>
+    <id>https://www.guoyaohua.com/%E3%80%90Python%E3%80%91%E5%85%83%E7%BB%84%E8%A7%A3%E5%8C%85%E7%9A%84%E5%8E%9F%E5%AD%90%E6%80%A7%EF%BC%9A%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%80%E8%A1%8C%E4%BA%A4%E6%8D%A2%E4%BB%A3%E7%A0%81%E6%B0%B8%E8%BF%9C%E4%B8%8D%E4%BC%9A%E4%B9%B1.html</id>
+    <link href="https://www.guoyaohua.com/%E3%80%90Python%E3%80%91%E5%85%83%E7%BB%84%E8%A7%A3%E5%8C%85%E7%9A%84%E5%8E%9F%E5%AD%90%E6%80%A7%EF%BC%9A%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%80%E8%A1%8C%E4%BA%A4%E6%8D%A2%E4%BB%A3%E7%A0%81%E6%B0%B8%E8%BF%9C%E4%B8%8D%E4%BC%9A%E4%B9%B1.html"/>
+    <published>2026-04-21T21:00:00.000Z</published>
+    <summary>
+      <![CDATA[<center>在 Python 编程中，`a, b = b, a` 这种简洁的交换写法人人都用，但你是否想过：为什么它永远不会出现"值被中途覆盖"的问题？尤其在处理二叉树节点这种复杂对象时，它依然能稳定运行。本文将以"翻转二叉树"为例，彻底搞懂元组解包的原子性，以及它如何帮我们规避其他语言中常见的坑。</center>]]>
+    </summary>
+    <title>【Python】元组解包的原子性：为什么一行交换代码永远不会乱？</title>
+    <updated>2026-04-21T14:14:21.872Z</updated>
+  </entry>
   <entry>
     <author>
       <name>郭耀华</name>
@@ -21,25 +42,12 @@
     <link href="https://www.guoyaohua.com/deeplearning-workstation.html"/>
     <published>2026-03-31T14:51:35.348Z</published>
     <summary>
-      <![CDATA[<h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>接触深度学习已经快两年了，之前一直使用<a href="https://colab.research.google.com/">Google Colab</a>和<a href="https://www.kaggle.com/kernels">Kaggle Kernel</a>提供的免费GPU（Tesla K80）训练模型（最近Google将Colab的GPU升级为<strong>Tesla T4</strong>，计算速度又提升了一个档次），不过由于内地网络的原因，Google和Kaggle连接十分不稳定，经常断线重连，一直是很令人头痛的问题，而且二者均有很多限制，例如Google Colab一个脚本运行的最长时间为12h，Kaggle的为6h，数据集上传也存在问题，需要使用一些Trick才能达成目的，模型的保存、下载等都会耗费很多精力，总之体验不是很好，不过免费的羊毛让大家撸，肯定会有一些限制，也是可以理解的。</p>
+      <![CDATA[<h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>接触深度学习已经快两年了，之前一直使用<a href="https://colab.research.google.com">Google Colab</a>和<a href="https://www.kaggle.com/kernels">Kaggle Kernel</a>提供的免费GPU（Tesla K80）训练模型（最近Google将Colab的GPU升级为<strong>Tesla T4</strong>，计算速度又提升了一个档次），不过由于内地网络的原因，Google和Kaggle连接十分不稳定，经常断线重连，一直是很令人头痛的问题，而且二者均有很多限制，例如Google Colab一个脚本运行的最长时间为12h，Kaggle的为6h，数据集上传也存在问题，需要使用一些Trick才能达成目的，模型的保存、下载等都会耗费很多精力，总之体验不是很好，不过免费的羊毛让大家撸，肯定会有一些限制，也是可以理解的。</p>
 <p>对于租用云服务器，之前也尝试过，租用了一家小平台的GPU服务器，也存在一些操作上的困难，不适合程序调试，而且价格也不便宜。</p>
 <p>很早之前就想要搭建一个自己的深度学习工作站，不过机器成本的昂贵，一直阻碍着我攒机计划的进行。工欲善其事，必先利其器！最近终于下定决心，置办一个深度学习工作站主机。本文将我在这段时间选择、购置硬件的心得体会，分享给大家。</p>]]>
     </summary>
     <title>深度学习工作站攒机指南</title>
     <updated>2026-03-31T14:51:35.349Z</updated>
-  </entry>
-  <entry>
-    <author>
-      <name>郭耀华</name>
-    </author>
-    <id>https://www.guoyaohua.com/hello-world.html</id>
-    <link href="https://www.guoyaohua.com/hello-world.html"/>
-    <published>2026-03-31T14:51:32.153Z</published>
-    <summary>
-      <![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>]]>
-    </summary>
-    <title>Hello World</title>
-    <updated>2026-03-31T14:51:32.154Z</updated>
   </entry>
   <entry>
     <author>
