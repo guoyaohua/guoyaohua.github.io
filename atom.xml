@@ -10,7 +10,33 @@
   <rights>All rights reserved 2026, 郭耀华</rights>
   <subtitle>欲穷千里目，更上一层楼。</subtitle>
   <title>郭耀华's Blog | 深度学习、机器学习领域技术博客</title>
-  <updated>2026-04-21T14:53:31.580Z</updated>
+  <updated>2026-04-23T14:09:21.218Z</updated>
+  <entry>
+    <author>
+      <name>郭耀华</name>
+    </author>
+    <category term="Artificial Intelligence" scheme="https://www.guoyaohua.com/categories/Artificial-Intelligence/"/>
+    <category term="AI" scheme="https://www.guoyaohua.com/tags/AI/"/>
+    <category term="LLM" scheme="https://www.guoyaohua.com/tags/LLM/"/>
+    <category term="大模型" scheme="https://www.guoyaohua.com/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B/"/>
+    <category term="Transformer" scheme="https://www.guoyaohua.com/tags/Transformer/"/>
+    <category term="深度学习" scheme="https://www.guoyaohua.com/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/"/>
+    <category term="注意力机制" scheme="https://www.guoyaohua.com/tags/%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6/"/>
+    <category term="RoPE" scheme="https://www.guoyaohua.com/tags/RoPE/"/>
+    <category term="RMSNorm" scheme="https://www.guoyaohua.com/tags/RMSNorm/"/>
+    <category term="GQA" scheme="https://www.guoyaohua.com/tags/GQA/"/>
+    <category term="MoE" scheme="https://www.guoyaohua.com/tags/MoE/"/>
+    <category term="SwiGLU" scheme="https://www.guoyaohua.com/tags/SwiGLU/"/>
+    <category term="KV Cache" scheme="https://www.guoyaohua.com/tags/KV-Cache/"/>
+    <id>https://www.guoyaohua.com/llm-vs-transformer-architecture.html</id>
+    <link href="https://www.guoyaohua.com/llm-vs-transformer-architecture.html"/>
+    <published>2026-04-22T10:00:00.000Z</published>
+    <summary>
+      <![CDATA[<center>2017 年 Google 一篇《Attention Is All You Need》开启了 Transformer 时代，2022 年 ChatGPT 把"大语言模型"推到了所有人面前。但很多人有个困惑：今天的 GPT-4、Llama、Qwen、DeepSeek 还是当年那个 Transformer 吗？答案是——<strong>骨架还在，但几乎每一块零件都被换过了。</strong>本文用快递公司、流水线、车间这些日常类比，从零开始把原始 Transformer 讲透，再逐个拆解现代 LLM 在它身上做了哪些关键改造，以及为什么。看完这一篇，你就能彻底分清"Transformer"和"LLM"。</center>]]>
+    </summary>
+    <title>【AI】从 Transformer 到 LLM：一篇博文彻底讲清现代大模型的架构演化</title>
+    <updated>2026-04-23T14:09:21.218Z</updated>
+  </entry>
   <entry>
     <author>
       <name>郭耀华</name>
@@ -122,8 +148,8 @@
       <name>郭耀华</name>
     </author>
     <category term="Machine Learning" scheme="https://www.guoyaohua.com/categories/Machine-Learning/"/>
-    <category term="机器学习" scheme="https://www.guoyaohua.com/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"/>
     <category term="深度学习" scheme="https://www.guoyaohua.com/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/"/>
+    <category term="机器学习" scheme="https://www.guoyaohua.com/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"/>
     <category term="决策树" scheme="https://www.guoyaohua.com/tags/%E5%86%B3%E7%AD%96%E6%A0%91/"/>
     <category term="剪枝" scheme="https://www.guoyaohua.com/tags/%E5%89%AA%E6%9E%9D/"/>
     <category term="ID3" scheme="https://www.guoyaohua.com/tags/ID3/"/>
@@ -146,8 +172,8 @@
       <name>郭耀华</name>
     </author>
     <category term="Machine Learning" scheme="https://www.guoyaohua.com/categories/Machine-Learning/"/>
-    <category term="机器学习" scheme="https://www.guoyaohua.com/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"/>
     <category term="深度学习" scheme="https://www.guoyaohua.com/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/"/>
+    <category term="机器学习" scheme="https://www.guoyaohua.com/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"/>
     <category term="分类算法" scheme="https://www.guoyaohua.com/tags/%E5%88%86%E7%B1%BB%E7%AE%97%E6%B3%95/"/>
     <category term="评价指标" scheme="https://www.guoyaohua.com/tags/%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87/"/>
     <category term="分类算法评价指标" scheme="https://www.guoyaohua.com/tags/%E5%88%86%E7%B1%BB%E7%AE%97%E6%B3%95%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87/"/>

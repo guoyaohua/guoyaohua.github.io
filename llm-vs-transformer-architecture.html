@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/favicon-32x32-next.png" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.31/fancybox/fancybox.css" integrity="sha256-gkQVf8UKZgQ0HyuxL/VnacadJ+D2Kox2TCEBuNQg5+w=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.guoyaohua.com","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"right","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"flat"},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":true,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false,"trigger":"auto"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="2017 年 Google 一篇《Attention Is All You Need》开启了 Transformer 时代，2022 年 ChatGPT 把&quot;大语言模型&quot;推到了所有人面前。但很多人有个困惑：今天的 GPT-4、Llama、Qwen、DeepSeek 还是当年那个 Transformer 吗？答案是——骨架还在，但几乎每一块零件都被换过了。本文用快递公司、流水线、车间这些日常类比，从">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【AI】从 Transformer 到 LLM：一篇博文彻底讲清现代大模型的架构演化">
+<meta property="og:url" content="https://www.guoyaohua.com/llm-vs-transformer-architecture.html">
+<meta property="og:site_name" content="郭耀华&#39;s Blog | 深度学习、机器学习领域技术博客">
+<meta property="og:description" content="2017 年 Google 一篇《Attention Is All You Need》开启了 Transformer 时代，2022 年 ChatGPT 把&quot;大语言模型&quot;推到了所有人面前。但很多人有个困惑：今天的 GPT-4、Llama、Qwen、DeepSeek 还是当年那个 Transformer 吗？答案是——骨架还在，但几乎每一块零件都被换过了。本文用快递公司、流水线、车间这些日常类比，从">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-04-22T10:00:00.000Z">
+<meta property="article:modified_time" content="2026-04-23T14:09:21.218Z">
+<meta property="article:author" content="郭耀华">
+<meta property="article:tag" content="AI">
+<meta property="article:tag" content="GQA">
+<meta property="article:tag" content="KV Cache">
+<meta property="article:tag" content="LLM">
+<meta property="article:tag" content="MoE">
+<meta property="article:tag" content="RMSNorm">
+<meta property="article:tag" content="RoPE">
+<meta property="article:tag" content="SwiGLU">
+<meta property="article:tag" content="Transformer">
+<meta property="article:tag" content="大模型">
+<meta property="article:tag" content="注意力机制">
+<meta property="article:tag" content="深度学习">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.guoyaohua.com/llm-vs-transformer-architecture.html">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.guoyaohua.com/llm-vs-transformer-architecture.html","path":"/llm-vs-transformer-architecture.html","title":"【AI】从 Transformer 到 LLM：一篇博文彻底讲清现代大模型的架构演化"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>【AI】从 Transformer 到 LLM：一篇博文彻底讲清现代大模型的架构演化 | 郭耀华's Blog | 深度学习、机器学习领域技术博客</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.31/fancybox/fancybox.umd.js" integrity="sha256-a+H7FYzJv6oU2hfsfDGM2Ohw/cR9v+hPfxHCLdmCrE8=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+  <script src="/js/third-party/fancybox.js" defer></script>
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="郭耀华's Blog | 深度学习、机器学习领域技术博客" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">郭耀华's Blog | 深度学习、机器学习领域技术博客</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">欲穷千里目，更上一层楼。</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%AE%E5%BD%95%E9%80%9F%E8%A7%88"><span class="nav-text">目录速览</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E5%85%88%E6%89%93%E4%B8%AA%E6%AF%94%E6%96%B9%EF%BC%9ATransformer-%E5%88%B0%E5%BA%95%E5%9C%A8%E5%81%9A%E4%BB%80%E4%B9%88"><span class="nav-text">一、先打个比方：Transformer 到底在做什么</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E5%8E%9F%E5%A7%8B-Transformer-%E6%9E%B6%E6%9E%84%E8%AF%A6%E8%A7%A3%EF%BC%882017-%E7%89%88%EF%BC%89"><span class="nav-text">二、原始 Transformer 架构详解（2017 版）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-%E6%95%B4%E4%BD%93%E7%BB%93%E6%9E%84%E5%9B%BE%EF%BC%88%E6%96%87%E5%AD%97%E7%89%88%EF%BC%89"><span class="nav-text">2.1 整体结构图（文字版）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-Token-%E5%8C%96%E4%B8%8E-Embedding%EF%BC%9A%E6%8A%8A%E6%96%87%E5%AD%97%E5%8F%98%E6%88%90%E5%90%91%E9%87%8F"><span class="nav-text">2.2 Token 化与 Embedding：把文字变成向量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81%EF%BC%88Positional-Encoding%EF%BC%89%EF%BC%9A%E5%91%8A%E8%AF%89%E6%A8%A1%E5%9E%8B%E5%AD%97%E7%9A%84%E5%85%88%E5%90%8E%E9%A1%BA%E5%BA%8F"><span class="nav-text">2.3 位置编码（Positional Encoding）：告诉模型字的先后顺序</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-4-%E8%87%AA%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6%EF%BC%88Self-Attention%EF%BC%89%EF%BC%9A%E6%9C%AC%E8%B4%A8%E6%98%AF%E2%80%9D%E5%8A%A0%E6%9D%83%E6%B1%82%E5%92%8C%E2%80%9D"><span class="nav-text">2.4 自注意力机制（Self-Attention）：本质是”加权求和”</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-5-%E5%89%8D%E9%A6%88%E7%BD%91%E7%BB%9C%EF%BC%88FFN%EF%BC%89%EF%BC%9A%E6%AF%8F%E4%B8%AA-token-%E5%8D%95%E7%8B%AC%E2%80%9D%E6%B6%88%E5%8C%96%E2%80%9D"><span class="nav-text">2.5 前馈网络（FFN）：每个 token 单独”消化”</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-6-%E6%AE%8B%E5%B7%AE%E8%BF%9E%E6%8E%A5%E4%B8%8E-LayerNorm%EF%BC%9A%E8%AE%A9%E6%B7%B1%E7%BD%91%E7%BB%9C%E8%83%BD%E8%AE%AD%E5%BE%97%E5%8A%A8"><span class="nav-text">2.6 残差连接与 LayerNorm：让深网络能训得动</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-7-Decoder-%E7%9A%84%E4%B8%A4%E4%B8%AA%E7%89%B9%E6%AE%8A%E4%B9%8B%E5%A4%84"><span class="nav-text">2.7 Decoder 的两个特殊之处</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81LLM-%E7%9A%84%E7%AC%AC%E4%B8%80%E6%AC%A1%E5%A4%A7%E8%BD%AC%E5%90%91%EF%BC%9A%E6%8A%9B%E5%BC%83-Encoder%EF%BC%8C%E5%8F%AA%E7%95%99-Decoder"><span class="nav-text">三、LLM 的第一次大转向：抛弃 Encoder，只留 Decoder</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-%E4%B8%89%E7%A7%8D%E6%9E%B6%E6%9E%84%E5%AE%B6%E6%97%8F"><span class="nav-text">3.1 三种架构家族</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-%E4%B8%BA%E4%BB%80%E4%B9%88%E7%8E%B0%E4%BB%A3-LLM-%E5%87%A0%E4%B9%8E%E6%B8%85%E4%B8%80%E8%89%B2-Decoder-only%EF%BC%9F"><span class="nav-text">3.2 为什么现代 LLM 几乎清一色 Decoder-only？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-Decoder-only-%E9%95%BF%E4%BB%80%E4%B9%88%E6%A0%B7%EF%BC%9F"><span class="nav-text">3.3 Decoder-only 长什么样？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81%E7%9A%84%E8%BF%9B%E5%8C%96%EF%BC%9A%E4%BB%8E%E7%BB%9D%E5%AF%B9%E6%AD%A3%E5%BC%A6%E5%88%B0-RoPE"><span class="nav-text">四、位置编码的进化：从绝对正弦到 RoPE</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-%E5%8E%9F%E5%A7%8B%E6%96%B9%E6%A1%88%E7%9A%84%E7%97%9B%E7%82%B9"><span class="nav-text">4.1 原始方案的痛点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-%E6%97%8B%E8%BD%AC%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81%EF%BC%88RoPE%EF%BC%89%E7%9A%84%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3"><span class="nav-text">4.2 旋转位置编码（RoPE）的核心思想</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#begin-pmatrix-q%E2%80%99-2i-q%E2%80%99-2i-1-end-pmatrix"><span class="nav-text">$$\begin{pmatrix} q’{2i} \ q’{2i+1} \end{pmatrix}</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-3-%E8%B0%81%E5%9C%A8%E7%94%A8-RoPE%EF%BC%9F"><span class="nav-text">4.3 谁在用 RoPE？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E5%BD%92%E4%B8%80%E5%8C%96%E7%9A%84%E8%BF%9B%E5%8C%96%EF%BC%9ALayerNorm-%E2%86%92-RMSNorm%EF%BC%8CPost-Norm-%E2%86%92-Pre-Norm"><span class="nav-text">五、归一化的进化：LayerNorm → RMSNorm，Post-Norm → Pre-Norm</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#5-1-Post-Norm-vs-Pre-Norm%EF%BC%9A%E5%BD%92%E4%B8%80%E5%8C%96%E6%94%BE%E5%9C%A8%E5%93%AA%EF%BC%9F"><span class="nav-text">5.1 Post-Norm vs Pre-Norm：归一化放在哪？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-2-RMSNorm%EF%BC%9A%E6%8A%8A-LayerNorm-%E7%A0%8D%E6%8E%89%E4%B8%80%E5%8D%8A"><span class="nav-text">5.2 RMSNorm：把 LayerNorm 砍掉一半</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E3%80%81%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6%E7%9A%84%E8%BF%9B%E5%8C%96%EF%BC%9AMHA-%E2%86%92-MQA-%E2%86%92-GQA-%E2%86%92-MLA"><span class="nav-text">六、注意力机制的进化：MHA → MQA → GQA → MLA</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#6-1-%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E4%BC%98%E5%8C%96%EF%BC%9FKV-Cache-%E6%98%AF%E6%98%BE%E5%AD%98%E5%A4%A7%E6%88%B7"><span class="nav-text">6.1 为什么要优化？KV Cache 是显存大户</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-2-MHA%EF%BC%9A%E5%8E%9F%E5%A7%8B%E5%A4%9A%E5%A4%B4%E6%B3%A8%E6%84%8F%E5%8A%9B"><span class="nav-text">6.2 MHA：原始多头注意力</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-3-MQA%EF%BC%88Multi-Query-Attention%EF%BC%89%EF%BC%9A%E6%9A%B4%E5%8A%9B%E5%85%B1%E4%BA%AB"><span class="nav-text">6.3 MQA（Multi-Query Attention）：暴力共享</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-4-GQA%EF%BC%88Grouped-Query-Attention%EF%BC%89%EF%BC%9A%E6%8A%98%E4%B8%AD%E6%96%B9%E6%A1%88"><span class="nav-text">6.4 GQA（Grouped-Query Attention）：折中方案</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-5-MLA%EF%BC%88Multi-head-Latent-Attention%EF%BC%89%EF%BC%9ADeepSeek-%E7%9A%84%E6%9D%80%E6%89%8B%E9%94%8F"><span class="nav-text">6.5 MLA（Multi-head Latent Attention）：DeepSeek 的杀手锏</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-6-%E4%B8%80%E5%9B%BE%E7%9C%8B%E6%87%82%E6%BC%94%E5%8C%96"><span class="nav-text">6.6 一图看懂演化</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%83%E3%80%81%E5%89%8D%E9%A6%88%E5%B1%82%E7%9A%84%E8%BF%9B%E5%8C%96%EF%BC%9AReLU-%E2%86%92-SwiGLU%EF%BC%8C%E5%86%8D%E5%88%B0-MoE"><span class="nav-text">七、前馈层的进化：ReLU → SwiGLU，再到 MoE</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#7-1-%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0%EF%BC%9AReLU-%E2%86%92-GELU-%E2%86%92-SwiGLU"><span class="nav-text">7.1 激活函数：ReLU → GELU → SwiGLU</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-2-MoE%EF%BC%88Mixture-of-Experts%EF%BC%89%EF%BC%9A%E8%AE%A9%E6%A8%A1%E5%9E%8B%E2%80%9D%E6%8C%89%E9%9C%80%E8%B0%83%E7%94%A8%E4%B8%93%E5%AE%B6%E2%80%9D"><span class="nav-text">7.2 MoE（Mixture of Experts）：让模型”按需调用专家”</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AB%E3%80%81%E8%AE%AD%E7%BB%83%E7%9B%AE%E6%A0%87%E4%B8%8E%E8%A7%84%E6%A8%A1%E7%9A%84%E5%B7%AE%E5%BC%82"><span class="nav-text">八、训练目标与规模的差异</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#8-1-%E8%AE%AD%E7%BB%83%E7%9B%AE%E6%A0%87"><span class="nav-text">8.1 训练目标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-2-%E4%B8%89%E9%98%B6%E6%AE%B5%E8%AE%AD%E7%BB%83%E6%B5%81%E7%A8%8B"><span class="nav-text">8.2 三阶段训练流程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-3-%E8%A7%84%E6%A8%A1%E7%9A%84%E4%BB%A3%E9%99%85%E5%B7%AE%E5%BC%82"><span class="nav-text">8.3 规模的代际差异</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B9%9D%E3%80%81%E6%8E%A8%E7%90%86%E9%98%B6%E6%AE%B5%E7%9A%84%E2%80%9D%E7%8B%AC%E9%97%A8%E6%AD%A6%E5%99%A8%E2%80%9D%EF%BC%9AKV-Cache-%E4%B8%8E%E4%B8%8A%E4%B8%8B%E6%96%87%E6%89%A9%E5%B1%95"><span class="nav-text">九、推理阶段的”独门武器”：KV Cache 与上下文扩展</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#9-1-KV-Cache"><span class="nav-text">9.1 KV Cache</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-2-PagedAttention%EF%BC%88vLLM%EF%BC%89"><span class="nav-text">9.2 PagedAttention（vLLM）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-3-Speculative-Decoding%EF%BC%88%E6%8A%95%E6%9C%BA%E8%A7%A3%E7%A0%81%EF%BC%89"><span class="nav-text">9.3 Speculative Decoding（投机解码）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-4-%E9%95%BF%E4%B8%8A%E4%B8%8B%E6%96%87%E6%89%A9%E5%B1%95"><span class="nav-text">9.4 长上下文扩展</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E3%80%81%E4%B8%80%E5%BC%A0%E6%80%BB%E8%A1%A8%EF%BC%9A%E5%8E%9F%E5%A7%8B-Transformer-vs-%E7%8E%B0%E4%BB%A3-LLM"><span class="nav-text">十、一张总表：原始 Transformer vs 现代 LLM</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%B8%80%E3%80%81%E5%86%99%E5%9C%A8%E6%9C%80%E5%90%8E"><span class="nav-text">十一、写在最后</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="郭耀华"
+      src="https://github.com/guoyaohua.png">
+  <p class="site-author-name" itemprop="name">郭耀华</p>
+  <div class="site-description" itemprop="description">记录IT成长路上的点点滴滴，分享深度学习、机器学习领域最新技术。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">9</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">60</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/guoyaohua" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;guoyaohua" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:guo.yaohua@foxmail.com" title="E-Mail → mailto:guo.yaohua@foxmail.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+          链接
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://jiqizhixin.com/" title="https:&#x2F;&#x2F;jiqizhixin.com" rel="noopener" target="_blank">机器之心</a>
+            </li>
+            <li class="links-of-blogroll-item">
+              <a href="https://www.cnblogs.com/guoyaohua" title="https:&#x2F;&#x2F;www.cnblogs.com&#x2F;guoyaohua" rel="noopener" target="_blank">郭耀华博客园</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.guoyaohua.com/llm-vs-transformer-architecture.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://github.com/guoyaohua.png">
+      <meta itemprop="name" content="郭耀华">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="郭耀华's Blog | 深度学习、机器学习领域技术博客">
+      <meta itemprop="description" content="记录IT成长路上的点点滴滴，分享深度学习、机器学习领域最新技术。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="【AI】从 Transformer 到 LLM：一篇博文彻底讲清现代大模型的架构演化 | 郭耀华's Blog | 深度学习、机器学习领域技术博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          【AI】从 Transformer 到 LLM：一篇博文彻底讲清现代大模型的架构演化
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-04-22 10:00:00" itemprop="dateCreated datePublished" datetime="2026-04-22T10:00:00Z">2026-04-22</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2026-04-23 14:09:21" itemprop="dateModified" datetime="2026-04-23T14:09:21Z">2026-04-23</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Artificial-Intelligence/" itemprop="url" rel="index"><span itemprop="name">Artificial Intelligence</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>9.5k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>9 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><center>2017 年 Google 一篇《Attention Is All You Need》开启了 Transformer 时代，2022 年 ChatGPT 把"大语言模型"推到了所有人面前。但很多人有个困惑：今天的 GPT-4、Llama、Qwen、DeepSeek 还是当年那个 Transformer 吗？答案是——<strong>骨架还在，但几乎每一块零件都被换过了。</strong>本文用快递公司、流水线、车间这些日常类比，从零开始把原始 Transformer 讲透，再逐个拆解现代 LLM 在它身上做了哪些关键改造，以及为什么。看完这一篇，你就能彻底分清"Transformer"和"LLM"。</center>
+
+<span id="more"></span>
+
+<h2 id="目录速览"><a href="#目录速览" class="headerlink" title="目录速览"></a>目录速览</h2><ol>
+<li><a href="#%E4%B8%80-%E5%85%88%E6%89%93%E4%B8%AA%E6%AF%94%E6%96%B9transformer-%E5%88%B0%E5%BA%95%E5%9C%A8%E5%81%9A%E4%BB%80%E4%B9%88">先打个比方：Transformer 到底在做什么</a></li>
+<li><a href="#%E4%BA%8C-%E5%8E%9F%E5%A7%8B-transformer-%E6%9E%B6%E6%9E%84%E8%AF%A6%E8%A7%A32017-%E7%89%88">原始 Transformer 架构详解（2017 版）</a></li>
+<li><a href="#%E4%B8%89-llm-%E7%9A%84%E7%AC%AC%E4%B8%80%E6%AC%A1%E5%A4%A7%E8%BD%AC%E5%90%91%E6%8A%9B%E5%BC%83-encoder%E5%8F%AA%E7%95%99-decoder">LLM 的第一次大转向：抛弃 Encoder，只留 Decoder</a></li>
+<li><a href="#%E5%9B%9B-%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81%E7%9A%84%E8%BF%9B%E5%8C%96%E4%BB%8E%E7%BB%9D%E5%AF%B9%E6%AD%A3%E5%BC%A6%E5%88%B0-rope">位置编码的进化：从绝对正弦到 RoPE</a></li>
+<li><a href="#%E4%BA%94-%E5%BD%92%E4%B8%80%E5%8C%96%E7%9A%84%E8%BF%9B%E5%8C%96layernorm--rmsnormpost-norm--pre-norm">归一化的进化：LayerNorm → RMSNorm，Post-Norm → Pre-Norm</a></li>
+<li><a href="#%E5%85%AD-%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6%E7%9A%84%E8%BF%9B%E5%8C%96mha--mqa--gqa--mla">注意力机制的进化：MHA → MQA → GQA → MLA</a></li>
+<li><a href="#%E4%B8%83-%E5%89%8D%E9%A6%88%E5%B1%82%E7%9A%84%E8%BF%9B%E5%8C%96relu--swiglu%E5%86%8D%E5%88%B0-moe">前馈层的进化：ReLU → SwiGLU，再到 MoE</a></li>
+<li><a href="#%E5%85%AB-%E8%AE%AD%E7%BB%83%E7%9B%AE%E6%A0%87%E4%B8%8E%E8%A7%84%E6%A8%A1%E7%9A%84%E5%B7%AE%E5%BC%82">训练目标与规模的差异</a></li>
+<li><a href="#%E4%B9%9D-%E6%8E%A8%E7%90%86%E9%98%B6%E6%AE%B5%E7%9A%84%E7%8B%AC%E9%97%A8%E6%AD%A6%E5%99%A8kv-cache-%E4%B8%8E%E4%B8%8A%E4%B8%8B%E6%96%87%E6%89%A9%E5%B1%95">推理阶段的”独门武器”：KV Cache 与上下文扩展</a></li>
+<li><a href="#%E5%8D%81-%E4%B8%80%E5%BC%A0%E6%80%BB%E8%A1%A8%E5%8E%9F%E5%A7%8B-transformer-vs-%E7%8E%B0%E4%BB%A3-llm">一张总表：原始 Transformer vs 现代 LLM</a></li>
+<li><a href="#%E5%8D%81%E4%B8%80-%E5%86%99%E5%9C%A8%E6%9C%80%E5%90%8E">写在最后</a></li>
+</ol>
+<hr>
+<h2 id="一、先打个比方：Transformer-到底在做什么"><a href="#一、先打个比方：Transformer-到底在做什么" class="headerlink" title="一、先打个比方：Transformer 到底在做什么"></a>一、先打个比方：Transformer 到底在做什么</h2><p>在啃公式之前，先建立一个<strong>直觉模型</strong>。</p>
+<p>想象一个跨国快递公司，要把一段中文翻译成英文。整个公司分成两个部门：</p>
+<ul>
+<li><strong>理解部（Encoder）</strong>：负责读懂中文原文，把每个字的含义、上下文关系全部消化成”内部档案”。</li>
+<li><strong>生成部（Decoder）</strong>：拿着理解部的档案，一个英文单词一个英文单词地往外写。</li>
+</ul>
+<p>每个部门里都站着一排排”员工”，每个员工都干同一件事——<strong>和身边的同事互相打听信息，然后更新自己手上的笔记</strong>。这个”互相打听”的动作，就是<strong>注意力机制（Attention）</strong>。</p>
+<p>为什么这个设计这么牛？因为在 Transformer 之前，主流的 RNN&#x2F;LSTM 是”流水线作业”——必须等第 1 个字处理完，才能处理第 2 个字。而 Transformer 让所有员工<strong>同时开工、互相串门</strong>，效率瞬间起飞，也能轻松看到很远的上下文关系。</p>
+<p>记住这个画面，下面所有的细节都是在给这家”快递公司”打补丁。</p>
+<hr>
+<h2 id="二、原始-Transformer-架构详解（2017-版）"><a href="#二、原始-Transformer-架构详解（2017-版）" class="headerlink" title="二、原始 Transformer 架构详解（2017 版）"></a>二、原始 Transformer 架构详解（2017 版）</h2><p>我们来正式拆解 2017 年那篇论文里的架构。原始 Transformer 是一个 <strong>Encoder-Decoder</strong> 结构，用于机器翻译任务。</p>
+<h3 id="2-1-整体结构图（文字版）"><a href="#2-1-整体结构图（文字版）" class="headerlink" title="2.1 整体结构图（文字版）"></a>2.1 整体结构图（文字版）</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">输入中文 &quot;我爱你&quot;                          目标英文 &quot;I love you&quot;</span><br><span class="line">     │                                            │</span><br><span class="line">[Token 化 + Embedding]                  [Token 化 + Embedding]</span><br><span class="line">     │                                            │</span><br><span class="line">[+ 位置编码]                              [+ 位置编码]</span><br><span class="line">     │                                            │</span><br><span class="line">┌────▼────────┐ × N层                    ┌────────▼────────┐ × N层</span><br><span class="line">│  Encoder Block  │                      │  Decoder Block      │</span><br><span class="line">│  ┌───────────┐  │                      │  ┌───────────────┐  │</span><br><span class="line">│  │自注意力    │  │                      │  │ 掩码自注意力   │  │</span><br><span class="line">│  └───────────┘  │                      │  └───────────────┘  │</span><br><span class="line">│  ┌───────────┐  │   ────────────►      │  ┌───────────────┐  │</span><br><span class="line">│  │   FFN     │  │                      │  │  交叉注意力    │  │</span><br><span class="line">│  └───────────┘  │                      │  └───────────────┘  │</span><br><span class="line">└─────────────────┘                      │  ┌───────────────┐  │</span><br><span class="line">                                         │  │     FFN       │  │</span><br><span class="line">                                         │  └───────────────┘  │</span><br><span class="line">                                         └─────────┬───────────┘</span><br><span class="line">                                                   │</span><br><span class="line">                                           [Linear + Softmax]</span><br><span class="line">                                                   │</span><br><span class="line">                                             输出下一个英文词</span><br></pre></td></tr></table></figure>
+
+<p>下面把每个零件单独剖开看。</p>
+<h3 id="2-2-Token-化与-Embedding：把文字变成向量"><a href="#2-2-Token-化与-Embedding：把文字变成向量" class="headerlink" title="2.2 Token 化与 Embedding：把文字变成向量"></a>2.2 Token 化与 Embedding：把文字变成向量</h3><p>计算机不认识文字，只认识数字。所以第一步是<strong>分词（Tokenize）</strong>——把”我爱你”切成 <code>[&quot;我&quot;, &quot;爱&quot;, &quot;你&quot;]</code>，再查一张巨大的”词典表”，把每个词映射成一个固定长度（比如 512 维）的向量。</p>
+<blockquote>
+<p>📌 <strong>新手理解</strong>：可以把每个 token 想象成一张身份证，向量就是身份证上的所有特征字段（身高、体重、爱好……一共 512 个属性）。</p>
+</blockquote>
+<h3 id="2-3-位置编码（Positional-Encoding）：告诉模型字的先后顺序"><a href="#2-3-位置编码（Positional-Encoding）：告诉模型字的先后顺序" class="headerlink" title="2.3 位置编码（Positional Encoding）：告诉模型字的先后顺序"></a>2.3 位置编码（Positional Encoding）：告诉模型字的先后顺序</h3><p>注意力机制有个天生的”病”——<strong>它对顺序不敏感</strong>。”我爱你” 和 “你爱我”，在自注意力眼里几乎一样。</p>
+<p>为了告诉模型”哪个字在前，哪个字在后”，原始 Transformer 给每个位置加了一组<strong>正弦余弦函数生成的固定向量</strong>：</p>
+<p>$$<br>PE_{(pos, 2i)} &#x3D; \sin\left(\frac{pos}{10000^{2i&#x2F;d}}\right), \quad PE_{(pos, 2i+1)} &#x3D; \cos\left(\frac{pos}{10000^{2i&#x2F;d}}\right)<br>$$</p>
+<blockquote>
+<p>📌 <strong>新手理解</strong>：相当于给每个座位贴了一个独特的”座位号牌”，这样员工们就知道谁坐在第几排。</p>
+</blockquote>
+<h3 id="2-4-自注意力机制（Self-Attention）：本质是”加权求和”"><a href="#2-4-自注意力机制（Self-Attention）：本质是”加权求和”" class="headerlink" title="2.4 自注意力机制（Self-Attention）：本质是”加权求和”"></a>2.4 自注意力机制（Self-Attention）：本质是”加权求和”</h3><p>这是 Transformer 的灵魂。每个 token 会生成三个向量：</p>
+<ul>
+<li><strong>Query (Q)</strong>：我想找什么？</li>
+<li><strong>Key (K)</strong>：我有什么标签？</li>
+<li><strong>Value (V)</strong>：我能提供什么信息？</li>
+</ul>
+<p>公式只有一行：</p>
+<p>$$<br>\text{Attention}(Q, K, V) &#x3D; \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right) V<br>$$</p>
+<p><strong>用打比方来理解</strong>：</p>
+<blockquote>
+<p>想象你在一场鸡尾酒会。你（Query）想找懂红酒的人聊天。每个客人胸前都挂着标签（Key），你扫一眼所有人的标签，给”懂红酒”的人打高分，给”只懂啤酒”的人打低分（这就是 $QK^T$）。然后你按这个分数的权重，去听每个人讲话的内容（Value），分数高的人你听得仔细，分数低的人你左耳进右耳出。最后你把所有听到的信息<strong>加权融合</strong>进自己脑子里——这就是注意力的输出。</p>
+</blockquote>
+<p><strong>多头注意力（Multi-Head Attention）</strong> 就是同时开 8 场鸡尾酒会，每场关注不同维度（语法、语义、指代……），最后拼起来。</p>
+<h3 id="2-5-前馈网络（FFN）：每个-token-单独”消化”"><a href="#2-5-前馈网络（FFN）：每个-token-单独”消化”" class="headerlink" title="2.5 前馈网络（FFN）：每个 token 单独”消化”"></a>2.5 前馈网络（FFN）：每个 token 单独”消化”</h3><p>注意力做完”串门”后，每个 token 还要经过一个<strong>两层的全连接网络</strong>单独加工：</p>
+<p>$$<br>\text{FFN}(x) &#x3D; \text{ReLU}(xW_1 + b_1)W_2 + b_2<br>$$</p>
+<blockquote>
+<p>📌 <strong>新手理解</strong>：注意力是”开会讨论”，FFN 是”散会后回工位整理笔记”。</p>
+</blockquote>
+<h3 id="2-6-残差连接与-LayerNorm：让深网络能训得动"><a href="#2-6-残差连接与-LayerNorm：让深网络能训得动" class="headerlink" title="2.6 残差连接与 LayerNorm：让深网络能训得动"></a>2.6 残差连接与 LayerNorm：让深网络能训得动</h3><p>每个子层（注意力 &#x2F; FFN）的输出都包了一层”保险”:</p>
+<p>$$<br>\text{Output} &#x3D; \text{LayerNorm}(x + \text{Sublayer}(x))<br>$$</p>
+<ul>
+<li><strong>残差连接 <code>x +</code></strong>：相当于”原稿留底”，避免改着改着把原意改丢了；同时让梯度能畅通无阻地流回浅层。</li>
+<li><strong>LayerNorm</strong>：把每一层的输出”标准化”到一个稳定的数值范围，避免越叠越爆炸或越叠越萎缩。</li>
+</ul>
+<p>注意原始 Transformer 是 <strong>Post-Norm</strong>——先残差相加，再做归一化。这个细节后面会被改掉。</p>
+<h3 id="2-7-Decoder-的两个特殊之处"><a href="#2-7-Decoder-的两个特殊之处" class="headerlink" title="2.7 Decoder 的两个特殊之处"></a>2.7 Decoder 的两个特殊之处</h3><ol>
+<li><strong>掩码自注意力（Masked Self-Attention）</strong>：生成第 i 个英文词时，不能偷看第 i+1、i+2 个词（不然就作弊了）。所以注意力矩阵的右上三角全部置为 $-\infty$。</li>
+<li><strong>交叉注意力（Cross-Attention）</strong>：Decoder 还要看 Encoder 输出的”中文档案”，所以多了一层 Q 来自 Decoder、K&#x2F;V 来自 Encoder 的注意力。</li>
+</ol>
+<p>到这里，原始 Transformer 就讲完了。现在主角登场——<strong>LLM 拿走了这套架构后，到底改了什么？</strong></p>
+<hr>
+<h2 id="三、LLM-的第一次大转向：抛弃-Encoder，只留-Decoder"><a href="#三、LLM-的第一次大转向：抛弃-Encoder，只留-Decoder" class="headerlink" title="三、LLM 的第一次大转向：抛弃 Encoder，只留 Decoder"></a>三、LLM 的第一次大转向：抛弃 Encoder，只留 Decoder</h2><h3 id="3-1-三种架构家族"><a href="#3-1-三种架构家族" class="headerlink" title="3.1 三种架构家族"></a>3.1 三种架构家族</h3><p>后续基于 Transformer 演化出了三大家族：</p>
+<table>
+<thead>
+<tr>
+<th>家族</th>
+<th>代表模型</th>
+<th>用什么</th>
+<th>擅长</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Encoder-only</strong></td>
+<td>BERT、RoBERTa</td>
+<td>只要 Encoder</td>
+<td>理解任务（分类、检索、NER）</td>
+</tr>
+<tr>
+<td><strong>Encoder-Decoder</strong></td>
+<td>原始 Transformer、T5、BART</td>
+<td>两者都要</td>
+<td>翻译、摘要等”输入→输出”任务</td>
+</tr>
+<tr>
+<td><strong>Decoder-only</strong></td>
+<td>GPT 系列、Llama、Qwen、DeepSeek</td>
+<td>只要 Decoder</td>
+<td><strong>生成式对话、通用 LLM</strong></td>
+</tr>
+</tbody></table>
+<h3 id="3-2-为什么现代-LLM-几乎清一色-Decoder-only？"><a href="#3-2-为什么现代-LLM-几乎清一色-Decoder-only？" class="headerlink" title="3.2 为什么现代 LLM 几乎清一色 Decoder-only？"></a>3.2 为什么现代 LLM 几乎清一色 Decoder-only？</h3><p>这是过去几年最重要的架构选择。原因有三：</p>
+<ol>
+<li><strong>训练目标统一</strong>：Decoder-only 用”预测下一个 token”这一个任务就能学习一切——翻译、问答、写代码、推理，全都能塞进”接下来该说什么”这个统一框架里。</li>
+<li><strong>数据效率更高</strong>：相同算力下，Decoder-only 在大规模无监督文本上学得最快、扩展性最好（Scaling Law 在它身上最显著）。</li>
+<li><strong>推理时天然支持流式生成</strong>：一个 token 一个 token 地往外吐，配合 KV Cache（后面讲）效率极高。</li>
+</ol>
+<blockquote>
+<p>📌 <strong>新手理解</strong>：原来”理解部 + 生成部”两个部门都要养，成本高、协调难。现在发现一个”全能生成部”足以——它边读边写，读懂了自然就能写好。</p>
+</blockquote>
+<h3 id="3-3-Decoder-only-长什么样？"><a href="#3-3-Decoder-only-长什么样？" class="headerlink" title="3.3 Decoder-only 长什么样？"></a>3.3 Decoder-only 长什么样？</h3><p>Decoder-only 砍掉了交叉注意力（因为没有 Encoder 了），变成超级简洁的堆叠结构：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">输入 token</span><br><span class="line">   │</span><br><span class="line">[Embedding + 位置信息]</span><br><span class="line">   │</span><br><span class="line">┌──▼──────────────────┐</span><br><span class="line">│  Transformer Block  │ × N 层（GPT-3 是 96 层，Llama-3-405B 是 126 层）</span><br><span class="line">│  ┌───────────────┐  │</span><br><span class="line">│  │ 掩码多头注意力 │  │</span><br><span class="line">│  └───────────────┘  │</span><br><span class="line">│  ┌───────────────┐  │</span><br><span class="line">│  │  前馈网络 FFN │  │</span><br><span class="line">│  └───────────────┘  │</span><br><span class="line">└──┬──────────────────┘</span><br><span class="line">   │</span><br><span class="line">[Linear + Softmax]</span><br><span class="line">   │</span><br><span class="line">预测下一个 token</span><br></pre></td></tr></table></figure>
+
+<p>骨架就是这样。下面所有的进化，都是把这个骨架里的零件<strong>逐个换成更高效、更稳定、更长上下文的版本</strong>。</p>
+<hr>
+<h2 id="四、位置编码的进化：从绝对正弦到-RoPE"><a href="#四、位置编码的进化：从绝对正弦到-RoPE" class="headerlink" title="四、位置编码的进化：从绝对正弦到 RoPE"></a>四、位置编码的进化：从绝对正弦到 RoPE</h2><h3 id="4-1-原始方案的痛点"><a href="#4-1-原始方案的痛点" class="headerlink" title="4.1 原始方案的痛点"></a>4.1 原始方案的痛点</h3><p>原始 Transformer 用的正弦位置编码是<strong>绝对位置</strong>——第 5 个 token 永远是 PE(5)。这有两个问题：</p>
+<ol>
+<li><strong>外推性差</strong>：训练时只见过长度 2048 的序列，推理时给 4096 它就懵了。</li>
+<li><strong>不直接表达相对位置</strong>：模型其实更关心”A 在 B 前面 3 个位置”这种相对关系，而不是”A 是第 17 个”。</li>
+</ol>
+<h3 id="4-2-旋转位置编码（RoPE）的核心思想"><a href="#4-2-旋转位置编码（RoPE）的核心思想" class="headerlink" title="4.2 旋转位置编码（RoPE）的核心思想"></a>4.2 旋转位置编码（RoPE）的核心思想</h3><p>RoPE（Rotary Position Embedding）的脑洞非常巧妙：<strong>不要把位置加到向量上，而是把位置变成一个旋转角度，去转动 Q 和 K 向量本身。</strong></p>
+<p>具体做法是：把每个 Q&#x2F;K 向量按维度两两分组，每组当作复平面上的一个二维向量，然后按位置 $m$ 旋转 $m\theta$ 角度：</p>
+<h1 id="begin-pmatrix-q’-2i-q’-2i-1-end-pmatrix"><a href="#begin-pmatrix-q’-2i-q’-2i-1-end-pmatrix" class="headerlink" title="$$\begin{pmatrix} q’{2i} \ q’{2i+1} \end{pmatrix}"></a>$$<br>\begin{pmatrix} q’<em>{2i} \ q’</em>{2i+1} \end{pmatrix}</h1><p>\begin{pmatrix} \cos m\theta_i &amp; -\sin m\theta_i \ \sin m\theta_i &amp; \cos m\theta_i \end{pmatrix}<br>\begin{pmatrix} q_{2i} \ q_{2i+1} \end{pmatrix}<br>$$</p>
+<p><strong>精妙之处</strong>：当 Q 在位置 $m$、K 在位置 $n$ 做点积时，结果只跟它们的<strong>相对位置 $(m-n)$</strong> 有关，绝对位置自然抵消！</p>
+<blockquote>
+<p>📌 <strong>新手理解</strong>：原来是”每个座位贴个号牌”，现在是”每个人按座位号自转一定角度”。两个人面对面交流时，他们之间的角度差只取决于座位距离，跟绝对座位号无关。</p>
+</blockquote>
+<h3 id="4-3-谁在用-RoPE？"><a href="#4-3-谁在用-RoPE？" class="headerlink" title="4.3 谁在用 RoPE？"></a>4.3 谁在用 RoPE？</h3><p><strong>几乎所有现代 LLM</strong>：Llama 全系、Qwen 全系、DeepSeek、GLM、Mistral、Gemma……RoPE 已经是事实上的标准。</p>
+<p>后续还有 NTK-aware RoPE、YaRN 等扩展，让模型能在不重新训练的情况下把上下文从 4K 拉到 128K 甚至 1M。</p>
+<hr>
+<h2 id="五、归一化的进化：LayerNorm-→-RMSNorm，Post-Norm-→-Pre-Norm"><a href="#五、归一化的进化：LayerNorm-→-RMSNorm，Post-Norm-→-Pre-Norm" class="headerlink" title="五、归一化的进化：LayerNorm → RMSNorm，Post-Norm → Pre-Norm"></a>五、归一化的进化：LayerNorm → RMSNorm，Post-Norm → Pre-Norm</h2><h3 id="5-1-Post-Norm-vs-Pre-Norm：归一化放在哪？"><a href="#5-1-Post-Norm-vs-Pre-Norm：归一化放在哪？" class="headerlink" title="5.1 Post-Norm vs Pre-Norm：归一化放在哪？"></a>5.1 Post-Norm vs Pre-Norm：归一化放在哪？</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Post-Norm（原始 Transformer）：     Pre-Norm（现代 LLM）：</span><br><span class="line">                                  </span><br><span class="line">    x ──┬─► Sublayer ─► (+) ─► LN ─► out      x ──┬─► LN ─► Sublayer ─► (+) ─► out</span><br><span class="line">        │                ▲                        │                       ▲</span><br><span class="line">        └────────────────┘                        └───────────────────────┘</span><br></pre></td></tr></table></figure>
+
+<p><strong>Post-Norm 的问题</strong>：在残差<strong>之后</strong>做归一化，会把残差的”原稿留底”效果削弱。当模型叠到几十层、上百层时，梯度反传困难，训练极不稳定，需要小心翼翼地预热学习率（warmup）。</p>
+<p><strong>Pre-Norm 的优势</strong>：在残差<strong>之内</strong>先归一化再处理，残差通路是”干净的恒等映射”，梯度能畅通流到底层。代价是最终输出的数值范围会变大，所以输出层前还要再加一次 LayerNorm。</p>
+<blockquote>
+<p>📌 <strong>结论</strong>：现代 LLM 几乎全部采用 Pre-Norm，让 100+ 层的深堆叠成为可能。</p>
+</blockquote>
+<h3 id="5-2-RMSNorm：把-LayerNorm-砍掉一半"><a href="#5-2-RMSNorm：把-LayerNorm-砍掉一半" class="headerlink" title="5.2 RMSNorm：把 LayerNorm 砍掉一半"></a>5.2 RMSNorm：把 LayerNorm 砍掉一半</h3><p>LayerNorm 的公式：</p>
+<p>$$<br>\text{LN}(x) &#x3D; \gamma \cdot \frac{x - \mu}{\sqrt{\sigma^2 + \epsilon}} + \beta<br>$$</p>
+<p>它做了两件事：<strong>去均值</strong>（减 $\mu$）和<strong>缩放</strong>（除标准差）。</p>
+<p>RMSNorm（Root Mean Square Norm）发现：去均值这一步在 Transformer 里<strong>几乎没用</strong>，砍掉对效果影响微乎其微，但能省下一笔计算：</p>
+<p>$$<br>\text{RMSNorm}(x) &#x3D; \gamma \cdot \frac{x}{\sqrt{\frac{1}{n}\sum x_i^2 + \epsilon}}<br>$$</p>
+<p><strong>收益</strong>：约 7-15% 的归一化开销下降，在大模型每层都用、推理速度敏感的场景非常划算。Llama、Qwen、DeepSeek 全部采用。</p>
+<blockquote>
+<p>📌 <strong>新手理解</strong>：LayerNorm 是”先把所有人的体重减去平均值再缩放到统一范围”，RMSNorm 是”直接缩放到统一范围”——后者发现”减平均值”那步压根不影响下游，那就别做了。</p>
+</blockquote>
+<hr>
+<h2 id="六、注意力机制的进化：MHA-→-MQA-→-GQA-→-MLA"><a href="#六、注意力机制的进化：MHA-→-MQA-→-GQA-→-MLA" class="headerlink" title="六、注意力机制的进化：MHA → MQA → GQA → MLA"></a>六、注意力机制的进化：MHA → MQA → GQA → MLA</h2><p>这是 LLM <strong>推理性能优化最关键的一条进化路径</strong>，背景是 KV Cache 太占显存。</p>
+<h3 id="6-1-为什么要优化？KV-Cache-是显存大户"><a href="#6-1-为什么要优化？KV-Cache-是显存大户" class="headerlink" title="6.1 为什么要优化？KV Cache 是显存大户"></a>6.1 为什么要优化？KV Cache 是显存大户</h3><p>LLM 生成时，每生成一个新 token，都需要回看前面所有 token 的 K 和 V。为了避免每步都重算，会把它们缓存下来——这就是 <strong>KV Cache</strong>。</p>
+<p>显存占用公式：</p>
+<p>$$<br>\text{KV Cache} &#x3D; 2 \times L \times H \times d_h \times s \times b<br>$$</p>
+<p>（2 是 K 和 V，$L$ 层数，$H$ 头数，$d_h$ 每头维度，$s$ 序列长，$b$ batch）</p>
+<p>举个例子：Llama-2-70B，80 层，64 个头，序列 4096，batch 1，FP16 下 KV Cache 就是 <strong>2.5 GB</strong>。Batch 拉到 32，就 <strong>80 GB</strong>——一张 A100 全部用来存 KV Cache！</p>
+<h3 id="6-2-MHA：原始多头注意力"><a href="#6-2-MHA：原始多头注意力" class="headerlink" title="6.2 MHA：原始多头注意力"></a>6.2 MHA：原始多头注意力</h3><p>每个头都有自己独立的 Q、K、V 投影矩阵。$H$ 个头就有 $H$ 套 K&#x2F;V，显存占用最高。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">头1: Q1 K1 V1</span><br><span class="line">头2: Q2 K2 V2</span><br><span class="line">...</span><br><span class="line">头H: QH KH VH</span><br></pre></td></tr></table></figure>
+
+<h3 id="6-3-MQA（Multi-Query-Attention）：暴力共享"><a href="#6-3-MQA（Multi-Query-Attention）：暴力共享" class="headerlink" title="6.3 MQA（Multi-Query Attention）：暴力共享"></a>6.3 MQA（Multi-Query Attention）：暴力共享</h3><p><strong>所有头共享同一组 K 和 V，只有 Q 还分头</strong>。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">头1: Q1 ┐</span><br><span class="line">头2: Q2 ┤  共享 K, V</span><br><span class="line">...     │</span><br><span class="line">头H: QH ┘</span><br></pre></td></tr></table></figure>
+
+<p>显存占用瞬间降到 $1&#x2F;H$，但效果有明显损失——所有头都被迫看同样的”标签”，多样性消失。</p>
+<h3 id="6-4-GQA（Grouped-Query-Attention）：折中方案"><a href="#6-4-GQA（Grouped-Query-Attention）：折中方案" class="headerlink" title="6.4 GQA（Grouped-Query Attention）：折中方案"></a>6.4 GQA（Grouped-Query Attention）：折中方案</h3><p><strong>把 H 个头分成 G 组，每组共享一套 K&#x2F;V</strong>。当 G&#x3D;1 时退化为 MQA，G&#x3D;H 时退化为 MHA。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">组1: [Q1 Q2 Q3 Q4] 共享 K1 V1</span><br><span class="line">组2: [Q5 Q6 Q7 Q8] 共享 K2 V2</span><br></pre></td></tr></table></figure>
+
+<p>GQA 在效果几乎不掉的前提下，把 KV Cache 压到 1&#x2F;4 ~ 1&#x2F;8。<strong>Llama-2&#x2F;3、Qwen-2&#x2F;2.5、Mistral 全部采用</strong>。</p>
+<h3 id="6-5-MLA（Multi-head-Latent-Attention）：DeepSeek-的杀手锏"><a href="#6-5-MLA（Multi-head-Latent-Attention）：DeepSeek-的杀手锏" class="headerlink" title="6.5 MLA（Multi-head Latent Attention）：DeepSeek 的杀手锏"></a>6.5 MLA（Multi-head Latent Attention）：DeepSeek 的杀手锏</h3><p>DeepSeek-V2&#x2F;V3 提出 MLA，把 K 和 V <strong>联合压缩成一个低维潜向量</strong>，存储潜向量本身而非 K&#x2F;V，需要时再解压。</p>
+<p>效果：KV Cache 进一步压缩到 GQA 的 1&#x2F;4 ~ 1&#x2F;10，且性能不掉反升。这是 DeepSeek 能用极低成本提供长上下文服务的关键。</p>
+<h3 id="6-6-一图看懂演化"><a href="#6-6-一图看懂演化" class="headerlink" title="6.6 一图看懂演化"></a>6.6 一图看懂演化</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">MHA（最优效果，最贵）  →  GQA（折中，主流）  →  MQA（最便宜，损失大）</span><br><span class="line">                                  ↘</span><br><span class="line">                              MLA（DeepSeek 路线，进一步压缩）</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="七、前馈层的进化：ReLU-→-SwiGLU，再到-MoE"><a href="#七、前馈层的进化：ReLU-→-SwiGLU，再到-MoE" class="headerlink" title="七、前馈层的进化：ReLU → SwiGLU，再到 MoE"></a>七、前馈层的进化：ReLU → SwiGLU，再到 MoE</h2><h3 id="7-1-激活函数：ReLU-→-GELU-→-SwiGLU"><a href="#7-1-激活函数：ReLU-→-GELU-→-SwiGLU" class="headerlink" title="7.1 激活函数：ReLU → GELU → SwiGLU"></a>7.1 激活函数：ReLU → GELU → SwiGLU</h3><p>原始 Transformer 用 ReLU，简单粗暴：$\text{ReLU}(x) &#x3D; \max(0, x)$。</p>
+<p>后来 BERT 换成 GELU（更平滑），现代 LLM 又换成了 <strong>SwiGLU</strong>：</p>
+<p>$$<br>\text{SwiGLU}(x) &#x3D; (\text{Swish}(xW_1)) \odot (xW_3)<br>$$</p>
+<p>它把 FFN 的第一层”拆成两路”，一路过 Swish 激活当”开关”，另一路当”内容”，再逐元素相乘——本质是给网络加了<strong>门控机制</strong>，让模型自己决定哪些信息放行、哪些抑制。</p>
+<p>代价是参数变多（多了一个 $W_3$），所以为了保持总参数量不变，FFN 隐藏维度通常从 $4d$ 降到 $\frac{8}{3}d$。</p>
+<blockquote>
+<p>📌 <strong>效果</strong>：SwiGLU 在同算力下显著优于 ReLU&#x2F;GELU，已成 Llama、Qwen、Mistral 的标配。</p>
+</blockquote>
+<h3 id="7-2-MoE（Mixture-of-Experts）：让模型”按需调用专家”"><a href="#7-2-MoE（Mixture-of-Experts）：让模型”按需调用专家”" class="headerlink" title="7.2 MoE（Mixture of Experts）：让模型”按需调用专家”"></a>7.2 MoE（Mixture of Experts）：让模型”按需调用专家”</h3><p>更激进的演化是把单一的 FFN 替换成<strong>多个专家 FFN + 一个路由器</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">            ┌──► 专家1 ─┐</span><br><span class="line">            │           │</span><br><span class="line">输入 ──► 路由器 ──► 专家2 ─┼──► 加权求和 ──► 输出</span><br><span class="line">            │           │</span><br><span class="line">            └──► 专家N ─┘</span><br></pre></td></tr></table></figure>
+
+<p>每个 token 只激活其中 2~8 个专家，<strong>总参数量可以做到上千亿，但单次推理只用其中几百亿</strong>。</p>
+<p>代表作：Mixtral 8×7B（共 47B 参数，每 token 激活 13B）、DeepSeek-V3（671B 参数，激活 37B）、Qwen3-MoE 系列。</p>
+<blockquote>
+<p>📌 <strong>新手理解</strong>：原来一个 token 来了，整个公司全员开工。MoE 改成”前台路由 → 只通知最相关的几个专家来处理”，公司可以养很多专家，但每次只用一小撮，省钱又专业。</p>
+</blockquote>
+<hr>
+<h2 id="八、训练目标与规模的差异"><a href="#八、训练目标与规模的差异" class="headerlink" title="八、训练目标与规模的差异"></a>八、训练目标与规模的差异</h2><h3 id="8-1-训练目标"><a href="#8-1-训练目标" class="headerlink" title="8.1 训练目标"></a>8.1 训练目标</h3><ul>
+<li><strong>原始 Transformer</strong>：监督学习——“中文 → 英文”配对数据，几百万句子级别。</li>
+<li><strong>LLM 预训练</strong>：自监督——海量互联网文本，让模型预测”下一个 token”。数据量从 GB 级别飙升到 <strong>TB 甚至 PB 级别</strong>（Llama-3 用了 15T tokens）。</li>
+</ul>
+<h3 id="8-2-三阶段训练流程"><a href="#8-2-三阶段训练流程" class="headerlink" title="8.2 三阶段训练流程"></a>8.2 三阶段训练流程</h3><p>现代 LLM 通常走”预训练 → 后训练”两个大阶段：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1. 预训练（Pre-training）       — 海量文本，学语言的统计规律和世界知识</span><br><span class="line">2. 监督微调（SFT）              — 高质量&quot;指令-回答&quot;对，学会&quot;听话&quot;</span><br><span class="line">3. 偏好对齐（RLHF / DPO / GRPO）— 学会回答得&quot;像人喜欢的样子&quot;</span><br></pre></td></tr></table></figure>
+
+<p>原始 Transformer 完全没有后两步——它是个翻译机，不需要”对齐人类偏好”。</p>
+<h3 id="8-3-规模的代际差异"><a href="#8-3-规模的代际差异" class="headerlink" title="8.3 规模的代际差异"></a>8.3 规模的代际差异</h3><table>
+<thead>
+<tr>
+<th>模型</th>
+<th>参数量</th>
+<th>训练数据</th>
+<th>训练算力</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>原始 Transformer (2017)</td>
+<td>65M</td>
+<td>~4.5M 句子对</td>
+<td>8 张 P100 训 3.5 天</td>
+</tr>
+<tr>
+<td>GPT-3 (2020)</td>
+<td>175B</td>
+<td>300B tokens</td>
+<td>~3640 PFLOPs-day</td>
+</tr>
+<tr>
+<td>Llama-3-405B (2024)</td>
+<td>405B</td>
+<td>15T tokens</td>
+<td>16K 张 H100 训数月</td>
+</tr>
+<tr>
+<td>DeepSeek-V3 (2024)</td>
+<td>671B (MoE)</td>
+<td>14.8T tokens</td>
+<td>2048 张 H800 训约 2 个月</td>
+</tr>
+</tbody></table>
+<p><strong>8 年时间，参数量涨了 1 万倍，训练数据涨了 100 万倍。</strong></p>
+<hr>
+<h2 id="九、推理阶段的”独门武器”：KV-Cache-与上下文扩展"><a href="#九、推理阶段的”独门武器”：KV-Cache-与上下文扩展" class="headerlink" title="九、推理阶段的”独门武器”：KV Cache 与上下文扩展"></a>九、推理阶段的”独门武器”：KV Cache 与上下文扩展</h2><p>原始 Transformer 论文几乎没讨论推理优化（毕竟翻译一句话很快），LLM 则把推理优化卷出了花：</p>
+<h3 id="9-1-KV-Cache"><a href="#9-1-KV-Cache" class="headerlink" title="9.1 KV Cache"></a>9.1 KV Cache</h3><p>如前所述，避免每生成一个 token 都重算前文的 K&#x2F;V。这是所有 LLM 推理框架（vLLM、TGI、SGLang）的基石。</p>
+<h3 id="9-2-PagedAttention（vLLM）"><a href="#9-2-PagedAttention（vLLM）" class="headerlink" title="9.2 PagedAttention（vLLM）"></a>9.2 PagedAttention（vLLM）</h3><p>把 KV Cache 按”内存页”管理（灵感来自操作系统的虚拟内存），消除碎片，让一张 GPU 能并行服务更多请求。</p>
+<h3 id="9-3-Speculative-Decoding（投机解码）"><a href="#9-3-Speculative-Decoding（投机解码）" class="headerlink" title="9.3 Speculative Decoding（投机解码）"></a>9.3 Speculative Decoding（投机解码）</h3><p>用一个<strong>小而快的草稿模型</strong>先猜几个 token，再用大模型一次性验证。命中就赚到，不命中就回退。可以把推理速度提升 2~3 倍。</p>
+<h3 id="9-4-长上下文扩展"><a href="#9-4-长上下文扩展" class="headerlink" title="9.4 长上下文扩展"></a>9.4 长上下文扩展</h3><ul>
+<li><strong>YaRN &#x2F; Dynamic NTK</strong>：在 RoPE 基础上调整频率，让 4K 训练的模型外推到 128K。</li>
+<li><strong>Sliding Window Attention</strong>（Mistral）：每个 token 只看最近的 W 个 token，降低长文本计算量。</li>
+<li><strong>Sparse Attention</strong>（GPT-4、Gemini）：只让部分 token 之间计算注意力。</li>
+</ul>
+<p>原始 Transformer 在这些方向上<strong>几乎完全没有积累</strong>——它是为短句翻译设计的。</p>
+<hr>
+<h2 id="十、一张总表：原始-Transformer-vs-现代-LLM"><a href="#十、一张总表：原始-Transformer-vs-现代-LLM" class="headerlink" title="十、一张总表：原始 Transformer vs 现代 LLM"></a>十、一张总表：原始 Transformer vs 现代 LLM</h2><table>
+<thead>
+<tr>
+<th>维度</th>
+<th>原始 Transformer (2017)</th>
+<th>现代 LLM (2024+)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>架构</strong></td>
+<td>Encoder-Decoder</td>
+<td>Decoder-only</td>
+</tr>
+<tr>
+<td><strong>位置编码</strong></td>
+<td>正弦绝对位置</td>
+<td>RoPE（旋转位置编码）</td>
+</tr>
+<tr>
+<td><strong>归一化位置</strong></td>
+<td>Post-Norm</td>
+<td>Pre-Norm</td>
+</tr>
+<tr>
+<td><strong>归一化函数</strong></td>
+<td>LayerNorm</td>
+<td>RMSNorm</td>
+</tr>
+<tr>
+<td><strong>注意力</strong></td>
+<td>MHA</td>
+<td>GQA &#x2F; MLA</td>
+</tr>
+<tr>
+<td><strong>激活函数</strong></td>
+<td>ReLU</td>
+<td>SwiGLU</td>
+</tr>
+<tr>
+<td><strong>FFN 结构</strong></td>
+<td>单一稠密 FFN</td>
+<td>稠密 FFN 或 MoE</td>
+</tr>
+<tr>
+<td><strong>训练目标</strong></td>
+<td>监督翻译</td>
+<td>自监督预训练 + SFT + RLHF</td>
+</tr>
+<tr>
+<td><strong>数据规模</strong></td>
+<td>百万句子对</td>
+<td>万亿 token</td>
+</tr>
+<tr>
+<td><strong>参数规模</strong></td>
+<td>6500 万</td>
+<td>几百亿到上万亿</td>
+</tr>
+<tr>
+<td><strong>上下文长度</strong></td>
+<td>512</td>
+<td>128K ~ 1M+</td>
+</tr>
+<tr>
+<td><strong>推理优化</strong></td>
+<td>几乎无</td>
+<td>KV Cache、PagedAttention、投机解码……</td>
+</tr>
+<tr>
+<td><strong>典型代表</strong></td>
+<td>原论文 base 模型</td>
+<td>GPT-4、Llama-3、Qwen-3、DeepSeek-V3</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="十一、写在最后"><a href="#十一、写在最后" class="headerlink" title="十一、写在最后"></a>十一、写在最后</h2><p>回过头看，<strong>Transformer 提供的真正不朽的东西不是某个具体零件，而是”用注意力机制堆叠”这个范式</strong>。</p>
+<ul>
+<li>注意力的核心思想（QKV 加权求和）—— <strong>没变</strong></li>
+<li>残差 + 归一化 + FFN 的基本单元 —— <strong>没变</strong></li>
+<li>多层堆叠的整体架构 —— <strong>没变</strong></li>
+</ul>
+<p>但围绕这个骨架，过去 8 年发生了一场<strong>全方位、悄无声息的零件替换</strong>：</p>
+<ul>
+<li>编码器被砍掉了；</li>
+<li>位置编码被旋转化了；</li>
+<li>归一化被前置和瘦身了；</li>
+<li>注意力的 K&#x2F;V 被反复压缩；</li>
+<li>FFN 被门控化、专家化；</li>
+<li>训练规模翻了百万倍；</li>
+<li>推理被各种技巧加速了几十倍。</li>
+</ul>
+<p>这就是为什么今天的 GPT-4、Llama-3、DeepSeek-V3，<strong>血脉上是 Transformer，气质上已经是另一个物种</strong>。</p>
+<p>如果你是新手，看完这篇能把上面这张总表的每一行讲清楚——你就已经超过了 90% 的”知道 Transformer 但说不清 LLM”的人。如果你是老手，下次面试遇到”为什么用 GQA 不用 MHA””为什么 RMSNorm 比 LayerNorm 好”，希望这篇文章能帮你结构化地组织答案。</p>
+<p><strong>架构的终点远未到来</strong>，Mamba、RWKV、TTT、Hybrid Architecture 仍在探索”是否还需要注意力”。但无论未来怎么变，Transformer 都将作为这一轮 AI 浪潮的<strong>奠基石</strong>，被永远写在历史里。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/AI/" rel="tag"># AI</a>
+              <a href="/tags/LLM/" rel="tag"># LLM</a>
+              <a href="/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B/" rel="tag"># 大模型</a>
+              <a href="/tags/Transformer/" rel="tag"># Transformer</a>
+              <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" rel="tag"># 深度学习</a>
+              <a href="/tags/%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6/" rel="tag"># 注意力机制</a>
+              <a href="/tags/RoPE/" rel="tag"># RoPE</a>
+              <a href="/tags/RMSNorm/" rel="tag"># RMSNorm</a>
+              <a href="/tags/GQA/" rel="tag"># GQA</a>
+              <a href="/tags/MoE/" rel="tag"># MoE</a>
+              <a href="/tags/SwiGLU/" rel="tag"># SwiGLU</a>
+              <a href="/tags/KV-Cache/" rel="tag"># KV Cache</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/csharp-jagged-vs-multidim-array.html" rel="prev" title="【C#】交错数组 int[][] 与多维数组 int[,] 详解：从一个 CS0178 报错说起">
+                  <i class="fa fa-angle-left"></i> 【C#】交错数组 int[][] 与多维数组 int[,] 详解：从一个 CS0178 报错说起
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments gitalk-container"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2019 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">郭耀华</span>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/guoyaohua" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/gitalk/1.8.0/gitalk.css" integrity="sha256-AJnUHL7dBv6PGaeyPQJcgQPDjt/Hn/PvYZde1iqfp8U=" crossorigin="anonymous">
+
+<script class="next-config" data-name="gitalk" type="application/json">{"enable":true,"github_id":"guoyaohua","repo":"guoyaohua.github.io","client_id":"4c009e072d5529480639","client_secret":"e3ecab593b9ac65237423e6802012693e9ee2035","admin_user":"guoyaohua","distraction_free_mode":true,"proxy":"https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token","language":null,"body":null,"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/gitalk/1.8.0/gitalk.min.js","integrity":"sha256-MVK9MGD/XJaGyIghSVrONSnoXoGh3IFxLw0zfvzpxR4="},"path_md5":"ca5cfbb16e6132c3c4f85b59e3c4325e"}</script>
+<script src="/js/third-party/comments/gitalk.js" defer></script>
+
+</body>
+</html>
