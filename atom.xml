@@ -10,7 +10,7 @@
   <rights>All rights reserved 2026, 郭耀华</rights>
   <subtitle>欲穷千里目，更上一层楼。</subtitle>
   <title>郭耀华's Blog | 深度学习、机器学习领域技术博客</title>
-  <updated>2026-04-23T14:09:21.218Z</updated>
+  <updated>2026-04-23T14:22:36.794Z</updated>
   <entry>
     <author>
       <name>郭耀华</name>
@@ -35,7 +35,7 @@
       <![CDATA[<center>2017 年 Google 一篇《Attention Is All You Need》开启了 Transformer 时代，2022 年 ChatGPT 把"大语言模型"推到了所有人面前。但很多人有个困惑：今天的 GPT-4、Llama、Qwen、DeepSeek 还是当年那个 Transformer 吗？答案是——<strong>骨架还在，但几乎每一块零件都被换过了。</strong>本文用快递公司、流水线、车间这些日常类比，从零开始把原始 Transformer 讲透，再逐个拆解现代 LLM 在它身上做了哪些关键改造，以及为什么。看完这一篇，你就能彻底分清"Transformer"和"LLM"。</center>]]>
     </summary>
     <title>【AI】从 Transformer 到 LLM：一篇博文彻底讲清现代大模型的架构演化</title>
-    <updated>2026-04-23T14:09:21.218Z</updated>
+    <updated>2026-04-23T14:22:36.794Z</updated>
   </entry>
   <entry>
     <author>

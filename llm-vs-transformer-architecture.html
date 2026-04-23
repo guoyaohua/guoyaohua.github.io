@@ -29,7 +29,7 @@
 <meta property="og:description" content="2017 年 Google 一篇《Attention Is All You Need》开启了 Transformer 时代，2022 年 ChatGPT 把&quot;大语言模型&quot;推到了所有人面前。但很多人有个困惑：今天的 GPT-4、Llama、Qwen、DeepSeek 还是当年那个 Transformer 吗？答案是——骨架还在，但几乎每一块零件都被换过了。本文用快递公司、流水线、车间这些日常类比，从">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-04-22T10:00:00.000Z">
-<meta property="article:modified_time" content="2026-04-23T14:09:21.218Z">
+<meta property="article:modified_time" content="2026-04-23T14:22:36.794Z">
 <meta property="article:author" content="郭耀华">
 <meta property="article:tag" content="AI">
 <meta property="article:tag" content="GQA">
@@ -292,7 +292,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-04-23 14:09:21" itemprop="dateModified" datetime="2026-04-23T14:09:21Z">2026-04-23</time>
+      <time title="修改时间：2026-04-23 14:22:36" itemprop="dateModified" datetime="2026-04-23T14:22:36Z">2026-04-23</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -311,14 +311,14 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>9.5k</span>
+      <span>14k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>9 分钟</span>
+      <span>13 分钟</span>
     </span>
 </div>
 
@@ -333,17 +333,17 @@
 <span id="more"></span>
 
 <h2 id="目录速览"><a href="#目录速览" class="headerlink" title="目录速览"></a>目录速览</h2><ol>
-<li><a href="#%E4%B8%80-%E5%85%88%E6%89%93%E4%B8%AA%E6%AF%94%E6%96%B9transformer-%E5%88%B0%E5%BA%95%E5%9C%A8%E5%81%9A%E4%BB%80%E4%B9%88">先打个比方：Transformer 到底在做什么</a></li>
-<li><a href="#%E4%BA%8C-%E5%8E%9F%E5%A7%8B-transformer-%E6%9E%B6%E6%9E%84%E8%AF%A6%E8%A7%A32017-%E7%89%88">原始 Transformer 架构详解（2017 版）</a></li>
-<li><a href="#%E4%B8%89-llm-%E7%9A%84%E7%AC%AC%E4%B8%80%E6%AC%A1%E5%A4%A7%E8%BD%AC%E5%90%91%E6%8A%9B%E5%BC%83-encoder%E5%8F%AA%E7%95%99-decoder">LLM 的第一次大转向：抛弃 Encoder，只留 Decoder</a></li>
-<li><a href="#%E5%9B%9B-%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81%E7%9A%84%E8%BF%9B%E5%8C%96%E4%BB%8E%E7%BB%9D%E5%AF%B9%E6%AD%A3%E5%BC%A6%E5%88%B0-rope">位置编码的进化：从绝对正弦到 RoPE</a></li>
-<li><a href="#%E4%BA%94-%E5%BD%92%E4%B8%80%E5%8C%96%E7%9A%84%E8%BF%9B%E5%8C%96layernorm--rmsnormpost-norm--pre-norm">归一化的进化：LayerNorm → RMSNorm，Post-Norm → Pre-Norm</a></li>
-<li><a href="#%E5%85%AD-%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6%E7%9A%84%E8%BF%9B%E5%8C%96mha--mqa--gqa--mla">注意力机制的进化：MHA → MQA → GQA → MLA</a></li>
-<li><a href="#%E4%B8%83-%E5%89%8D%E9%A6%88%E5%B1%82%E7%9A%84%E8%BF%9B%E5%8C%96relu--swiglu%E5%86%8D%E5%88%B0-moe">前馈层的进化：ReLU → SwiGLU，再到 MoE</a></li>
-<li><a href="#%E5%85%AB-%E8%AE%AD%E7%BB%83%E7%9B%AE%E6%A0%87%E4%B8%8E%E8%A7%84%E6%A8%A1%E7%9A%84%E5%B7%AE%E5%BC%82">训练目标与规模的差异</a></li>
-<li><a href="#%E4%B9%9D-%E6%8E%A8%E7%90%86%E9%98%B6%E6%AE%B5%E7%9A%84%E7%8B%AC%E9%97%A8%E6%AD%A6%E5%99%A8kv-cache-%E4%B8%8E%E4%B8%8A%E4%B8%8B%E6%96%87%E6%89%A9%E5%B1%95">推理阶段的”独门武器”：KV Cache 与上下文扩展</a></li>
-<li><a href="#%E5%8D%81-%E4%B8%80%E5%BC%A0%E6%80%BB%E8%A1%A8%E5%8E%9F%E5%A7%8B-transformer-vs-%E7%8E%B0%E4%BB%A3-llm">一张总表：原始 Transformer vs 现代 LLM</a></li>
-<li><a href="#%E5%8D%81%E4%B8%80-%E5%86%99%E5%9C%A8%E6%9C%80%E5%90%8E">写在最后</a></li>
+<li>先打个比方：Transformer 到底在做什么</li>
+<li>原始 Transformer 架构详解（2017 版）</li>
+<li>LLM 的第一次大转向：抛弃 Encoder，只留 Decoder</li>
+<li>位置编码的进化：从绝对正弦到 RoPE</li>
+<li>归一化的进化：LayerNorm → RMSNorm，Post-Norm → Pre-Norm</li>
+<li>注意力机制的进化：MHA → MQA → GQA → MLA</li>
+<li>前馈层的进化：ReLU → SwiGLU，再到 MoE</li>
+<li>训练目标与规模的差异</li>
+<li>推理阶段的”独门武器”：KV Cache 与上下文扩展</li>
+<li>一张总表：原始 Transformer vs 现代 LLM</li>
+<li>写在最后</li>
 </ol>
 <hr>
 <h2 id="一、先打个比方：Transformer-到底在做什么"><a href="#一、先打个比方：Transformer-到底在做什么" class="headerlink" title="一、先打个比方：Transformer 到底在做什么"></a>一、先打个比方：Transformer 到底在做什么</h2><p>在啃公式之前，先建立一个<strong>直觉模型</strong>。</p>
@@ -357,7 +357,7 @@
 <p>记住这个画面，下面所有的细节都是在给这家”快递公司”打补丁。</p>
 <hr>
 <h2 id="二、原始-Transformer-架构详解（2017-版）"><a href="#二、原始-Transformer-架构详解（2017-版）" class="headerlink" title="二、原始 Transformer 架构详解（2017 版）"></a>二、原始 Transformer 架构详解（2017 版）</h2><p>我们来正式拆解 2017 年那篇论文里的架构。原始 Transformer 是一个 <strong>Encoder-Decoder</strong> 结构，用于机器翻译任务。</p>
-<h3 id="2-1-整体结构图（文字版）"><a href="#2-1-整体结构图（文字版）" class="headerlink" title="2.1 整体结构图（文字版）"></a>2.1 整体结构图（文字版）</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">输入中文 &quot;我爱你&quot;                          目标英文 &quot;I love you&quot;</span><br><span class="line">     │                                            │</span><br><span class="line">[Token 化 + Embedding]                  [Token 化 + Embedding]</span><br><span class="line">     │                                            │</span><br><span class="line">[+ 位置编码]                              [+ 位置编码]</span><br><span class="line">     │                                            │</span><br><span class="line">┌────▼────────┐ × N层                    ┌────────▼────────┐ × N层</span><br><span class="line">│  Encoder Block  │                      │  Decoder Block      │</span><br><span class="line">│  ┌───────────┐  │                      │  ┌───────────────┐  │</span><br><span class="line">│  │自注意力    │  │                      │  │ 掩码自注意力   │  │</span><br><span class="line">│  └───────────┘  │                      │  └───────────────┘  │</span><br><span class="line">│  ┌───────────┐  │   ────────────►      │  ┌───────────────┐  │</span><br><span class="line">│  │   FFN     │  │                      │  │  交叉注意力    │  │</span><br><span class="line">│  └───────────┘  │                      │  └───────────────┘  │</span><br><span class="line">└─────────────────┘                      │  ┌───────────────┐  │</span><br><span class="line">                                         │  │     FFN       │  │</span><br><span class="line">                                         │  └───────────────┘  │</span><br><span class="line">                                         └─────────┬───────────┘</span><br><span class="line">                                                   │</span><br><span class="line">                                           [Linear + Softmax]</span><br><span class="line">                                                   │</span><br><span class="line">                                             输出下一个英文词</span><br></pre></td></tr></table></figure>
+<h3 id="2-1-整体结构图（文字版）"><a href="#2-1-整体结构图（文字版）" class="headerlink" title="2.1 整体结构图（文字版）"></a>2.1 整体结构图（文字版）</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">   输入中文 &quot;我爱你&quot;                       目标英文 &quot;I love you&quot;</span><br><span class="line">        │                                          │</span><br><span class="line">   [Token 化 + Embedding]                  [Token 化 + Embedding]</span><br><span class="line">        │                                          │</span><br><span class="line">   [+ 位置编码]                             [+ 位置编码]</span><br><span class="line">        │                                          │</span><br><span class="line">┌───────▼────────┐ × N 层               ┌──────────▼─────────┐ × N 层</span><br><span class="line">│  Encoder Block │                      │   Decoder Block    │</span><br><span class="line">│ ┌────────────┐ │                      │ ┌────────────────┐ │</span><br><span class="line">│ │  自注意力  │ │                      │ │  掩码自注意力  │ │</span><br><span class="line">│ └────────────┘ │                      │ └────────────────┘ │</span><br><span class="line">│ ┌────────────┐ │   ───────────►       │ ┌────────────────┐ │</span><br><span class="line">│ │    FFN     │ │   (输出K/V给Decoder) │ │   交叉注意力   │ │</span><br><span class="line">│ └────────────┘ │                      │ └────────────────┘ │</span><br><span class="line">└────────────────┘                      │ ┌────────────────┐ │</span><br><span class="line">                                        │ │      FFN       │ │</span><br><span class="line">                                        │ └────────────────┘ │</span><br><span class="line">                                        └──────────┬─────────┘</span><br><span class="line">                                                   │</span><br><span class="line">                                          [Linear + Softmax]</span><br><span class="line">                                                   │</span><br><span class="line">                                            输出下一个英文词</span><br></pre></td></tr></table></figure>
 
 <p>下面把每个零件单独剖开看。</p>
 <h3 id="2-2-Token-化与-Embedding：把文字变成向量"><a href="#2-2-Token-化与-Embedding：把文字变成向量" class="headerlink" title="2.2 Token 化与 Embedding：把文字变成向量"></a>2.2 Token 化与 Embedding：把文字变成向量</h3><p>计算机不认识文字，只认识数字。所以第一步是<strong>分词（Tokenize）</strong>——把”我爱你”切成 <code>[&quot;我&quot;, &quot;爱&quot;, &quot;你&quot;]</code>，再查一张巨大的”词典表”，把每个词映射成一个固定长度（比如 512 维）的向量。</p>
@@ -402,6 +402,38 @@
 <p>到这里，原始 Transformer 就讲完了。现在主角登场——<strong>LLM 拿走了这套架构后，到底改了什么？</strong></p>
 <hr>
 <h2 id="三、LLM-的第一次大转向：抛弃-Encoder，只留-Decoder"><a href="#三、LLM-的第一次大转向：抛弃-Encoder，只留-Decoder" class="headerlink" title="三、LLM 的第一次大转向：抛弃 Encoder，只留 Decoder"></a>三、LLM 的第一次大转向：抛弃 Encoder，只留 Decoder</h2><h3 id="3-1-三种架构家族"><a href="#3-1-三种架构家族" class="headerlink" title="3.1 三种架构家族"></a>3.1 三种架构家族</h3><p>后续基于 Transformer 演化出了三大家族：</p>
+<div align="center">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 260" style="max-width:100%;height:auto;font-family:'Helvetica Neue',Arial,sans-serif;">
+  <style>
+    .box{stroke:#333;stroke-width:1.5;rx:6;ry:6;}
+    .enc{fill:#e3f2fd;}
+    .dec{fill:#fff3e0;}
+    .lbl{font-size:13px;fill:#222;text-anchor:middle;}
+    .ttl{font-size:14px;font-weight:bold;text-anchor:middle;fill:#111;}
+    .sub{font-size:11px;fill:#555;text-anchor:middle;}
+  </style>
+  <!-- Encoder-only -->
+  <text x="110" y="25" class="ttl">Encoder-only</text>
+  <text x="110" y="42" class="sub">BERT / RoBERTa</text>
+  <rect class="box enc" x="50" y="60" width="120" height="50"/>
+  <text x="110" y="90" class="lbl">Encoder × N</text>
+  <text x="110" y="135" class="sub">↓</text>
+  <text x="110" y="160" class="lbl">理解：分类 / 检索</text>
+
+  <!-- Encoder-Decoder -->
+<p>  <text x="360" y="25" class="ttl">Encoder-Decoder</text><br>  <text x="360" y="42" class="sub">原始 Transformer &#x2F; T5 &#x2F; BART</text><br>  <rect class="box enc" x="270" y="60" width="80" height="50"/><br>  <text x="310" y="90" class="lbl">Encoder × N</text><br>  <rect class="box dec" x="370" y="60" width="80" height="50"/><br>  <text x="410" y="90" class="lbl">Decoder × N</text><br>  <line x1="350" y1="85" x2="370" y2="85" stroke="#333" stroke-width="1.5" marker-end="url(#arr)"/><br>  <text x="360" y="135" class="sub">↓</text><br>  <text x="360" y="160" class="lbl">翻译 &#x2F; 摘要</text></p>
+  <!-- Decoder-only -->
+<p>  <text x="610" y="25" class="ttl">Decoder-only ⭐</text><br>  <text x="610" y="42" class="sub">GPT &#x2F; Llama &#x2F; Qwen &#x2F; DeepSeek</text><br>  <rect class="box dec" x="550" y="60" width="120" height="50"/><br>  <text x="610" y="90" class="lbl">Decoder × N</text><br>  <text x="610" y="135" class="sub">↓</text><br>  <text x="610" y="160" class="lbl">通用生成 &#x2F; 对话 &#x2F; 推理</text></p>
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#333"/>
+    </marker>
+  </defs>
+
+  <!-- footer -->
+<p>  <text x="360" y="220" class="sub">三大家族都源自 2017 年的 Transformer，但各自走出了完全不同的应用方向</text><br></svg></p>
+</div>
+
 <table>
 <thead>
 <tr>
@@ -440,7 +472,7 @@
 <p>📌 <strong>新手理解</strong>：原来”理解部 + 生成部”两个部门都要养，成本高、协调难。现在发现一个”全能生成部”足以——它边读边写，读懂了自然就能写好。</p>
 </blockquote>
 <h3 id="3-3-Decoder-only-长什么样？"><a href="#3-3-Decoder-only-长什么样？" class="headerlink" title="3.3 Decoder-only 长什么样？"></a>3.3 Decoder-only 长什么样？</h3><p>Decoder-only 砍掉了交叉注意力（因为没有 Encoder 了），变成超级简洁的堆叠结构：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">输入 token</span><br><span class="line">   │</span><br><span class="line">[Embedding + 位置信息]</span><br><span class="line">   │</span><br><span class="line">┌──▼──────────────────┐</span><br><span class="line">│  Transformer Block  │ × N 层（GPT-3 是 96 层，Llama-3-405B 是 126 层）</span><br><span class="line">│  ┌───────────────┐  │</span><br><span class="line">│  │ 掩码多头注意力 │  │</span><br><span class="line">│  └───────────────┘  │</span><br><span class="line">│  ┌───────────────┐  │</span><br><span class="line">│  │  前馈网络 FFN │  │</span><br><span class="line">│  └───────────────┘  │</span><br><span class="line">└──┬──────────────────┘</span><br><span class="line">   │</span><br><span class="line">[Linear + Softmax]</span><br><span class="line">   │</span><br><span class="line">预测下一个 token</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">         输入 token</span><br><span class="line">             │</span><br><span class="line">   [Embedding + 位置信息]</span><br><span class="line">             │</span><br><span class="line">┌────────────▼────────────┐</span><br><span class="line">│   Transformer Block     │  × N 层</span><br><span class="line">│  ┌───────────────────┐  │  （GPT-3: 96 层</span><br><span class="line">│  │  掩码多头注意力   │  │   Llama-3-405B: 126 层</span><br><span class="line">│  └───────────────────┘  │   DeepSeek-V3: 61 层 + MoE）</span><br><span class="line">│  ┌───────────────────┐  │</span><br><span class="line">│  │    前馈网络 FFN   │  │</span><br><span class="line">│  └───────────────────┘  │</span><br><span class="line">└────────────┬────────────┘</span><br><span class="line">             │</span><br><span class="line">     [Linear + Softmax]</span><br><span class="line">             │</span><br><span class="line">      预测下一个 token</span><br></pre></td></tr></table></figure>
 
 <p>骨架就是这样。下面所有的进化，都是把这个骨架里的零件<strong>逐个换成更高效、更稳定、更长上下文的版本</strong>。</p>
 <hr>
@@ -456,13 +488,74 @@
 <blockquote>
 <p>📌 <strong>新手理解</strong>：原来是”每个座位贴个号牌”，现在是”每个人按座位号自转一定角度”。两个人面对面交流时，他们之间的角度差只取决于座位距离，跟绝对座位号无关。</p>
 </blockquote>
+<div align="center">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 240" style="max-width:100%;height:auto;font-family:'Helvetica Neue',Arial,sans-serif;">
+  <style>
+    .axis{stroke:#999;stroke-width:1;}
+    .vec{stroke-width:2;fill:none;}
+    .v1{stroke:#1976d2;}
+    .v2{stroke:#d32f2f;}
+    .v3{stroke:#388e3c;}
+    .lbl{font-size:12px;fill:#222;text-anchor:middle;}
+    .ttl{font-size:13px;font-weight:bold;text-anchor:middle;fill:#111;}
+    .arc{fill:none;stroke:#888;stroke-width:1;stroke-dasharray:2,2;}
+  </style>
+  <!-- pos 0 -->
+  <g transform="translate(80,120)">
+    <text x="0" y="-90" class="ttl">位置 m=0</text>
+    <line class="axis" x1="-60" y1="0" x2="60" y2="0"/>
+    <line class="axis" x1="0" y1="-60" x2="0" y2="60"/>
+    <line class="vec v1" x1="0" y1="0" x2="50" y2="0" marker-end="url(#a1)"/>
+    <text x="55" y="-5" class="lbl" style="fill:#1976d2;">q</text>
+    <text x="0" y="90" class="lbl">不旋转</text>
+  </g>
+  <!-- pos 1 -->
+  <g transform="translate(240,120)">
+    <text x="0" y="-90" class="ttl">位置 m=1</text>
+    <line class="axis" x1="-60" y1="0" x2="60" y2="0"/>
+    <line class="axis" x1="0" y1="-60" x2="0" y2="60"/>
+    <line class="vec v2" x1="0" y1="0" x2="43.3" y2="-25" marker-end="url(#a2)"/>
+    <path class="arc" d="M 30 0 A 30 30 0 0 1 26 -15"/>
+    <text x="55" y="-25" class="lbl" style="fill:#d32f2f;">q'</text>
+    <text x="0" y="90" class="lbl">旋转 θ</text>
+  </g>
+  <!-- pos 2 -->
+  <g transform="translate(400,120)">
+    <text x="0" y="-90" class="ttl">位置 m=2</text>
+    <line class="axis" x1="-60" y1="0" x2="60" y2="0"/>
+    <line class="axis" x1="0" y1="-60" x2="0" y2="60"/>
+    <line class="vec v3" x1="0" y1="0" x2="25" y2="-43.3" marker-end="url(#a3)"/>
+    <path class="arc" d="M 30 0 A 30 30 0 0 1 15 -26"/>
+    <text x="35" y="-50" class="lbl" style="fill:#388e3c;">q''</text>
+    <text x="0" y="90" class="lbl">旋转 2θ</text>
+  </g>
+  <!-- legend -->
+  <g transform="translate(490,90)">
+    <text x="0" y="0" class="ttl" style="text-anchor:start;">RoPE 的核心：</text>
+    <text x="0" y="22" class="lbl" style="text-anchor:start;">同一个向量在不同位置</text>
+    <text x="0" y="40" class="lbl" style="text-anchor:start;">被旋转不同的角度。</text>
+    <text x="0" y="62" class="lbl" style="text-anchor:start;">Q·K 点积只跟"角度差"</text>
+    <text x="0" y="80" class="lbl" style="text-anchor:start;">即相对距离 (m-n) 有关。</text>
+  </g>
+  <defs>
+    <marker id="a1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#1976d2"/></marker>
+    <marker id="a2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#d32f2f"/></marker>
+    <marker id="a3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#388e3c"/></marker>
+  </defs>
+</svg>
+</div>
+
 <h3 id="4-3-谁在用-RoPE？"><a href="#4-3-谁在用-RoPE？" class="headerlink" title="4.3 谁在用 RoPE？"></a>4.3 谁在用 RoPE？</h3><p><strong>几乎所有现代 LLM</strong>：Llama 全系、Qwen 全系、DeepSeek、GLM、Mistral、Gemma……RoPE 已经是事实上的标准。</p>
 <p>后续还有 NTK-aware RoPE、YaRN 等扩展，让模型能在不重新训练的情况下把上下文从 4K 拉到 128K 甚至 1M。</p>
 <hr>
-<h2 id="五、归一化的进化：LayerNorm-→-RMSNorm，Post-Norm-→-Pre-Norm"><a href="#五、归一化的进化：LayerNorm-→-RMSNorm，Post-Norm-→-Pre-Norm" class="headerlink" title="五、归一化的进化：LayerNorm → RMSNorm，Post-Norm → Pre-Norm"></a>五、归一化的进化：LayerNorm → RMSNorm，Post-Norm → Pre-Norm</h2><h3 id="5-1-Post-Norm-vs-Pre-Norm：归一化放在哪？"><a href="#5-1-Post-Norm-vs-Pre-Norm：归一化放在哪？" class="headerlink" title="5.1 Post-Norm vs Pre-Norm：归一化放在哪？"></a>5.1 Post-Norm vs Pre-Norm：归一化放在哪？</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Post-Norm（原始 Transformer）：     Pre-Norm（现代 LLM）：</span><br><span class="line">                                  </span><br><span class="line">    x ──┬─► Sublayer ─► (+) ─► LN ─► out      x ──┬─► LN ─► Sublayer ─► (+) ─► out</span><br><span class="line">        │                ▲                        │                       ▲</span><br><span class="line">        └────────────────┘                        └───────────────────────┘</span><br></pre></td></tr></table></figure>
+<h2 id="五、归一化的进化：LayerNorm-→-RMSNorm，Post-Norm-→-Pre-Norm"><a href="#五、归一化的进化：LayerNorm-→-RMSNorm，Post-Norm-→-Pre-Norm" class="headerlink" title="五、归一化的进化：LayerNorm → RMSNorm，Post-Norm → Pre-Norm"></a>五、归一化的进化：LayerNorm → RMSNorm，Post-Norm → Pre-Norm</h2><h3 id="5-1-Post-Norm-vs-Pre-Norm：归一化放在哪？"><a href="#5-1-Post-Norm-vs-Pre-Norm：归一化放在哪？" class="headerlink" title="5.1 Post-Norm vs Pre-Norm：归一化放在哪？"></a>5.1 Post-Norm vs Pre-Norm：归一化放在哪？</h3><p><strong>Post-Norm（原始 Transformer）</strong>：先把子层输出和残差相加，再做归一化。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">             ┌──────────────┐</span><br><span class="line">x ──────────►│  Sublayer    │──► (+) ──► LayerNorm ──► out</span><br><span class="line">     │       └──────────────┘     ▲</span><br><span class="line">     └────────────────────────────┘</span><br><span class="line">               （残差连接）</span><br></pre></td></tr></table></figure>
 
-<p><strong>Post-Norm 的问题</strong>：在残差<strong>之后</strong>做归一化，会把残差的”原稿留底”效果削弱。当模型叠到几十层、上百层时，梯度反传困难，训练极不稳定，需要小心翼翼地预热学习率（warmup）。</p>
-<p><strong>Pre-Norm 的优势</strong>：在残差<strong>之内</strong>先归一化再处理，残差通路是”干净的恒等映射”，梯度能畅通流到底层。代价是最终输出的数值范围会变大，所以输出层前还要再加一次 LayerNorm。</p>
+<p><strong>Pre-Norm（现代 LLM）</strong>：先把输入归一化再喂给子层，残差直接走”高速公路”。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">     ┌──► LayerNorm ──► Sublayer ──┐</span><br><span class="line">x ───┤                              ├──► (+) ──► out</span><br><span class="line">     └──────────────────────────────┘</span><br><span class="line">               （残差直通）</span><br></pre></td></tr></table></figure>
+
+<p><strong>Post-Norm 的问题</strong>：归一化夹在残差通路中间，会把梯度的”原稿留底”效果削弱。当模型叠到几十层、上百层时，梯度反传困难，训练极不稳定，需要小心翼翼地预热学习率（warmup）。</p>
+<p><strong>Pre-Norm 的优势</strong>：残差通路是一条”干净的恒等映射”，梯度能畅通流到底层。代价是最终输出的数值范围会变大，所以输出层前还要再加一次 LayerNorm 收尾。</p>
 <blockquote>
 <p>📌 <strong>结论</strong>：现代 LLM 几乎全部采用 Pre-Norm，让 100+ 层的深堆叠成为可能。</p>
 </blockquote>
@@ -478,25 +571,85 @@
 <hr>
 <h2 id="六、注意力机制的进化：MHA-→-MQA-→-GQA-→-MLA"><a href="#六、注意力机制的进化：MHA-→-MQA-→-GQA-→-MLA" class="headerlink" title="六、注意力机制的进化：MHA → MQA → GQA → MLA"></a>六、注意力机制的进化：MHA → MQA → GQA → MLA</h2><p>这是 LLM <strong>推理性能优化最关键的一条进化路径</strong>，背景是 KV Cache 太占显存。</p>
 <h3 id="6-1-为什么要优化？KV-Cache-是显存大户"><a href="#6-1-为什么要优化？KV-Cache-是显存大户" class="headerlink" title="6.1 为什么要优化？KV Cache 是显存大户"></a>6.1 为什么要优化？KV Cache 是显存大户</h3><p>LLM 生成时，每生成一个新 token，都需要回看前面所有 token 的 K 和 V。为了避免每步都重算，会把它们缓存下来——这就是 <strong>KV Cache</strong>。</p>
-<p>显存占用公式：</p>
-<p>$$<br>\text{KV Cache} &#x3D; 2 \times L \times H \times d_h \times s \times b<br>$$</p>
-<p>（2 是 K 和 V，$L$ 层数，$H$ 头数，$d_h$ 每头维度，$s$ 序列长，$b$ batch）</p>
-<p>举个例子：Llama-2-70B，80 层，64 个头，序列 4096，batch 1，FP16 下 KV Cache 就是 <strong>2.5 GB</strong>。Batch 拉到 32，就 <strong>80 GB</strong>——一张 A100 全部用来存 KV Cache！</p>
+<p>显存占用公式（<strong>MHA 情况下</strong>）：</p>
+<p>$$<br>\text{KV Cache} &#x3D; 2 \times L \times H \times d_h \times s \times b \times \text{bytes}<br>$$</p>
+<p>（2 是 K 和 V，$L$ 层数，$H$ 头数，$d_h$ 每头维度，$s$ 序列长，$b$ batch，FP16 时 bytes&#x3D;2）</p>
+<p><strong>举个例子</strong>：Llama-2-7B 是经典的 MHA 模型，$L&#x3D;32$、$H&#x3D;32$、$d_h&#x3D;128$，序列 $s&#x3D;4096$、$b&#x3D;1$、FP16：</p>
+<p>$$<br>2 \times 32 \times 32 \times 128 \times 4096 \times 1 \times 2 \approx 2,\text{GB}<br>$$</p>
+<p>Batch 拉到 <strong>16</strong> 就吃满 32 GB；如果换成 70B 级别的稠密 MHA 模型，单 batch 就能逼近一张 A100 80G 的上限——<strong>KV Cache 已经成为 LLM 推理的头号显存杀手</strong>。这就是后面所有变体（MQA&#x2F;GQA&#x2F;MLA）都在做同一件事的原因：<strong>砍掉冗余的 K&#x2F;V</strong>。</p>
 <h3 id="6-2-MHA：原始多头注意力"><a href="#6-2-MHA：原始多头注意力" class="headerlink" title="6.2 MHA：原始多头注意力"></a>6.2 MHA：原始多头注意力</h3><p>每个头都有自己独立的 Q、K、V 投影矩阵。$H$ 个头就有 $H$ 套 K&#x2F;V，显存占用最高。</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">头1: Q1 K1 V1</span><br><span class="line">头2: Q2 K2 V2</span><br><span class="line">...</span><br><span class="line">头H: QH KH VH</span><br></pre></td></tr></table></figure>
 
 <h3 id="6-3-MQA（Multi-Query-Attention）：暴力共享"><a href="#6-3-MQA（Multi-Query-Attention）：暴力共享" class="headerlink" title="6.3 MQA（Multi-Query Attention）：暴力共享"></a>6.3 MQA（Multi-Query Attention）：暴力共享</h3><p><strong>所有头共享同一组 K 和 V，只有 Q 还分头</strong>。</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">头1: Q1 ┐</span><br><span class="line">头2: Q2 ┤  共享 K, V</span><br><span class="line">...     │</span><br><span class="line">头H: QH ┘</span><br></pre></td></tr></table></figure>
 
-<p>显存占用瞬间降到 $1&#x2F;H$，但效果有明显损失——所有头都被迫看同样的”标签”，多样性消失。</p>
+<p>显存占用瞬间降到 MHA 的 $1&#x2F;H$（仅就 KV Cache 而言），但效果有明显损失——所有头都被迫看同样的”标签”，多样性消失。</p>
 <h3 id="6-4-GQA（Grouped-Query-Attention）：折中方案"><a href="#6-4-GQA（Grouped-Query-Attention）：折中方案" class="headerlink" title="6.4 GQA（Grouped-Query Attention）：折中方案"></a>6.4 GQA（Grouped-Query Attention）：折中方案</h3><p><strong>把 H 个头分成 G 组，每组共享一套 K&#x2F;V</strong>。当 G&#x3D;1 时退化为 MQA，G&#x3D;H 时退化为 MHA。</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">组1: [Q1 Q2 Q3 Q4] 共享 K1 V1</span><br><span class="line">组2: [Q5 Q6 Q7 Q8] 共享 K2 V2</span><br></pre></td></tr></table></figure>
 
 <p>GQA 在效果几乎不掉的前提下，把 KV Cache 压到 1&#x2F;4 ~ 1&#x2F;8。<strong>Llama-2&#x2F;3、Qwen-2&#x2F;2.5、Mistral 全部采用</strong>。</p>
 <h3 id="6-5-MLA（Multi-head-Latent-Attention）：DeepSeek-的杀手锏"><a href="#6-5-MLA（Multi-head-Latent-Attention）：DeepSeek-的杀手锏" class="headerlink" title="6.5 MLA（Multi-head Latent Attention）：DeepSeek 的杀手锏"></a>6.5 MLA（Multi-head Latent Attention）：DeepSeek 的杀手锏</h3><p>DeepSeek-V2&#x2F;V3 提出 MLA，把 K 和 V <strong>联合压缩成一个低维潜向量</strong>，存储潜向量本身而非 K&#x2F;V，需要时再解压。</p>
 <p>效果：KV Cache 进一步压缩到 GQA 的 1&#x2F;4 ~ 1&#x2F;10，且性能不掉反升。这是 DeepSeek 能用极低成本提供长上下文服务的关键。</p>
-<h3 id="6-6-一图看懂演化"><a href="#6-6-一图看懂演化" class="headerlink" title="6.6 一图看懂演化"></a>6.6 一图看懂演化</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">MHA（最优效果，最贵）  →  GQA（折中，主流）  →  MQA（最便宜，损失大）</span><br><span class="line">                                  ↘</span><br><span class="line">                              MLA（DeepSeek 路线，进一步压缩）</span><br></pre></td></tr></table></figure>
+<h3 id="6-6-一图看懂演化"><a href="#6-6-一图看懂演化" class="headerlink" title="6.6 一图看懂演化"></a>6.6 一图看懂演化</h3><div align="center">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 320" style="max-width:100%;height:auto;font-family:'Helvetica Neue',Arial,sans-serif;">
+  <style>
+    .ttl{font-size:14px;font-weight:bold;text-anchor:middle;fill:#111;}
+    .sub{font-size:11px;fill:#555;text-anchor:middle;}
+    .q{fill:#bbdefb;stroke:#1976d2;stroke-width:1;}
+    .k{fill:#c8e6c9;stroke:#388e3c;stroke-width:1;}
+    .v{fill:#ffe0b2;stroke:#f57c00;stroke-width:1;}
+    .lbl{font-size:11px;text-anchor:middle;fill:#222;}
+    .grp{stroke:#999;stroke-dasharray:3,3;fill:none;}
+  </style>
 
+  <!-- MHA -->
+<p>  <text x="100" y="20" class="ttl">MHA</text><br>  <text x="100" y="36" class="sub">每个头独立 Q&#x2F;K&#x2F;V</text><br>  <g transform="translate(40,55)"><br>    <rect class="q" x="0" y="0" width="20" height="20"/><text x="10" y="14" class="lbl">Q1</text><br>    <rect class="k" x="25" y="0" width="20" height="20"/><text x="35" y="14" class="lbl">K1</text><br>    <rect class="v" x="50" y="0" width="20" height="20"/><text x="60" y="14" class="lbl">V1</text></p>
+<pre><code>&lt;rect class=&quot;q&quot; x=&quot;0&quot; y=&quot;25&quot; width=&quot;20&quot; height=&quot;20&quot;/&gt;&lt;text x=&quot;10&quot; y=&quot;39&quot; class=&quot;lbl&quot;&gt;Q2&lt;/text&gt;
+&lt;rect class=&quot;k&quot; x=&quot;25&quot; y=&quot;25&quot; width=&quot;20&quot; height=&quot;20&quot;/&gt;&lt;text x=&quot;35&quot; y=&quot;39&quot; class=&quot;lbl&quot;&gt;K2&lt;/text&gt;
+&lt;rect class=&quot;v&quot; x=&quot;50&quot; y=&quot;25&quot; width=&quot;20&quot; height=&quot;20&quot;/&gt;&lt;text x=&quot;60&quot; y=&quot;39&quot; class=&quot;lbl&quot;&gt;V2&lt;/text&gt;
+
+&lt;rect class=&quot;q&quot; x=&quot;0&quot; y=&quot;50&quot; width=&quot;20&quot; height=&quot;20&quot;/&gt;&lt;text x=&quot;10&quot; y=&quot;64&quot; class=&quot;lbl&quot;&gt;Q3&lt;/text&gt;
+&lt;rect class=&quot;k&quot; x=&quot;25&quot; y=&quot;50&quot; width=&quot;20&quot; height=&quot;20&quot;/&gt;&lt;text x=&quot;35&quot; y=&quot;64&quot; class=&quot;lbl&quot;&gt;K3&lt;/text&gt;
+&lt;rect class=&quot;v&quot; x=&quot;50&quot; y=&quot;50&quot; width=&quot;20&quot; height=&quot;20&quot;/&gt;&lt;text x=&quot;60&quot; y=&quot;64&quot; class=&quot;lbl&quot;&gt;V3&lt;/text&gt;
+
+&lt;rect class=&quot;q&quot; x=&quot;0&quot; y=&quot;75&quot; width=&quot;20&quot; height=&quot;20&quot;/&gt;&lt;text x=&quot;10&quot; y=&quot;89&quot; class=&quot;lbl&quot;&gt;Q4&lt;/text&gt;
+&lt;rect class=&quot;k&quot; x=&quot;25&quot; y=&quot;75&quot; width=&quot;20&quot; height=&quot;20&quot;/&gt;&lt;text x=&quot;35&quot; y=&quot;89&quot; class=&quot;lbl&quot;&gt;K4&lt;/text&gt;
+&lt;rect class=&quot;v&quot; x=&quot;50&quot; y=&quot;75&quot; width=&quot;20&quot; height=&quot;20&quot;/&gt;&lt;text x=&quot;60&quot; y=&quot;89&quot; class=&quot;lbl&quot;&gt;V4&lt;/text&gt;
+</code></pre>
+  </g>
+  <text x="100" y="200" class="sub">KV Cache: 100%</text>
+  <text x="100" y="218" class="sub">效果最佳，最耗显存</text>
+
+  <!-- GQA -->
+<p>  <text x="290" y="20" class="ttl">GQA（主流）</text><br>  <text x="290" y="36" class="sub">每组 Q 共享一组 K&#x2F;V</text><br>  <g transform="translate(230,55)"><br>    <rect class="q" x="0" y="0" width="20" height="20"/><text x="10" y="14" class="lbl">Q1</text><br>    <rect class="q" x="0" y="25" width="20" height="20"/><text x="10" y="39" class="lbl">Q2</text><br>    <rect class="k" x="35" y="10" width="20" height="20"/><text x="45" y="24" class="lbl">K1</text><br>    <rect class="v" x="60" y="10" width="20" height="20"/><text x="70" y="24" class="lbl">V1</text><br>    <rect class="grp" x="-3" y="-3" width="86" height="51"/></p>
+<pre><code>&lt;rect class=&quot;q&quot; x=&quot;0&quot; y=&quot;55&quot; width=&quot;20&quot; height=&quot;20&quot;/&gt;&lt;text x=&quot;10&quot; y=&quot;69&quot; class=&quot;lbl&quot;&gt;Q3&lt;/text&gt;
+&lt;rect class=&quot;q&quot; x=&quot;0&quot; y=&quot;80&quot; width=&quot;20&quot; height=&quot;20&quot;/&gt;&lt;text x=&quot;10&quot; y=&quot;94&quot; class=&quot;lbl&quot;&gt;Q4&lt;/text&gt;
+&lt;rect class=&quot;k&quot; x=&quot;35&quot; y=&quot;65&quot; width=&quot;20&quot; height=&quot;20&quot;/&gt;&lt;text x=&quot;45&quot; y=&quot;79&quot; class=&quot;lbl&quot;&gt;K2&lt;/text&gt;
+&lt;rect class=&quot;v&quot; x=&quot;60&quot; y=&quot;65&quot; width=&quot;20&quot; height=&quot;20&quot;/&gt;&lt;text x=&quot;70&quot; y=&quot;79&quot; class=&quot;lbl&quot;&gt;V2&lt;/text&gt;
+&lt;rect class=&quot;grp&quot; x=&quot;-3&quot; y=&quot;52&quot; width=&quot;86&quot; height=&quot;51&quot;/&gt;
+</code></pre>
+  </g>
+  <text x="290" y="200" class="sub">KV Cache: ~25%</text>
+  <text x="290" y="218" class="sub">效果几乎不掉，性价比高</text>
+
+  <!-- MQA -->
+<p>  <text x="480" y="20" class="ttl">MQA</text><br>  <text x="480" y="36" class="sub">所有 Q 共享一组 K&#x2F;V</text><br>  <g transform="translate(420,55)"><br>    <rect class="q" x="0" y="0" width="20" height="20"/><text x="10" y="14" class="lbl">Q1</text><br>    <rect class="q" x="0" y="25" width="20" height="20"/><text x="10" y="39" class="lbl">Q2</text><br>    <rect class="q" x="0" y="50" width="20" height="20"/><text x="10" y="64" class="lbl">Q3</text><br>    <rect class="q" x="0" y="75" width="20" height="20"/><text x="10" y="89" class="lbl">Q4</text><br>    <rect class="k" x="35" y="35" width="20" height="20"/><text x="45" y="49" class="lbl">K</text><br>    <rect class="v" x="60" y="35" width="20" height="20"/><text x="70" y="49" class="lbl">V</text><br>  </g><br>  <text x="480" y="200" class="sub">KV Cache: ~12%</text><br>  <text x="480" y="218" class="sub">最省显存，效果有损</text></p>
+  <!-- MLA -->
+<p>  <text x="650" y="20" class="ttl">MLA</text><br>  <text x="650" y="36" class="sub">压缩为低维潜向量</text><br>  <g transform="translate(595,55)"><br>    <rect class="q" x="0" y="0" width="20" height="20"/><text x="10" y="14" class="lbl">Q1</text><br>    <rect class="q" x="0" y="25" width="20" height="20"/><text x="10" y="39" class="lbl">Q2</text><br>    <rect class="q" x="0" y="50" width="20" height="20"/><text x="10" y="64" class="lbl">Q3</text><br>    <rect class="q" x="0" y="75" width="20" height="20"/><text x="10" y="89" class="lbl">Q4</text><br>    <rect x="40" y="35" width="50" height="20" fill="#f8bbd0" stroke="#c2185b"/><br>    <text x="65" y="49" class="lbl">latent c</text><br>  </g><br>  <text x="650" y="200" class="sub">KV Cache: &lt;5%</text><br>  <text x="650" y="218" class="sub">DeepSeek-V2&#x2F;V3 路线</text></p>
+  <!-- arrow flow -->
+  <line x1="170" y1="270" x2="220" y2="270" stroke="#666" stroke-width="2" marker-end="url(#arr2)"/>
+  <line x1="360" y1="270" x2="410" y2="270" stroke="#666" stroke-width="2" marker-end="url(#arr2)"/>
+  <line x1="540" y1="270" x2="590" y2="270" stroke="#666" stroke-width="2" marker-end="url(#arr2)"/>
+  <text x="375" y="295" class="sub">显存占用越来越小，工程权衡越来越精巧</text>
+  <defs>
+    <marker id="arr2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#666"/>
+    </marker>
+  </defs>
+</svg>
+</div>
+
+<p>简单一句话总结这条进化线：<strong>MHA 太贵 → MQA 太省（掉点）→ GQA 折中（成主流）→ MLA 把潜在表征压缩玩出新高度</strong>。</p>
 <hr>
 <h2 id="七、前馈层的进化：ReLU-→-SwiGLU，再到-MoE"><a href="#七、前馈层的进化：ReLU-→-SwiGLU，再到-MoE" class="headerlink" title="七、前馈层的进化：ReLU → SwiGLU，再到 MoE"></a>七、前馈层的进化：ReLU → SwiGLU，再到 MoE</h2><h3 id="7-1-激活函数：ReLU-→-GELU-→-SwiGLU"><a href="#7-1-激活函数：ReLU-→-GELU-→-SwiGLU" class="headerlink" title="7.1 激活函数：ReLU → GELU → SwiGLU"></a>7.1 激活函数：ReLU → GELU → SwiGLU</h3><p>原始 Transformer 用 ReLU，简单粗暴：$\text{ReLU}(x) &#x3D; \max(0, x)$。</p>
 <p>后来 BERT 换成 GELU（更平滑），现代 LLM 又换成了 <strong>SwiGLU</strong>：</p>
@@ -507,7 +660,7 @@
 <p>📌 <strong>效果</strong>：SwiGLU 在同算力下显著优于 ReLU&#x2F;GELU，已成 Llama、Qwen、Mistral 的标配。</p>
 </blockquote>
 <h3 id="7-2-MoE（Mixture-of-Experts）：让模型”按需调用专家”"><a href="#7-2-MoE（Mixture-of-Experts）：让模型”按需调用专家”" class="headerlink" title="7.2 MoE（Mixture of Experts）：让模型”按需调用专家”"></a>7.2 MoE（Mixture of Experts）：让模型”按需调用专家”</h3><p>更激进的演化是把单一的 FFN 替换成<strong>多个专家 FFN + 一个路由器</strong>：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">            ┌──► 专家1 ─┐</span><br><span class="line">            │           │</span><br><span class="line">输入 ──► 路由器 ──► 专家2 ─┼──► 加权求和 ──► 输出</span><br><span class="line">            │           │</span><br><span class="line">            └──► 专家N ─┘</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">                    ┌──► 专家 1 ─┐</span><br><span class="line">                    │            │</span><br><span class="line">                    ├──► 专家 2 ─┤</span><br><span class="line">输入 ──► 路由器 ────┤            ├──► 加权求和 ──► 输出</span><br><span class="line">                    ├──► 专家 3 ─┤</span><br><span class="line">                    │            │</span><br><span class="line">                    └──► 专家 N ─┘</span><br><span class="line">         （路由器只挑选 Top-K 个专家激活）</span><br></pre></td></tr></table></figure>
 
 <p>每个 token 只激活其中 2~8 个专家，<strong>总参数量可以做到上千亿，但单次推理只用其中几百亿</strong>。</p>
 <p>代表作：Mixtral 8×7B（共 47B 参数，每 token 激活 13B）、DeepSeek-V3（671B 参数，激活 37B）、Qwen3-MoE 系列。</p>
@@ -519,7 +672,7 @@
 <li><strong>原始 Transformer</strong>：监督学习——“中文 → 英文”配对数据，几百万句子级别。</li>
 <li><strong>LLM 预训练</strong>：自监督——海量互联网文本，让模型预测”下一个 token”。数据量从 GB 级别飙升到 <strong>TB 甚至 PB 级别</strong>（Llama-3 用了 15T tokens）。</li>
 </ul>
-<h3 id="8-2-三阶段训练流程"><a href="#8-2-三阶段训练流程" class="headerlink" title="8.2 三阶段训练流程"></a>8.2 三阶段训练流程</h3><p>现代 LLM 通常走”预训练 → 后训练”两个大阶段：</p>
+<h3 id="8-2-三阶段训练流程"><a href="#8-2-三阶段训练流程" class="headerlink" title="8.2 三阶段训练流程"></a>8.2 三阶段训练流程</h3><p>现代 LLM 通常走”预训练 → 后训练（Post-training）”的整体路线，其中后训练又细分为 SFT 和偏好对齐两步，合起来就是<strong>三个阶段</strong>：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1. 预训练（Pre-training）       — 海量文本，学语言的统计规律和世界知识</span><br><span class="line">2. 监督微调（SFT）              — 高质量&quot;指令-回答&quot;对，学会&quot;听话&quot;</span><br><span class="line">3. 偏好对齐（RLHF / DPO / GRPO）— 学会回答得&quot;像人喜欢的样子&quot;</span><br></pre></td></tr></table></figure>
 
 <p>原始 Transformer 完全没有后两步——它是个翻译机，不需要”对齐人类偏好”。</p>
@@ -542,7 +695,7 @@
 <td>GPT-3 (2020)</td>
 <td>175B</td>
 <td>300B tokens</td>
-<td>~3640 PFLOPs-day</td>
+<td>~3640 PetaFLOP&#x2F;s-days</td>
 </tr>
 <tr>
 <td>Llama-3-405B (2024)</td>
