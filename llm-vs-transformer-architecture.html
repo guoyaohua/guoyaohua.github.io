@@ -195,7 +195,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">9</span>
+          <span class="site-state-item-count">10</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -206,7 +206,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">60</span>
+        <span class="site-state-item-count">64</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -311,14 +311,14 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>12k</span>
+      <span>11k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>11 分钟</span>
+      <span>10 分钟</span>
     </span>
 </div>
 
@@ -331,7 +331,6 @@
     <div class="post-body" itemprop="articleBody"><center>2017 年 Google 一篇《Attention Is All You Need》开启了 Transformer 时代，2022 年 ChatGPT 把"大语言模型"推到了所有人面前。但很多人有个困惑：今天的 GPT-4、Llama、Qwen、DeepSeek 还是当年那个 Transformer 吗？答案是——<strong>骨架还在，但几乎每一块零件都被换过了。</strong>本文用快递公司、流水线、车间这些日常类比，从零开始把原始 Transformer 讲透，再逐个拆解现代 LLM 在它身上做了哪些关键改造，以及为什么。看完这一篇，你就能彻底分清"Transformer"和"LLM"。</center>
 
 <span id="more"></span>
-
 <h2 id="目录速览"><a href="#目录速览" class="headerlink" title="目录速览"></a>目录速览</h2><ol>
 <li>先打个比方：Transformer 到底在做什么</li>
 <li>原始 Transformer 架构详解（2017 版）</li>
@@ -353,12 +352,11 @@
 <li><strong>生成部（Decoder）</strong>：拿着理解部的档案，一个英文单词一个英文单词地往外写。</li>
 </ul>
 <p>每个部门里都站着一排排”员工”，每个员工都干同一件事——<strong>和身边的同事互相打听信息，然后更新自己手上的笔记</strong>。这个”互相打听”的动作，就是<strong>注意力机制（Attention）</strong>。</p>
-<p>为什么这个设计这么牛？因为在 Transformer 之前，主流的 RNN&#x2F;LSTM 是”流水线作业”——必须等第 1 个字处理完，才能处理第 2 个字。而 Transformer 让所有员工<strong>同时开工、互相串门</strong>，效率瞬间起飞，也能轻松看到很远的上下文关系。</p>
+<p>为什么这个设计这么牛？因为在 Transformer 之前，主流的 RNN/LSTM 是”流水线作业”——必须等第 1 个字处理完，才能处理第 2 个字。而 Transformer 让所有员工<strong>同时开工、互相串门</strong>，效率瞬间起飞，也能轻松看到很远的上下文关系。</p>
 <p>记住这个画面，下面所有的细节都是在给这家”快递公司”打补丁。</p>
 <hr>
 <h2 id="二、原始-Transformer-架构详解（2017-版）"><a href="#二、原始-Transformer-架构详解（2017-版）" class="headerlink" title="二、原始 Transformer 架构详解（2017 版）"></a>二、原始 Transformer 架构详解（2017 版）</h2><p>我们来正式拆解 2017 年那篇论文里的架构。原始 Transformer 是一个 <strong>Encoder-Decoder</strong> 结构，用于机器翻译任务。</p>
 <h3 id="2-1-整体结构图（文字版）"><a href="#2-1-整体结构图（文字版）" class="headerlink" title="2.1 整体结构图（文字版）"></a>2.1 整体结构图（文字版）</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">   输入中文 &quot;我爱你&quot;                       目标英文 &quot;I love you&quot;</span><br><span class="line">        │                                          │</span><br><span class="line">   [Token 化 + Embedding]                  [Token 化 + Embedding]</span><br><span class="line">        │                                          │</span><br><span class="line">   [+ 位置编码]                             [+ 位置编码]</span><br><span class="line">        │                                          │</span><br><span class="line">┌───────▼────────┐ × N 层               ┌──────────▼─────────┐ × N 层</span><br><span class="line">│  Encoder Block │                      │   Decoder Block    │</span><br><span class="line">│ ┌────────────┐ │                      │ ┌────────────────┐ │</span><br><span class="line">│ │  自注意力  │ │                      │ │  掩码自注意力  │ │</span><br><span class="line">│ └────────────┘ │                      │ └────────────────┘ │</span><br><span class="line">│ ┌────────────┐ │   ───────────►       │ ┌────────────────┐ │</span><br><span class="line">│ │    FFN     │ │   (输出K/V给Decoder) │ │   交叉注意力   │ │</span><br><span class="line">│ └────────────┘ │                      │ └────────────────┘ │</span><br><span class="line">└────────────────┘                      │ ┌────────────────┐ │</span><br><span class="line">                                        │ │      FFN       │ │</span><br><span class="line">                                        │ └────────────────┘ │</span><br><span class="line">                                        └──────────┬─────────┘</span><br><span class="line">                                                   │</span><br><span class="line">                                          [Linear + Softmax]</span><br><span class="line">                                                   │</span><br><span class="line">                                            输出下一个英文词</span><br></pre></td></tr></table></figure>
-
 <p>下面把每个零件单独剖开看。</p>
 <h3 id="2-2-Token-化与-Embedding：把文字变成向量"><a href="#2-2-Token-化与-Embedding：把文字变成向量" class="headerlink" title="2.2 Token 化与 Embedding：把文字变成向量"></a>2.2 Token 化与 Embedding：把文字变成向量</h3><p>计算机不认识文字，只认识数字。所以第一步是<strong>分词（Tokenize）</strong>——把”我爱你”切成 <code>[&quot;我&quot;, &quot;爱&quot;, &quot;你&quot;]</code>，再查一张巨大的”词典表”，把每个词映射成一个固定长度（比如 512 维）的向量。</p>
 <blockquote>
@@ -366,8 +364,8 @@
 </blockquote>
 <h3 id="2-3-位置编码（Positional-Encoding）：告诉模型字的先后顺序"><a href="#2-3-位置编码（Positional-Encoding）：告诉模型字的先后顺序" class="headerlink" title="2.3 位置编码（Positional Encoding）：告诉模型字的先后顺序"></a>2.3 位置编码（Positional Encoding）：告诉模型字的先后顺序</h3><p>注意力机制有个天生的”病”——<strong>它对顺序不敏感</strong>。”我爱你” 和 “你爱我”，在自注意力眼里几乎一样。</p>
 <p>为了告诉模型”哪个字在前，哪个字在后”，原始 Transformer 给每个位置加了一组<strong>正弦余弦函数生成的固定向量</strong>：</p>
-<p>$$<br>PE_{(pos, 2i)} &#x3D; \sin\left(\frac{pos}{10000^{2i&#x2F;d}}\right), \quad PE_{(pos, 2i+1)} &#x3D; \cos\left(\frac{pos}{10000^{2i&#x2F;d}}\right)<br>$$</p>
-<blockquote>
+<script type="math/tex; mode=display">
+PE_{(pos, 2i)} = \sin\left(\frac{pos}{10000^{2i/d}}\right), \quad PE_{(pos, 2i+1)} = \cos\left(\frac{pos}{10000^{2i/d}}\right)</script><blockquote>
 <p>📌 <strong>新手理解</strong>：相当于给每个座位贴了一个独特的”座位号牌”，这样员工们就知道谁坐在第几排。</p>
 </blockquote>
 <h3 id="2-4-自注意力机制（Self-Attention）：本质是”加权求和”"><a href="#2-4-自注意力机制（Self-Attention）：本质是”加权求和”" class="headerlink" title="2.4 自注意力机制（Self-Attention）：本质是”加权求和”"></a>2.4 自注意力机制（Self-Attention）：本质是”加权求和”</h3><p>这是 Transformer 的灵魂。每个 token 会生成三个向量：</p>
@@ -377,27 +375,27 @@
 <li><strong>Value (V)</strong>：我能提供什么信息？</li>
 </ul>
 <p>公式只有一行：</p>
-<p>$$<br>\text{Attention}(Q, K, V) &#x3D; \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right) V<br>$$</p>
-<p><strong>用打比方来理解</strong>：</p>
+<script type="math/tex; mode=display">
+\text{Attention}(Q, K, V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right) V</script><p><strong>用打比方来理解</strong>：</p>
 <blockquote>
 <p>想象你在一场鸡尾酒会。你（Query）想找懂红酒的人聊天。每个客人胸前都挂着标签（Key），你扫一眼所有人的标签，给”懂红酒”的人打高分，给”只懂啤酒”的人打低分（这就是 $QK^T$）。然后你按这个分数的权重，去听每个人讲话的内容（Value），分数高的人你听得仔细，分数低的人你左耳进右耳出。最后你把所有听到的信息<strong>加权融合</strong>进自己脑子里——这就是注意力的输出。</p>
 </blockquote>
 <p><strong>多头注意力（Multi-Head Attention）</strong> 就是同时开 8 场鸡尾酒会，每场关注不同维度（语法、语义、指代……），最后拼起来。</p>
 <h3 id="2-5-前馈网络（FFN）：每个-token-单独”消化”"><a href="#2-5-前馈网络（FFN）：每个-token-单独”消化”" class="headerlink" title="2.5 前馈网络（FFN）：每个 token 单独”消化”"></a>2.5 前馈网络（FFN）：每个 token 单独”消化”</h3><p>注意力做完”串门”后，每个 token 还要经过一个<strong>两层的全连接网络</strong>单独加工：</p>
-<p>$$<br>\text{FFN}(x) &#x3D; \text{ReLU}(xW_1 + b_1)W_2 + b_2<br>$$</p>
-<blockquote>
+<script type="math/tex; mode=display">
+\text{FFN}(x) = \text{ReLU}(xW_1 + b_1)W_2 + b_2</script><blockquote>
 <p>📌 <strong>新手理解</strong>：注意力是”开会讨论”，FFN 是”散会后回工位整理笔记”。</p>
 </blockquote>
-<h3 id="2-6-残差连接与-LayerNorm：让深网络能训得动"><a href="#2-6-残差连接与-LayerNorm：让深网络能训得动" class="headerlink" title="2.6 残差连接与 LayerNorm：让深网络能训得动"></a>2.6 残差连接与 LayerNorm：让深网络能训得动</h3><p>每个子层（注意力 &#x2F; FFN）的输出都包了一层”保险”:</p>
-<p>$$<br>\text{Output} &#x3D; \text{LayerNorm}(x + \text{Sublayer}(x))<br>$$</p>
-<ul>
+<h3 id="2-6-残差连接与-LayerNorm：让深网络能训得动"><a href="#2-6-残差连接与-LayerNorm：让深网络能训得动" class="headerlink" title="2.6 残差连接与 LayerNorm：让深网络能训得动"></a>2.6 残差连接与 LayerNorm：让深网络能训得动</h3><p>每个子层（注意力 / FFN）的输出都包了一层”保险”:</p>
+<script type="math/tex; mode=display">
+\text{Output} = \text{LayerNorm}(x + \text{Sublayer}(x))</script><ul>
 <li><strong>残差连接 <code>x +</code></strong>：相当于”原稿留底”，避免改着改着把原意改丢了；同时让梯度能畅通无阻地流回浅层。</li>
 <li><strong>LayerNorm</strong>：把每一层的输出”标准化”到一个稳定的数值范围，避免越叠越爆炸或越叠越萎缩。</li>
 </ul>
 <p>注意原始 Transformer 是 <strong>Post-Norm</strong>——先残差相加，再做归一化。这个细节后面会被改掉。</p>
 <h3 id="2-7-Decoder-的两个特殊之处"><a href="#2-7-Decoder-的两个特殊之处" class="headerlink" title="2.7 Decoder 的两个特殊之处"></a>2.7 Decoder 的两个特殊之处</h3><ol>
 <li><strong>掩码自注意力（Masked Self-Attention）</strong>：生成第 i 个英文词时，不能偷看第 i+1、i+2 个词（不然就作弊了）。所以注意力矩阵的右上三角全部置为 $-\infty$。</li>
-<li><strong>交叉注意力（Cross-Attention）</strong>：Decoder 还要看 Encoder 输出的”中文档案”，所以多了一层 Q 来自 Decoder、K&#x2F;V 来自 Encoder 的注意力。</li>
+<li><strong>交叉注意力（Cross-Attention）</strong>：Decoder 还要看 Encoder 输出的”中文档案”，所以多了一层 Q 来自 Decoder、K/V 来自 Encoder 的注意力。</li>
 </ol>
 <p>到这里，原始 Transformer 就讲完了。现在主角登场——<strong>LLM 拿走了这套架构后，到底改了什么？</strong></p>
 <hr>
@@ -446,6 +444,7 @@
 </svg>
 </div>
 
+<div class="table-container">
 <table>
 <thead>
 <tr>
@@ -455,7 +454,8 @@
 <th>擅长</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td><strong>Encoder-only</strong></td>
 <td>BERT、RoBERTa</td>
 <td>只要 Encoder</td>
@@ -473,7 +473,9 @@
 <td>只要 Decoder</td>
 <td><strong>生成式对话、通用 LLM</strong></td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
+</div>
 <h3 id="3-2-为什么现代-LLM-几乎清一色-Decoder-only？"><a href="#3-2-为什么现代-LLM-几乎清一色-Decoder-only？" class="headerlink" title="3.2 为什么现代 LLM 几乎清一色 Decoder-only？"></a>3.2 为什么现代 LLM 几乎清一色 Decoder-only？</h3><p>这是过去几年最重要的架构选择。原因有三：</p>
 <ol>
 <li><strong>训练目标统一</strong>：Decoder-only 用”预测下一个 token”这一个任务就能学习一切——翻译、问答、写代码、推理，全都能塞进”接下来该说什么”这个统一框架里。</li>
@@ -485,7 +487,6 @@
 </blockquote>
 <h3 id="3-3-Decoder-only-长什么样？"><a href="#3-3-Decoder-only-长什么样？" class="headerlink" title="3.3 Decoder-only 长什么样？"></a>3.3 Decoder-only 长什么样？</h3><p>Decoder-only 砍掉了交叉注意力（因为没有 Encoder 了），变成超级简洁的堆叠结构：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">         输入 token</span><br><span class="line">             │</span><br><span class="line">   [Embedding + 位置信息]</span><br><span class="line">             │</span><br><span class="line">┌────────────▼────────────┐</span><br><span class="line">│   Transformer Block     │  × N 层</span><br><span class="line">│  ┌───────────────────┐  │  （GPT-3: 96 层</span><br><span class="line">│  │  掩码多头注意力   │  │   Llama-3-405B: 126 层</span><br><span class="line">│  └───────────────────┘  │   DeepSeek-V3: 61 层 + MoE）</span><br><span class="line">│  ┌───────────────────┐  │</span><br><span class="line">│  │    前馈网络 FFN   │  │</span><br><span class="line">│  └───────────────────┘  │</span><br><span class="line">└────────────┬────────────┘</span><br><span class="line">             │</span><br><span class="line">     [Linear + Softmax]</span><br><span class="line">             │</span><br><span class="line">      预测下一个 token</span><br></pre></td></tr></table></figure>
-
 <p>骨架就是这样。下面所有的进化，都是把这个骨架里的零件<strong>逐个换成更高效、更稳定、更长上下文的版本</strong>。</p>
 <hr>
 <h2 id="四、位置编码的进化：从绝对正弦到-RoPE"><a href="#四、位置编码的进化：从绝对正弦到-RoPE" class="headerlink" title="四、位置编码的进化：从绝对正弦到 RoPE"></a>四、位置编码的进化：从绝对正弦到 RoPE</h2><h3 id="4-1-原始方案的痛点"><a href="#4-1-原始方案的痛点" class="headerlink" title="4.1 原始方案的痛点"></a>4.1 原始方案的痛点</h3><p>原始 Transformer 用的正弦位置编码是<strong>绝对位置</strong>——第 5 个 token 永远是 PE(5)。这有两个问题：</p>
@@ -494,7 +495,7 @@
 <li><strong>不直接表达相对位置</strong>：模型其实更关心”A 在 B 前面 3 个位置”这种相对关系，而不是”A 是第 17 个”。</li>
 </ol>
 <h3 id="4-2-旋转位置编码（RoPE）的核心思想"><a href="#4-2-旋转位置编码（RoPE）的核心思想" class="headerlink" title="4.2 旋转位置编码（RoPE）的核心思想"></a>4.2 旋转位置编码（RoPE）的核心思想</h3><p>RoPE（Rotary Position Embedding）的脑洞非常巧妙：<strong>不要把位置加到向量上，而是把位置变成一个旋转角度，去转动 Q 和 K 向量本身。</strong></p>
-<p>具体做法是：把每个 Q&#x2F;K 向量按维度两两分组，每组当作复平面上的一个二维向量，然后按位置 $m$ 旋转 $m\theta$ 角度：</p>
+<p>具体做法是：把每个 Q/K 向量按维度两两分组，每组当作复平面上的一个二维向量，然后按位置 $m$ 旋转 $m\theta$ 角度：</p>
 <div>
 $$
 \begin{pmatrix} q^{\prime}_{2i} \\\\ q^{\prime}_{2i+1} \end{pmatrix} = \begin{pmatrix} \cos m\theta_i & -\sin m\theta_i \\\\ \sin m\theta_i & \cos m\theta_i \end{pmatrix} \begin{pmatrix} q_{2i} \\\\ q_{2i+1} \end{pmatrix}
@@ -567,21 +568,19 @@ $$
 <hr>
 <h2 id="五、归一化的进化：LayerNorm-→-RMSNorm，Post-Norm-→-Pre-Norm"><a href="#五、归一化的进化：LayerNorm-→-RMSNorm，Post-Norm-→-Pre-Norm" class="headerlink" title="五、归一化的进化：LayerNorm → RMSNorm，Post-Norm → Pre-Norm"></a>五、归一化的进化：LayerNorm → RMSNorm，Post-Norm → Pre-Norm</h2><h3 id="5-1-Post-Norm-vs-Pre-Norm：归一化放在哪？"><a href="#5-1-Post-Norm-vs-Pre-Norm：归一化放在哪？" class="headerlink" title="5.1 Post-Norm vs Pre-Norm：归一化放在哪？"></a>5.1 Post-Norm vs Pre-Norm：归一化放在哪？</h3><p><strong>Post-Norm（原始 Transformer）</strong>：先把子层输出和残差相加，再做归一化。</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">             ┌──────────────┐</span><br><span class="line">x ──────────►│  Sublayer    │──► (+) ──► LayerNorm ──► out</span><br><span class="line">     │       └──────────────┘     ▲</span><br><span class="line">     └────────────────────────────┘</span><br><span class="line">               （残差连接）</span><br></pre></td></tr></table></figure>
-
 <p><strong>Pre-Norm（现代 LLM）</strong>：先把输入归一化再喂给子层，残差直接走”高速公路”。</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">     ┌──► LayerNorm ──► Sublayer ──┐</span><br><span class="line">x ───┤                              ├──► (+) ──► out</span><br><span class="line">     └──────────────────────────────┘</span><br><span class="line">               （残差直通）</span><br></pre></td></tr></table></figure>
-
 <p><strong>Post-Norm 的问题</strong>：归一化夹在残差通路中间，会把梯度的”原稿留底”效果削弱。当模型叠到几十层、上百层时，梯度反传困难，训练极不稳定，需要小心翼翼地预热学习率（warmup）。</p>
 <p><strong>Pre-Norm 的优势</strong>：残差通路是一条”干净的恒等映射”，梯度能畅通流到底层。代价是最终输出的数值范围会变大，所以输出层前还要再加一次 LayerNorm 收尾。</p>
 <blockquote>
 <p>📌 <strong>结论</strong>：现代 LLM 几乎全部采用 Pre-Norm，让 100+ 层的深堆叠成为可能。</p>
 </blockquote>
 <h3 id="5-2-RMSNorm：把-LayerNorm-砍掉一半"><a href="#5-2-RMSNorm：把-LayerNorm-砍掉一半" class="headerlink" title="5.2 RMSNorm：把 LayerNorm 砍掉一半"></a>5.2 RMSNorm：把 LayerNorm 砍掉一半</h3><p>LayerNorm 的公式：</p>
-<p>$$<br>\text{LN}(x) &#x3D; \gamma \cdot \frac{x - \mu}{\sqrt{\sigma^2 + \epsilon}} + \beta<br>$$</p>
-<p>它做了两件事：<strong>去均值</strong>（减 $\mu$）和<strong>缩放</strong>（除标准差）。</p>
+<script type="math/tex; mode=display">
+\text{LN}(x) = \gamma \cdot \frac{x - \mu}{\sqrt{\sigma^2 + \epsilon}} + \beta</script><p>它做了两件事：<strong>去均值</strong>（减 $\mu$）和<strong>缩放</strong>（除标准差）。</p>
 <p>RMSNorm（Root Mean Square Norm）发现：去均值这一步在 Transformer 里<strong>几乎没用</strong>，砍掉对效果影响微乎其微，但能省下一笔计算：</p>
-<p>$$<br>\text{RMSNorm}(x) &#x3D; \gamma \cdot \frac{x}{\sqrt{\frac{1}{n}\sum x_i^2 + \epsilon}}<br>$$</p>
-<p><strong>收益</strong>：约 7-15% 的归一化开销下降，在大模型每层都用、推理速度敏感的场景非常划算。Llama、Qwen、DeepSeek 全部采用。</p>
+<script type="math/tex; mode=display">
+\text{RMSNorm}(x) = \gamma \cdot \frac{x}{\sqrt{\frac{1}{n}\sum x_i^2 + \epsilon}}</script><p><strong>收益</strong>：约 7-15% 的归一化开销下降，在大模型每层都用、推理速度敏感的场景非常划算。Llama、Qwen、DeepSeek 全部采用。</p>
 <blockquote>
 <p>📌 <strong>新手理解</strong>：LayerNorm 是”先把所有人的体重减去平均值再缩放到统一范围”，RMSNorm 是”直接缩放到统一范围”——后者发现”减平均值”那步压根不影响下游，那就别做了。</p>
 </blockquote>
@@ -589,24 +588,21 @@ $$
 <h2 id="六、注意力机制的进化：MHA-→-MQA-→-GQA-→-MLA"><a href="#六、注意力机制的进化：MHA-→-MQA-→-GQA-→-MLA" class="headerlink" title="六、注意力机制的进化：MHA → MQA → GQA → MLA"></a>六、注意力机制的进化：MHA → MQA → GQA → MLA</h2><p>这是 LLM <strong>推理性能优化最关键的一条进化路径</strong>，背景是 KV Cache 太占显存。</p>
 <h3 id="6-1-为什么要优化？KV-Cache-是显存大户"><a href="#6-1-为什么要优化？KV-Cache-是显存大户" class="headerlink" title="6.1 为什么要优化？KV Cache 是显存大户"></a>6.1 为什么要优化？KV Cache 是显存大户</h3><p>LLM 生成时，每生成一个新 token，都需要回看前面所有 token 的 K 和 V。为了避免每步都重算，会把它们缓存下来——这就是 <strong>KV Cache</strong>。</p>
 <p>显存占用公式（<strong>MHA 情况下</strong>）：</p>
-<p>$$<br>\text{KV Cache} &#x3D; 2 \times L \times H \times d_h \times s \times b \times \text{bytes}<br>$$</p>
-<p>（2 是 K 和 V，$L$ 层数，$H$ 头数，$d_h$ 每头维度，$s$ 序列长，$b$ batch，FP16 时 bytes&#x3D;2）</p>
-<p><strong>举个例子</strong>：Llama-2-7B 是经典的 MHA 模型，$L&#x3D;32$、$H&#x3D;32$、$d_h&#x3D;128$，序列 $s&#x3D;4096$、$b&#x3D;1$、FP16：</p>
-<p>$$<br>2 \times 32 \times 32 \times 128 \times 4096 \times 1 \times 2 \approx 2,\text{GB}<br>$$</p>
-<p>Batch 拉到 <strong>16</strong> 就吃满 32 GB；如果换成 70B 级别的稠密 MHA 模型，单 batch 就能逼近一张 A100 80G 的上限——<strong>KV Cache 已经成为 LLM 推理的头号显存杀手</strong>。这就是后面所有变体（MQA&#x2F;GQA&#x2F;MLA）都在做同一件事的原因：<strong>砍掉冗余的 K&#x2F;V</strong>。</p>
-<h3 id="6-2-MHA：原始多头注意力"><a href="#6-2-MHA：原始多头注意力" class="headerlink" title="6.2 MHA：原始多头注意力"></a>6.2 MHA：原始多头注意力</h3><p>每个头都有自己独立的 Q、K、V 投影矩阵。$H$ 个头就有 $H$ 套 K&#x2F;V，显存占用最高。</p>
+<script type="math/tex; mode=display">
+\text{KV Cache} = 2 \times L \times H \times d_h \times s \times b \times \text{bytes}</script><p>（2 是 K 和 V，$L$ 层数，$H$ 头数，$d_h$ 每头维度，$s$ 序列长，$b$ batch，FP16 时 bytes=2）</p>
+<p><strong>举个例子</strong>：Llama-2-7B 是经典的 MHA 模型，$L=32$、$H=32$、$d_h=128$，序列 $s=4096$、$b=1$、FP16：</p>
+<script type="math/tex; mode=display">
+2 \times 32 \times 32 \times 128 \times 4096 \times 1 \times 2 \approx 2\,\text{GB}</script><p>Batch 拉到 <strong>16</strong> 就吃满 32 GB；如果换成 70B 级别的稠密 MHA 模型，单 batch 就能逼近一张 A100 80G 的上限——<strong>KV Cache 已经成为 LLM 推理的头号显存杀手</strong>。这就是后面所有变体（MQA/GQA/MLA）都在做同一件事的原因：<strong>砍掉冗余的 K/V</strong>。</p>
+<h3 id="6-2-MHA：原始多头注意力"><a href="#6-2-MHA：原始多头注意力" class="headerlink" title="6.2 MHA：原始多头注意力"></a>6.2 MHA：原始多头注意力</h3><p>每个头都有自己独立的 Q、K、V 投影矩阵。$H$ 个头就有 $H$ 套 K/V，显存占用最高。</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">头1: Q1 K1 V1</span><br><span class="line">头2: Q2 K2 V2</span><br><span class="line">...</span><br><span class="line">头H: QH KH VH</span><br></pre></td></tr></table></figure>
-
 <h3 id="6-3-MQA（Multi-Query-Attention）：暴力共享"><a href="#6-3-MQA（Multi-Query-Attention）：暴力共享" class="headerlink" title="6.3 MQA（Multi-Query Attention）：暴力共享"></a>6.3 MQA（Multi-Query Attention）：暴力共享</h3><p><strong>所有头共享同一组 K 和 V，只有 Q 还分头</strong>。</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">头1: Q1 ┐</span><br><span class="line">头2: Q2 ┤  共享 K, V</span><br><span class="line">...     │</span><br><span class="line">头H: QH ┘</span><br></pre></td></tr></table></figure>
-
-<p>显存占用瞬间降到 MHA 的 $1&#x2F;H$（仅就 KV Cache 而言），但效果有明显损失——所有头都被迫看同样的”标签”，多样性消失。</p>
-<h3 id="6-4-GQA（Grouped-Query-Attention）：折中方案"><a href="#6-4-GQA（Grouped-Query-Attention）：折中方案" class="headerlink" title="6.4 GQA（Grouped-Query Attention）：折中方案"></a>6.4 GQA（Grouped-Query Attention）：折中方案</h3><p><strong>把 H 个头分成 G 组，每组共享一套 K&#x2F;V</strong>。当 G&#x3D;1 时退化为 MQA，G&#x3D;H 时退化为 MHA。</p>
+<p>显存占用瞬间降到 MHA 的 $1/H$（仅就 KV Cache 而言），但效果有明显损失——所有头都被迫看同样的”标签”，多样性消失。</p>
+<h3 id="6-4-GQA（Grouped-Query-Attention）：折中方案"><a href="#6-4-GQA（Grouped-Query-Attention）：折中方案" class="headerlink" title="6.4 GQA（Grouped-Query Attention）：折中方案"></a>6.4 GQA（Grouped-Query Attention）：折中方案</h3><p><strong>把 H 个头分成 G 组，每组共享一套 K/V</strong>。当 G=1 时退化为 MQA，G=H 时退化为 MHA。</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">组1: [Q1 Q2 Q3 Q4] 共享 K1 V1</span><br><span class="line">组2: [Q5 Q6 Q7 Q8] 共享 K2 V2</span><br></pre></td></tr></table></figure>
-
-<p>GQA 在效果几乎不掉的前提下，把 KV Cache 压到 1&#x2F;4 ~ 1&#x2F;8。<strong>Llama-2&#x2F;3、Qwen-2&#x2F;2.5、Mistral 全部采用</strong>。</p>
-<h3 id="6-5-MLA（Multi-head-Latent-Attention）：DeepSeek-的杀手锏"><a href="#6-5-MLA（Multi-head-Latent-Attention）：DeepSeek-的杀手锏" class="headerlink" title="6.5 MLA（Multi-head Latent Attention）：DeepSeek 的杀手锏"></a>6.5 MLA（Multi-head Latent Attention）：DeepSeek 的杀手锏</h3><p>DeepSeek-V2&#x2F;V3 提出 MLA，把 K 和 V <strong>联合压缩成一个低维潜向量</strong>，存储潜向量本身而非 K&#x2F;V，需要时再解压。</p>
-<p>效果：KV Cache 进一步压缩到 GQA 的 1&#x2F;4 ~ 1&#x2F;10，且性能不掉反升。这是 DeepSeek 能用极低成本提供长上下文服务的关键。</p>
+<p>GQA 在效果几乎不掉的前提下，把 KV Cache 压到 1/4 ~ 1/8。<strong>Llama-2/3、Qwen-2/2.5、Mistral 全部采用</strong>。</p>
+<h3 id="6-5-MLA（Multi-head-Latent-Attention）：DeepSeek-的杀手锏"><a href="#6-5-MLA（Multi-head-Latent-Attention）：DeepSeek-的杀手锏" class="headerlink" title="6.5 MLA（Multi-head Latent Attention）：DeepSeek 的杀手锏"></a>6.5 MLA（Multi-head Latent Attention）：DeepSeek 的杀手锏</h3><p>DeepSeek-V2/V3 提出 MLA，把 K 和 V <strong>联合压缩成一个低维潜向量</strong>，存储潜向量本身而非 K/V，需要时再解压。</p>
+<p>效果：KV Cache 进一步压缩到 GQA 的 1/4 ~ 1/10，且性能不掉反升。这是 DeepSeek 能用极低成本提供长上下文服务的关键。</p>
 <h3 id="6-6-一图看懂演化"><a href="#6-6-一图看懂演化" class="headerlink" title="6.6 一图看懂演化"></a>6.6 一图看懂演化</h3><div align="center">
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 320" style="max-width:100%;height:auto;font-family:'Helvetica Neue',Arial,sans-serif;">
   <style>
@@ -695,17 +691,16 @@ $$
 
 <p>简单一句话总结这条进化线：<strong>MHA 太贵 → MQA 太省（掉点）→ GQA 折中（成主流）→ MLA 把潜在表征压缩玩出新高度</strong>。</p>
 <hr>
-<h2 id="七、前馈层的进化：ReLU-→-SwiGLU，再到-MoE"><a href="#七、前馈层的进化：ReLU-→-SwiGLU，再到-MoE" class="headerlink" title="七、前馈层的进化：ReLU → SwiGLU，再到 MoE"></a>七、前馈层的进化：ReLU → SwiGLU，再到 MoE</h2><h3 id="7-1-激活函数：ReLU-→-GELU-→-SwiGLU"><a href="#7-1-激活函数：ReLU-→-GELU-→-SwiGLU" class="headerlink" title="7.1 激活函数：ReLU → GELU → SwiGLU"></a>7.1 激活函数：ReLU → GELU → SwiGLU</h3><p>原始 Transformer 用 ReLU，简单粗暴：$\text{ReLU}(x) &#x3D; \max(0, x)$。</p>
+<h2 id="七、前馈层的进化：ReLU-→-SwiGLU，再到-MoE"><a href="#七、前馈层的进化：ReLU-→-SwiGLU，再到-MoE" class="headerlink" title="七、前馈层的进化：ReLU → SwiGLU，再到 MoE"></a>七、前馈层的进化：ReLU → SwiGLU，再到 MoE</h2><h3 id="7-1-激活函数：ReLU-→-GELU-→-SwiGLU"><a href="#7-1-激活函数：ReLU-→-GELU-→-SwiGLU" class="headerlink" title="7.1 激活函数：ReLU → GELU → SwiGLU"></a>7.1 激活函数：ReLU → GELU → SwiGLU</h3><p>原始 Transformer 用 ReLU，简单粗暴：$\text{ReLU}(x) = \max(0, x)$。</p>
 <p>后来 BERT 换成 GELU（更平滑），现代 LLM 又换成了 <strong>SwiGLU</strong>：</p>
-<p>$$<br>\text{SwiGLU}(x) &#x3D; (\text{Swish}(xW_1)) \odot (xW_3)<br>$$</p>
-<p>它把 FFN 的第一层”拆成两路”，一路过 Swish 激活当”开关”，另一路当”内容”，再逐元素相乘——本质是给网络加了<strong>门控机制</strong>，让模型自己决定哪些信息放行、哪些抑制。</p>
+<script type="math/tex; mode=display">
+\text{SwiGLU}(x) = (\text{Swish}(xW_1)) \odot (xW_3)</script><p>它把 FFN 的第一层”拆成两路”，一路过 Swish 激活当”开关”，另一路当”内容”，再逐元素相乘——本质是给网络加了<strong>门控机制</strong>，让模型自己决定哪些信息放行、哪些抑制。</p>
 <p>代价是参数变多（多了一个 $W_3$），所以为了保持总参数量不变，FFN 隐藏维度通常从 $4d$ 降到 $\frac{8}{3}d$。</p>
 <blockquote>
-<p>📌 <strong>效果</strong>：SwiGLU 在同算力下显著优于 ReLU&#x2F;GELU，已成 Llama、Qwen、Mistral 的标配。</p>
+<p>📌 <strong>效果</strong>：SwiGLU 在同算力下显著优于 ReLU/GELU，已成 Llama、Qwen、Mistral 的标配。</p>
 </blockquote>
 <h3 id="7-2-MoE（Mixture-of-Experts）：让模型”按需调用专家”"><a href="#7-2-MoE（Mixture-of-Experts）：让模型”按需调用专家”" class="headerlink" title="7.2 MoE（Mixture of Experts）：让模型”按需调用专家”"></a>7.2 MoE（Mixture of Experts）：让模型”按需调用专家”</h3><p>更激进的演化是把单一的 FFN 替换成<strong>多个专家 FFN + 一个路由器</strong>：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">                    ┌──► 专家 1 ─┐</span><br><span class="line">                    │            │</span><br><span class="line">                    ├──► 专家 2 ─┤</span><br><span class="line">输入 ──► 路由器 ────┤            ├──► 加权求和 ──► 输出</span><br><span class="line">                    ├──► 专家 3 ─┤</span><br><span class="line">                    │            │</span><br><span class="line">                    └──► 专家 N ─┘</span><br><span class="line">         （路由器只挑选 Top-K 个专家激活）</span><br></pre></td></tr></table></figure>
-
 <p>每个 token 只激活其中 2~8 个专家，<strong>总参数量可以做到上千亿，但单次推理只用其中几百亿</strong>。</p>
 <p>代表作：Mixtral 8×7B（共 47B 参数，每 token 激活 13B）、DeepSeek-V3（671B 参数，激活 37B）、Qwen3-MoE 系列。</p>
 <blockquote>
@@ -718,9 +713,9 @@ $$
 </ul>
 <h3 id="8-2-三阶段训练流程"><a href="#8-2-三阶段训练流程" class="headerlink" title="8.2 三阶段训练流程"></a>8.2 三阶段训练流程</h3><p>现代 LLM 通常走”预训练 → 后训练（Post-training）”的整体路线，其中后训练又细分为 SFT 和偏好对齐两步，合起来就是<strong>三个阶段</strong>：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1. 预训练（Pre-training）       — 海量文本，学语言的统计规律和世界知识</span><br><span class="line">2. 监督微调（SFT）              — 高质量&quot;指令-回答&quot;对，学会&quot;听话&quot;</span><br><span class="line">3. 偏好对齐（RLHF / DPO / GRPO）— 学会回答得&quot;像人喜欢的样子&quot;</span><br></pre></td></tr></table></figure>
-
 <p>原始 Transformer 完全没有后两步——它是个翻译机，不需要”对齐人类偏好”。</p>
-<h3 id="8-3-规模的代际差异"><a href="#8-3-规模的代际差异" class="headerlink" title="8.3 规模的代际差异"></a>8.3 规模的代际差异</h3><table>
+<h3 id="8-3-规模的代际差异"><a href="#8-3-规模的代际差异" class="headerlink" title="8.3 规模的代际差异"></a>8.3 规模的代际差异</h3><div class="table-container">
+<table>
 <thead>
 <tr>
 <th>模型</th>
@@ -729,7 +724,8 @@ $$
 <th>训练算力</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>原始 Transformer (2017)</td>
 <td>65M</td>
 <td>~4.5M 句子对</td>
@@ -739,7 +735,7 @@ $$
 <td>GPT-3 (2020)</td>
 <td>175B</td>
 <td>300B tokens</td>
-<td>~3640 PetaFLOP&#x2F;s-days</td>
+<td>~3640 PetaFLOP/s-days</td>
 </tr>
 <tr>
 <td>Llama-3-405B (2024)</td>
@@ -753,21 +749,24 @@ $$
 <td>14.8T tokens</td>
 <td>2048 张 H800 训约 2 个月</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
+</div>
 <p><strong>8 年时间，参数量涨了 1 万倍，训练数据涨了 100 万倍。</strong></p>
 <hr>
 <h2 id="九、推理阶段的”独门武器”：KV-Cache-与上下文扩展"><a href="#九、推理阶段的”独门武器”：KV-Cache-与上下文扩展" class="headerlink" title="九、推理阶段的”独门武器”：KV Cache 与上下文扩展"></a>九、推理阶段的”独门武器”：KV Cache 与上下文扩展</h2><p>原始 Transformer 论文几乎没讨论推理优化（毕竟翻译一句话很快），LLM 则把推理优化卷出了花：</p>
-<h3 id="9-1-KV-Cache"><a href="#9-1-KV-Cache" class="headerlink" title="9.1 KV Cache"></a>9.1 KV Cache</h3><p>如前所述，避免每生成一个 token 都重算前文的 K&#x2F;V。这是所有 LLM 推理框架（vLLM、TGI、SGLang）的基石。</p>
+<h3 id="9-1-KV-Cache"><a href="#9-1-KV-Cache" class="headerlink" title="9.1 KV Cache"></a>9.1 KV Cache</h3><p>如前所述，避免每生成一个 token 都重算前文的 K/V。这是所有 LLM 推理框架（vLLM、TGI、SGLang）的基石。</p>
 <h3 id="9-2-PagedAttention（vLLM）"><a href="#9-2-PagedAttention（vLLM）" class="headerlink" title="9.2 PagedAttention（vLLM）"></a>9.2 PagedAttention（vLLM）</h3><p>把 KV Cache 按”内存页”管理（灵感来自操作系统的虚拟内存），消除碎片，让一张 GPU 能并行服务更多请求。</p>
 <h3 id="9-3-Speculative-Decoding（投机解码）"><a href="#9-3-Speculative-Decoding（投机解码）" class="headerlink" title="9.3 Speculative Decoding（投机解码）"></a>9.3 Speculative Decoding（投机解码）</h3><p>用一个<strong>小而快的草稿模型</strong>先猜几个 token，再用大模型一次性验证。命中就赚到，不命中就回退。可以把推理速度提升 2~3 倍。</p>
 <h3 id="9-4-长上下文扩展"><a href="#9-4-长上下文扩展" class="headerlink" title="9.4 长上下文扩展"></a>9.4 长上下文扩展</h3><ul>
-<li><strong>YaRN &#x2F; Dynamic NTK</strong>：在 RoPE 基础上调整频率，让 4K 训练的模型外推到 128K。</li>
+<li><strong>YaRN / Dynamic NTK</strong>：在 RoPE 基础上调整频率，让 4K 训练的模型外推到 128K。</li>
 <li><strong>Sliding Window Attention</strong>（Mistral）：每个 token 只看最近的 W 个 token，降低长文本计算量。</li>
 <li><strong>Sparse Attention</strong>（GPT-4、Gemini）：只让部分 token 之间计算注意力。</li>
 </ul>
 <p>原始 Transformer 在这些方向上<strong>几乎完全没有积累</strong>——它是为短句翻译设计的。</p>
 <hr>
-<h2 id="十、一张总表：原始-Transformer-vs-现代-LLM"><a href="#十、一张总表：原始-Transformer-vs-现代-LLM" class="headerlink" title="十、一张总表：原始 Transformer vs 现代 LLM"></a>十、一张总表：原始 Transformer vs 现代 LLM</h2><table>
+<h2 id="十、一张总表：原始-Transformer-vs-现代-LLM"><a href="#十、一张总表：原始-Transformer-vs-现代-LLM" class="headerlink" title="十、一张总表：原始 Transformer vs 现代 LLM"></a>十、一张总表：原始 Transformer vs 现代 LLM</h2><div class="table-container">
+<table>
 <thead>
 <tr>
 <th>维度</th>
@@ -775,7 +774,8 @@ $$
 <th>现代 LLM (2024+)</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td><strong>架构</strong></td>
 <td>Encoder-Decoder</td>
 <td>Decoder-only</td>
@@ -798,7 +798,7 @@ $$
 <tr>
 <td><strong>注意力</strong></td>
 <td>MHA</td>
-<td>GQA &#x2F; MLA</td>
+<td>GQA / MLA</td>
 </tr>
 <tr>
 <td><strong>激活函数</strong></td>
@@ -840,7 +840,9 @@ $$
 <td>原论文 base 模型</td>
 <td>GPT-4、Llama-3、Qwen-3、DeepSeek-V3</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
+</div>
 <hr>
 <h2 id="十一、写在最后"><a href="#十一、写在最后" class="headerlink" title="十一、写在最后"></a>十一、写在最后</h2><p>回过头看，<strong>Transformer 提供的真正不朽的东西不是某个具体零件，而是”用注意力机制堆叠”这个范式</strong>。</p>
 <ul>
@@ -853,7 +855,7 @@ $$
 <li>编码器被砍掉了；</li>
 <li>位置编码被旋转化了；</li>
 <li>归一化被前置和瘦身了；</li>
-<li>注意力的 K&#x2F;V 被反复压缩；</li>
+<li>注意力的 K/V 被反复压缩；</li>
 <li>FFN 被门控化、专家化；</li>
 <li>训练规模翻了百万倍；</li>
 <li>推理被各种技巧加速了几十倍。</li>
@@ -872,9 +874,9 @@ $$
           <div class="post-tags">
               <a href="/tags/AI/" rel="tag"># AI</a>
               <a href="/tags/LLM/" rel="tag"># LLM</a>
-              <a href="/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B/" rel="tag"># 大模型</a>
               <a href="/tags/Transformer/" rel="tag"># Transformer</a>
               <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" rel="tag"># 深度学习</a>
+              <a href="/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B/" rel="tag"># 大模型</a>
               <a href="/tags/%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6/" rel="tag"># 注意力机制</a>
               <a href="/tags/RoPE/" rel="tag"># RoPE</a>
               <a href="/tags/RMSNorm/" rel="tag"># RMSNorm</a>
@@ -893,6 +895,9 @@ $$
                 </a>
             </div>
             <div class="post-nav-item">
+                <a href="/flash-attention-explained.html" rel="next" title="【AI】FlashAttention 详解：为什么它能让大模型注意力计算又快又省显存？">
+                  【AI】FlashAttention 详解：为什么它能让大模型注意力计算又快又省显存？ <i class="fa fa-angle-right"></i>
+                </a>
             </div>
           </div>
     </footer>

@@ -10,7 +10,7 @@
   <rights>All rights reserved 2026, 郭耀华</rights>
   <subtitle>欲穷千里目，更上一层楼。</subtitle>
   <title>郭耀华's Blog | 深度学习、机器学习领域技术博客</title>
-  <updated>2026-04-23T14:33:10.663Z</updated>
+  <updated>2026-04-28T14:04:43.658Z</updated>
   <entry>
     <author>
       <name>郭耀华</name>
@@ -18,9 +18,32 @@
     <category term="Artificial Intelligence" scheme="https://www.guoyaohua.com/categories/Artificial-Intelligence/"/>
     <category term="AI" scheme="https://www.guoyaohua.com/tags/AI/"/>
     <category term="LLM" scheme="https://www.guoyaohua.com/tags/LLM/"/>
+    <category term="Transformer" scheme="https://www.guoyaohua.com/tags/Transformer/"/>
+    <category term="FlashAttention" scheme="https://www.guoyaohua.com/tags/FlashAttention/"/>
+    <category term="Attention" scheme="https://www.guoyaohua.com/tags/Attention/"/>
+    <category term="CUDA" scheme="https://www.guoyaohua.com/tags/CUDA/"/>
+    <category term="GPU" scheme="https://www.guoyaohua.com/tags/GPU/"/>
+    <category term="深度学习" scheme="https://www.guoyaohua.com/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/"/>
     <category term="大模型" scheme="https://www.guoyaohua.com/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B/"/>
+    <id>https://www.guoyaohua.com/flash-attention-explained.html</id>
+    <link href="https://www.guoyaohua.com/flash-attention-explained.html"/>
+    <published>2026-04-28T21:00:00.000Z</published>
+    <summary>
+      <![CDATA[<center>FlashAttention 是现代大模型训练与推理中最重要的底层优化之一。它并没有改变注意力机制的数学结果，也不是近似算法，却能显著降低显存占用、提升计算速度。本文从标准 Attention 的显存瓶颈讲起，用图解方式拆开 FlashAttention 的核心思想：<strong>IO-aware、分块计算、在线 Softmax、SRAM 复用、反向重算</strong>。看完这篇，你会真正明白它为什么快、为什么省、什么时候有效、什么时候不明显。</center>]]>
+    </summary>
+    <title>【AI】FlashAttention 详解：为什么它能让大模型注意力计算又快又省显存？</title>
+    <updated>2026-04-28T14:04:43.658Z</updated>
+  </entry>
+  <entry>
+    <author>
+      <name>郭耀华</name>
+    </author>
+    <category term="Artificial Intelligence" scheme="https://www.guoyaohua.com/categories/Artificial-Intelligence/"/>
+    <category term="AI" scheme="https://www.guoyaohua.com/tags/AI/"/>
+    <category term="LLM" scheme="https://www.guoyaohua.com/tags/LLM/"/>
     <category term="Transformer" scheme="https://www.guoyaohua.com/tags/Transformer/"/>
     <category term="深度学习" scheme="https://www.guoyaohua.com/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/"/>
+    <category term="大模型" scheme="https://www.guoyaohua.com/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B/"/>
     <category term="注意力机制" scheme="https://www.guoyaohua.com/tags/%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6/"/>
     <category term="RoPE" scheme="https://www.guoyaohua.com/tags/RoPE/"/>
     <category term="RMSNorm" scheme="https://www.guoyaohua.com/tags/RMSNorm/"/>
@@ -114,7 +137,7 @@
     <link href="https://www.guoyaohua.com/deeplearning-workstation.html"/>
     <published>2026-03-31T14:51:35.348Z</published>
     <summary>
-      <![CDATA[<h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>接触深度学习已经快两年了，之前一直使用<a href="https://colab.research.google.com/">Google Colab</a>和<a href="https://www.kaggle.com/kernels">Kaggle Kernel</a>提供的免费GPU（Tesla K80）训练模型（最近Google将Colab的GPU升级为<strong>Tesla T4</strong>，计算速度又提升了一个档次），不过由于内地网络的原因，Google和Kaggle连接十分不稳定，经常断线重连，一直是很令人头痛的问题，而且二者均有很多限制，例如Google Colab一个脚本运行的最长时间为12h，Kaggle的为6h，数据集上传也存在问题，需要使用一些Trick才能达成目的，模型的保存、下载等都会耗费很多精力，总之体验不是很好，不过免费的羊毛让大家撸，肯定会有一些限制，也是可以理解的。</p>
+      <![CDATA[<h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>接触深度学习已经快两年了，之前一直使用<a href="https://colab.research.google.com">Google Colab</a>和<a href="https://www.kaggle.com/kernels">Kaggle Kernel</a>提供的免费GPU（Tesla K80）训练模型（最近Google将Colab的GPU升级为<strong>Tesla T4</strong>，计算速度又提升了一个档次），不过由于内地网络的原因，Google和Kaggle连接十分不稳定，经常断线重连，一直是很令人头痛的问题，而且二者均有很多限制，例如Google Colab一个脚本运行的最长时间为12h，Kaggle的为6h，数据集上传也存在问题，需要使用一些Trick才能达成目的，模型的保存、下载等都会耗费很多精力，总之体验不是很好，不过免费的羊毛让大家撸，肯定会有一些限制，也是可以理解的。</p>
 <p>对于租用云服务器，之前也尝试过，租用了一家小平台的GPU服务器，也存在一些操作上的困难，不适合程序调试，而且价格也不便宜。</p>
 <p>很早之前就想要搭建一个自己的深度学习工作站，不过机器成本的昂贵，一直阻碍着我攒机计划的进行。工欲善其事，必先利其器！最近终于下定决心，置办一个深度学习工作站主机。本文将我在这段时间选择、购置硬件的心得体会，分享给大家。</p>]]>
     </summary>
@@ -127,12 +150,12 @@
     </author>
     <category term="Artificial Intelligence" scheme="https://www.guoyaohua.com/categories/Artificial-Intelligence/"/>
     <category term="AI" scheme="https://www.guoyaohua.com/tags/AI/"/>
+    <category term="LLM" scheme="https://www.guoyaohua.com/tags/LLM/"/>
+    <category term="大模型" scheme="https://www.guoyaohua.com/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B/"/>
     <category term="Agent" scheme="https://www.guoyaohua.com/tags/Agent/"/>
     <category term="Tool" scheme="https://www.guoyaohua.com/tags/Tool/"/>
     <category term="MCP" scheme="https://www.guoyaohua.com/tags/MCP/"/>
     <category term="Skill" scheme="https://www.guoyaohua.com/tags/Skill/"/>
-    <category term="LLM" scheme="https://www.guoyaohua.com/tags/LLM/"/>
-    <category term="大模型" scheme="https://www.guoyaohua.com/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B/"/>
     <category term="人工智能" scheme="https://www.guoyaohua.com/tags/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/"/>
     <id>https://www.guoyaohua.com/%E3%80%90AI%E3%80%91%E4%B8%80%E6%96%87%E6%90%9E%E6%87%82AI%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5%EF%BC%9AAgent%E3%80%81Tool%E3%80%81MCP%E4%B8%8ESkill%E5%85%A8%E8%A7%A3%E6%9E%90.html</id>
     <link href="https://www.guoyaohua.com/%E3%80%90AI%E3%80%91%E4%B8%80%E6%96%87%E6%90%9E%E6%87%82AI%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5%EF%BC%9AAgent%E3%80%81Tool%E3%80%81MCP%E4%B8%8ESkill%E5%85%A8%E8%A7%A3%E6%9E%90.html"/>
