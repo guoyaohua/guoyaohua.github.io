@@ -321,15 +321,20 @@
     <div class="post-body" itemprop="articleBody"><center>很多 C# 开发者在写动态规划题时会习惯性写出 <code>int[][] dp = new int[m+1][n+1]();</code>，然后被编译器一句 <strong>CS0178: Invalid rank specifier</strong> 当头浇下。这个报错的根源不是手滑，而是混淆了 C# 中两种"二维数组"的本质：交错数组 <code>int[][]</code> 与多维数组 <code>int[,]</code>。本文从这个报错出发，把两者的语法、内存布局、性能、适用场景一次讲透。</center>
 
 <span id="more"></span>
+
 <h2 id="一、先解决报错：错误代码到底错在哪？"><a href="#一、先解决报错：错误代码到底错在哪？" class="headerlink" title="一、先解决报错：错误代码到底错在哪？"></a>一、先解决报错：错误代码到底错在哪？</h2><p>让我们直面这段经典的错误代码：</p>
 <figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">int</span>[][] dp = <span class="keyword">new</span> <span class="built_in">int</span>[m+<span class="number">1</span>][n+<span class="number">1</span>]();</span><br></pre></td></tr></table></figure>
+
 <p>编译器报错：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Line 12: Char 35: error CS0178: Invalid rank specifier:</span><br><span class="line">expected &#x27;,&#x27; or &#x27;]&#x27;</span><br></pre></td></tr></table></figure>
+
 <p>这一行代码同时犯了<strong>两个独立的语法错误</strong>，就算修掉一个，另一个也会让你继续报错。</p>
 <h3 id="1-1-错误一：交错数组无法在声明时一次性指定所有维度"><a href="#1-1-错误一：交错数组无法在声明时一次性指定所有维度" class="headerlink" title="1.1 错误一：交错数组无法在声明时一次性指定所有维度"></a>1.1 错误一：交错数组无法在声明时一次性指定所有维度</h3><p><code>int[][]</code> 在 C# 里是<strong>交错数组</strong>，本质是”数组的数组”——外层数组的每个元素本身又是一个独立的一维数组。所以初始化时只能告诉编译器”我外层有多少行”，每一行具体多长得<strong>之后再单独 new</strong>。</p>
 <figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ❌ 错误：交错数组不能一次指定两维</span></span><br><span class="line"><span class="built_in">int</span>[][] dp = <span class="keyword">new</span> <span class="built_in">int</span>[m+<span class="number">1</span>][n+<span class="number">1</span>];</span><br><span class="line"></span><br><span class="line"><span class="comment">// ✅ 正确：先 new 外层，再逐行 new 内层</span></span><br><span class="line"><span class="built_in">int</span>[][] dp = <span class="keyword">new</span> <span class="built_in">int</span>[m+<span class="number">1</span>][];</span><br><span class="line"><span class="keyword">for</span> (<span class="built_in">int</span> i = <span class="number">0</span>; i &lt;= m; i++)</span><br><span class="line">    dp[i] = <span class="keyword">new</span> <span class="built_in">int</span>[n+<span class="number">1</span>];</span><br></pre></td></tr></table></figure>
+
 <h3 id="1-2-错误二：数组初始化末尾不能加"><a href="#1-2-错误二：数组初始化末尾不能加" class="headerlink" title="1.2 错误二：数组初始化末尾不能加 ()"></a>1.2 错误二：数组初始化末尾不能加 <code>()</code></h3><p><code>()</code> 在 C# 里是<strong>调用语法</strong>——用于方法调用、构造函数调用。数组没有”无参构造函数”这一说，<code>new T[5]</code> 已经是完整的实例化表达式了，再加 <code>()</code> 就成了”对一个数组调用空参方法”，编译器自然不接受。</p>
 <figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ❌ 多余的括号</span></span><br><span class="line"><span class="built_in">int</span>[] arr = <span class="keyword">new</span> <span class="built_in">int</span>[<span class="number">5</span>]();</span><br><span class="line"><span class="built_in">int</span>[,] grid = <span class="keyword">new</span> <span class="built_in">int</span>[<span class="number">3</span>, <span class="number">3</span>]();</span><br><span class="line"></span><br><span class="line"><span class="comment">// ✅ 正确写法</span></span><br><span class="line"><span class="built_in">int</span>[] arr = <span class="keyword">new</span> <span class="built_in">int</span>[<span class="number">5</span>];</span><br><span class="line"><span class="built_in">int</span>[,] grid = <span class="keyword">new</span> <span class="built_in">int</span>[<span class="number">3</span>, <span class="number">3</span>];</span><br></pre></td></tr></table></figure>
+
 <h3 id="1-3-报错位置-Char-35-是怎么定位出来的？"><a href="#1-3-报错位置-Char-35-是怎么定位出来的？" class="headerlink" title="1.3 报错位置 Char 35 是怎么定位出来的？"></a>1.3 报错位置 <code>Char 35</code> 是怎么定位出来的？</h3><p>编译器从左到右解析 <code>new int[m+1][n+1]</code>，在读完第一个 <code>[m+1]</code> 后期待两种可能的下一个 token：</p>
 <ul>
 <li><code>]</code> —— 表示交错数组的外层维度声明结束</li>
@@ -338,24 +343,29 @@
 <p>但实际上读到的是 <code>[</code>（开始第二个 <code>[n+1]</code>），完全不在期待集合里，于是抛出 <code>CS0178: expected &#39;,&#39; or &#39;]&#39;</code>。</p>
 <h2 id="二、交错数组-int-：数组的数组"><a href="#二、交错数组-int-：数组的数组" class="headerlink" title="二、交错数组 int[][]：数组的数组"></a>二、交错数组 <code>int[][]</code>：数组的数组</h2><p>交错数组（Jagged Array）的官方定义就一句话：<strong>它的每个元素都是一个数组</strong>。可以把它想象成一栋公寓楼——外层数组是楼栋名册，每一项指向一户人家（内层数组），每户人家的房间数（内层数组长度）可以完全不同。</p>
 <h3 id="2-1-三种典型初始化写法"><a href="#2-1-三种典型初始化写法" class="headerlink" title="2.1 三种典型初始化写法"></a>2.1 三种典型初始化写法</h3><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 写法 1：等长二维（最常见的算法题用法）</span></span><br><span class="line"><span class="built_in">int</span>[][] dp = <span class="keyword">new</span> <span class="built_in">int</span>[m + <span class="number">1</span>][];</span><br><span class="line"><span class="keyword">for</span> (<span class="built_in">int</span> i = <span class="number">0</span>; i &lt;= m; i++)</span><br><span class="line">    dp[i] = <span class="keyword">new</span> <span class="built_in">int</span>[n + <span class="number">1</span>];</span><br><span class="line"></span><br><span class="line"><span class="comment">// 写法 2：每行不等长（交错数组真正的优势所在）</span></span><br><span class="line"><span class="built_in">int</span>[][] triangle = <span class="keyword">new</span> <span class="built_in">int</span>[<span class="number">3</span>][];</span><br><span class="line">triangle[<span class="number">0</span>] = <span class="keyword">new</span> <span class="built_in">int</span>[] &#123; <span class="number">1</span> &#125;;</span><br><span class="line">triangle[<span class="number">1</span>] = <span class="keyword">new</span> <span class="built_in">int</span>[] &#123; <span class="number">2</span>, <span class="number">3</span> &#125;;</span><br><span class="line">triangle[<span class="number">2</span>] = <span class="keyword">new</span> <span class="built_in">int</span>[] &#123; <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span> &#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 写法 3：声明即赋值</span></span><br><span class="line"><span class="built_in">int</span>[][] data =</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">new</span>[] &#123; <span class="number">1</span>, <span class="number">2</span> &#125;,</span><br><span class="line">    <span class="keyword">new</span>[] &#123; <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span> &#125;,</span><br><span class="line">    <span class="keyword">new</span>[] &#123; <span class="number">6</span> &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
 <h3 id="2-2-访问语法：双重方括号"><a href="#2-2-访问语法：双重方括号" class="headerlink" title="2.2 访问语法：双重方括号"></a>2.2 访问语法：双重方括号</h3><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">dp[<span class="number">0</span>][<span class="number">0</span>] = <span class="number">1</span>;          <span class="comment">// 写</span></span><br><span class="line"><span class="built_in">int</span> v = dp[<span class="number">1</span>][<span class="number">2</span>];      <span class="comment">// 读</span></span><br><span class="line"><span class="built_in">int</span> rows = dp.Length;  <span class="comment">// 行数</span></span><br><span class="line"><span class="built_in">int</span> cols0 = dp[<span class="number">0</span>].Length; <span class="comment">// 第 0 行的列数（每行可能不同！）</span></span><br></pre></td></tr></table></figure>
+
 <h3 id="2-3-内存布局：分散在堆上的多块内存"><a href="#2-3-内存布局：分散在堆上的多块内存" class="headerlink" title="2.3 内存布局：分散在堆上的多块内存"></a>2.3 内存布局：分散在堆上的多块内存</h3><p>交错数组的内存是<strong>非连续</strong>的：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">栈：dp ──┐</span><br><span class="line">         ↓</span><br><span class="line">堆：[ref0][ref1][ref2][ref3]   ← 外层数组（只存引用）</span><br><span class="line">       │     │     │     │</span><br><span class="line">       ↓     ↓     ↓     ↓</span><br><span class="line">     [a,b][c,d,e][f][g,h,i,j]  ← 每行各自独立分配</span><br></pre></td></tr></table></figure>
+
 <ul>
-<li><strong>优点</strong>：每行独立分配，可以”按需供给”，避免空间浪费；可以单独替换/排序某一行。</li>
+<li><strong>优点</strong>：每行独立分配，可以”按需供给”，避免空间浪费；可以单独替换&#x2F;排序某一行。</li>
 <li><strong>缺点</strong>：访问 <code>dp[i][j]</code> 需要两次寻址（先取外层引用，再取内层元素），CPU 缓存命中率较低。</li>
 </ul>
 <h2 id="三、多维数组-int-：真正的矩形矩阵"><a href="#三、多维数组-int-：真正的矩形矩阵" class="headerlink" title="三、多维数组 int[,]：真正的矩形矩阵"></a>三、多维数组 <code>int[,]</code>：真正的矩形矩阵</h2><p>多维数组（Multidimensional Array）才是大多数人脑海中”二维数组”的样子——一块<strong>单一的连续内存</strong>，按行优先（row-major）顺序铺开，所有行长度严格一致。</p>
 <h3 id="3-1-初始化方式"><a href="#3-1-初始化方式" class="headerlink" title="3.1 初始化方式"></a>3.1 初始化方式</h3><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 写法 1：指定大小</span></span><br><span class="line"><span class="built_in">int</span>[,] dp = <span class="keyword">new</span> <span class="built_in">int</span>[m + <span class="number">1</span>, n + <span class="number">1</span>];</span><br><span class="line"></span><br><span class="line"><span class="comment">// 写法 2：指定大小 + 初始值</span></span><br><span class="line"><span class="built_in">int</span>[,] grid = <span class="keyword">new</span> <span class="built_in">int</span>[<span class="number">2</span>, <span class="number">3</span>] &#123; &#123; <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span> &#125;, &#123; <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span> &#125; &#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 写法 3：编译器自动推断维度</span></span><br><span class="line"><span class="built_in">int</span>[,] grid2 = &#123; &#123; <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span> &#125;, &#123; <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span> &#125; &#125;;</span><br></pre></td></tr></table></figure>
+
 <h3 id="3-2-访问语法：单方括号-逗号"><a href="#3-2-访问语法：单方括号-逗号" class="headerlink" title="3.2 访问语法：单方括号 + 逗号"></a>3.2 访问语法：单方括号 + 逗号</h3><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">dp[<span class="number">0</span>, <span class="number">0</span>] = <span class="number">1</span>;</span><br><span class="line"><span class="built_in">int</span> v = dp[<span class="number">1</span>, <span class="number">2</span>];</span><br><span class="line"></span><br><span class="line"><span class="built_in">int</span> rows = dp.GetLength(<span class="number">0</span>); <span class="comment">// 第 0 维长度（行数）</span></span><br><span class="line"><span class="built_in">int</span> cols = dp.GetLength(<span class="number">1</span>); <span class="comment">// 第 1 维长度（列数）</span></span><br><span class="line"><span class="built_in">int</span> total = dp.Length;      <span class="comment">// 总元素数 = rows * cols</span></span><br></pre></td></tr></table></figure>
+
 <p>注意：多维数组<strong>不能用 <code>dp.Length</code> 拿到行数</strong>，必须用 <code>GetLength(dim)</code>。</p>
 <h3 id="3-3-内存布局：单块连续内存"><a href="#3-3-内存布局：单块连续内存" class="headerlink" title="3.3 内存布局：单块连续内存"></a>3.3 内存布局：单块连续内存</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">栈：dp ──┐</span><br><span class="line">         ↓</span><br><span class="line">堆：[a,b,c,d,e,f,g,h,i]  ← 单一连续内存块（行优先排布）</span><br><span class="line">     └──row0──┘└──row1──┘└──row2──┘</span><br></pre></td></tr></table></figure>
+
 <ul>
 <li><strong>优点</strong>：访问 <code>dp[i, j]</code> 只需一次地址计算（<code>base + (i * cols + j) * sizeof(int)</code>），缓存友好，遍历快。</li>
 <li><strong>缺点</strong>：所有行必须等长；扩容只能整体重建。</li>
 </ul>
-<h2 id="四、核心区别一览表"><a href="#四、核心区别一览表" class="headerlink" title="四、核心区别一览表"></a>四、核心区别一览表</h2><div class="table-container">
-<table>
+<h2 id="四、核心区别一览表"><a href="#四、核心区别一览表" class="headerlink" title="四、核心区别一览表"></a>四、核心区别一览表</h2><table>
 <thead>
 <tr>
 <th>维度</th>
@@ -363,8 +373,7 @@
 <th>多维数组 <code>int[,]</code></th>
 </tr>
 </thead>
-<tbody>
-<tr>
+<tbody><tr>
 <td>本质</td>
 <td>数组的数组（引用集合）</td>
 <td>单一连续内存块</td>
@@ -405,7 +414,7 @@
 <td>快，缓存友好</td>
 </tr>
 <tr>
-<td><code>LINQ</code> / <code>foreach</code></td>
+<td><code>LINQ</code> &#x2F; <code>foreach</code></td>
 <td>完整支持</td>
 <td>支持但需 <code>Cast&lt;T&gt;()</code> 等转换</td>
 </tr>
@@ -414,19 +423,21 @@
 <td>行数</td>
 <td>总元素数（不是行数！）</td>
 </tr>
-</tbody>
-</table>
-</div>
-<h2 id="五、性能与-JIT：为什么很多算法题反而推荐交错数组？"><a href="#五、性能与-JIT：为什么很多算法题反而推荐交错数组？" class="headerlink" title="五、性能与 JIT：为什么很多算法题反而推荐交错数组？"></a>五、性能与 JIT：为什么很多算法题反而推荐交错数组？</h2><p>很多人想当然地以为”连续内存=快”，所以多维数组一定胜过交错数组。但在 .NET 上<strong>实测往往相反</strong>——尤其是密集的 <code>dp[i][j]</code> 风格访问，<strong>交错数组反而更快</strong>。原因有两点：</p>
+</tbody></table>
+<h2 id="五、性能与-JIT：为什么很多算法题反而推荐交错数组？"><a href="#五、性能与-JIT：为什么很多算法题反而推荐交错数组？" class="headerlink" title="五、性能与 JIT：为什么很多算法题反而推荐交错数组？"></a>五、性能与 JIT：为什么很多算法题反而推荐交错数组？</h2><p>很多人想当然地以为”连续内存&#x3D;快”，所以多维数组一定胜过交错数组。但在 .NET 上<strong>实测往往相反</strong>——尤其是密集的 <code>dp[i][j]</code> 风格访问，<strong>交错数组反而更快</strong>。原因有两点：</p>
 <ol>
-<li><strong>JIT 对一维数组的优化更激进</strong>：CLR 对 <code>T[]</code> 的边界检查、向量化、内联做了大量优化。<code>int[][]</code> 的内层就是普通 <code>int[]</code>，全程吃尽这套红利；而 <code>int[,]</code> 走的是另一套 IL 指令（<code>Array.GetValue</code> / <code>SetValue</code> 风格的封装），优化没有那么彻底。</li>
+<li><strong>JIT 对一维数组的优化更激进</strong>：CLR 对 <code>T[]</code> 的边界检查、向量化、内联做了大量优化。<code>int[][]</code> 的内层就是普通 <code>int[]</code>，全程吃尽这套红利；而 <code>int[,]</code> 走的是另一套 IL 指令（<code>Array.GetValue</code> &#x2F; <code>SetValue</code> 风格的封装），优化没有那么彻底。</li>
 <li><strong>行级局部性其实够用</strong>：动态规划往往是”逐行扫描”，交错数组只要每一行内部连续就够了，外层那次额外寻址在循环中可以被 JIT 提到行外。</li>
 </ol>
 <p>所以经验法则是：<strong>追求极致性能的密集数值计算</strong>（深度学习张量、图像像素）请用 <code>int[,]</code> 配合 <code>unsafe</code> 或 <code>Span&lt;T&gt;</code>；<strong>日常业务和算法题</strong>优先用 <code>int[][]</code>，简单又快。</p>
 <h2 id="六、三个高频踩坑"><a href="#六、三个高频踩坑" class="headerlink" title="六、三个高频踩坑"></a>六、三个高频踩坑</h2><h3 id="坑-1：把多维写法套到交错数组上"><a href="#坑-1：把多维写法套到交错数组上" class="headerlink" title="坑 1：把多维写法套到交错数组上"></a>坑 1：把多维写法套到交错数组上</h3><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ❌</span></span><br><span class="line"><span class="built_in">int</span>[][] dp = <span class="keyword">new</span> <span class="built_in">int</span>[m + <span class="number">1</span>][n + <span class="number">1</span>];</span><br><span class="line"><span class="comment">// ✅</span></span><br><span class="line"><span class="built_in">int</span>[][] dp = <span class="keyword">new</span> <span class="built_in">int</span>[m + <span class="number">1</span>][];</span><br><span class="line"><span class="keyword">for</span> (<span class="built_in">int</span> i = <span class="number">0</span>; i &lt;= m; i++) dp[i] = <span class="keyword">new</span> <span class="built_in">int</span>[n + <span class="number">1</span>];</span><br></pre></td></tr></table></figure>
+
 <h3 id="坑-2：数组初始化加"><a href="#坑-2：数组初始化加" class="headerlink" title="坑 2：数组初始化加 ()"></a>坑 2：数组初始化加 <code>()</code></h3><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ❌</span></span><br><span class="line"><span class="built_in">int</span>[,] dp = <span class="keyword">new</span> <span class="built_in">int</span>[m + <span class="number">1</span>, n + <span class="number">1</span>]();</span><br><span class="line"><span class="comment">// ✅</span></span><br><span class="line"><span class="built_in">int</span>[,] dp = <span class="keyword">new</span> <span class="built_in">int</span>[m + <span class="number">1</span>, n + <span class="number">1</span>];</span><br></pre></td></tr></table></figure>
+
 <h3 id="坑-3：索引语法张冠李戴"><a href="#坑-3：索引语法张冠李戴" class="headerlink" title="坑 3：索引语法张冠李戴"></a>坑 3：索引语法张冠李戴</h3><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">int</span>[][] a = ...;</span><br><span class="line"><span class="built_in">int</span>[,]  b = ...;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ❌ 编译错</span></span><br><span class="line"><span class="built_in">int</span> x = a[i, j];</span><br><span class="line"><span class="built_in">int</span> y = b[i][j];</span><br><span class="line"></span><br><span class="line"><span class="comment">// ✅</span></span><br><span class="line"><span class="built_in">int</span> x = a[i][j];</span><br><span class="line"><span class="built_in">int</span> y = b[i, j];</span><br></pre></td></tr></table></figure>
+
 <h3 id="坑-4（隐藏关卡）：多维数组的-Length-不是行数"><a href="#坑-4（隐藏关卡）：多维数组的-Length-不是行数" class="headerlink" title="坑 4（隐藏关卡）：多维数组的 Length 不是行数"></a>坑 4（隐藏关卡）：多维数组的 <code>Length</code> 不是行数</h3><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">int</span>[,] grid = <span class="keyword">new</span> <span class="built_in">int</span>[<span class="number">3</span>, <span class="number">4</span>];</span><br><span class="line">Console.WriteLine(grid.Length);          <span class="comment">// 输出 12，不是 3！</span></span><br><span class="line">Console.WriteLine(grid.GetLength(<span class="number">0</span>));    <span class="comment">// 输出 3，这才是行数</span></span><br></pre></td></tr></table></figure>
+
 <h2 id="七、实战选型决策树"><a href="#七、实战选型决策树" class="headerlink" title="七、实战选型决策树"></a>七、实战选型决策树</h2><p>遇到”二维数组”需求时，按这套流程判断即可：</p>
 <ol>
 <li><strong>每行长度都一样吗？</strong><ul>
@@ -435,7 +446,7 @@
 </ul>
 </li>
 <li><strong>是否做密集数值计算（图像、矩阵乘、张量）？</strong><ul>
-<li>是 → <strong>多维数组</strong> <code>int[,]</code>（或更进一步 <code>Span&lt;T&gt;</code> / <code>Memory&lt;T&gt;</code>）。</li>
+<li>是 → <strong>多维数组</strong> <code>int[,]</code>（或更进一步 <code>Span&lt;T&gt;</code> &#x2F; <code>Memory&lt;T&gt;</code>）。</li>
 <li>否 → 进入第 3 步。</li>
 </ul>
 </li>
