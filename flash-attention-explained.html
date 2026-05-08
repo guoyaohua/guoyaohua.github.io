@@ -29,7 +29,7 @@
 <meta property="og:description" content="FlashAttention 是现代大模型训练与推理中最重要的底层优化之一。它并没有改变注意力机制的数学结果，也不是近似算法，却能显著降低显存占用、提升计算速度。本文从标准 Attention 的显存瓶颈讲起，用图解方式拆开 FlashAttention 的核心思想：IO-aware、分块计算、在线 Softmax、SRAM 复用、反向重算。看完这篇，你会真正明白它为什么快、为什么省、什么时候有效">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-04-28T21:00:00.000Z">
-<meta property="article:modified_time" content="2026-04-28T14:04:43.658Z">
+<meta property="article:modified_time" content="2026-05-08T14:24:06.744Z">
 <meta property="article:author" content="郭耀华">
 <meta property="article:tag" content="AI">
 <meta property="article:tag" content="Attention">
@@ -177,7 +177,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E5%85%88%E8%AF%B4%E7%BB%93%E8%AE%BA%EF%BC%9AFlashAttention-%E5%88%B0%E5%BA%95%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-text">一、先说结论：FlashAttention 到底是什么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E5%85%88%E5%A4%8D%E4%B9%A0%E6%A0%87%E5%87%86-Attention%EF%BC%9A%E6%85%A2%E5%9C%A8%E5%93%AA%E9%87%8C%EF%BC%9F"><span class="nav-text">二、先复习标准 Attention：慢在哪里？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E7%9C%9F%E6%AD%A3%E7%9A%84%E7%93%B6%E9%A2%88%EF%BC%9A%E4%B8%8D%E6%98%AF%E7%AE%97%E4%B8%8D%E5%8A%A8%EF%BC%8C%E8%80%8C%E6%98%AF%E6%90%AC%E4%B8%8D%E5%8A%A8"><span class="nav-text">三、真正的瓶颈：不是算不动，而是搬不动</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81FlashAttention-%E7%9A%84%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3%EF%BC%9A%E4%B8%8D%E8%A6%81%E6%8A%8A%E6%95%B4%E5%BC%A0%E6%B3%A8%E6%84%8F%E5%8A%9B%E8%A1%A8%E6%91%8A%E5%BC%80"><span class="nav-text">四、FlashAttention 的核心思想：不要把整张注意力表摊开</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E5%88%86%E5%9D%97%E8%AE%A1%E7%AE%97%EF%BC%9ATiling"><span class="nav-text">五、分块计算：Tiling</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E3%80%81%E5%9C%A8%E7%BA%BF-Softmax%EF%BC%9A%E8%BE%B9%E7%9C%8B%E8%BE%B9%E6%9B%B4%E6%96%B0%E5%85%A8%E5%B1%80%E7%BB%93%E6%9E%9C"><span class="nav-text">六、在线 Softmax：边看边更新全局结果</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%83%E3%80%81FlashAttention-%E7%9A%84%E5%AE%8C%E6%95%B4%E6%B5%81%E7%A8%8B"><span class="nav-text">七、FlashAttention 的完整流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AB%E3%80%81%E4%B8%BA%E4%BB%80%E4%B9%88%E5%AE%83%E7%9C%81%E6%98%BE%E5%AD%98%EF%BC%9F"><span class="nav-text">八、为什么它省显存？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B9%9D%E3%80%81%E4%B8%BA%E4%BB%80%E4%B9%88%E5%AE%83%E6%9B%B4%E5%BF%AB%EF%BC%9F"><span class="nav-text">九、为什么它更快？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E3%80%81%E5%8F%8D%E5%90%91%E4%BC%A0%E6%92%AD%EF%BC%9A%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BF%98%E8%A6%81%E9%87%8D%E7%AE%97%EF%BC%9F"><span class="nav-text">十、反向传播：为什么还要重算？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%B8%80%E3%80%81FlashAttention-v1%E3%80%81v2%E3%80%81v3-%E6%9C%89%E4%BB%80%E4%B9%88%E5%8C%BA%E5%88%AB%EF%BC%9F"><span class="nav-text">十一、FlashAttention v1、v2、v3 有什么区别？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#11-1-FlashAttention-v1"><span class="nav-text">11.1 FlashAttention v1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#11-2-FlashAttention-v2"><span class="nav-text">11.2 FlashAttention v2</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#11-3-FlashAttention-v3"><span class="nav-text">11.3 FlashAttention v3</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%BA%8C%E3%80%81%E5%AE%83%E5%92%8C-Sparse-Attention%E3%80%81Linear-Attention-%E6%9C%89%E4%BB%80%E4%B9%88%E5%8C%BA%E5%88%AB%EF%BC%9F"><span class="nav-text">十二、它和 Sparse Attention、Linear Attention 有什么区别？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%B8%89%E3%80%81%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E6%94%B6%E7%9B%8A%E6%9C%80%E5%A4%A7%EF%BC%9F"><span class="nav-text">十三、什么时候收益最大？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#13-1-%E6%94%B6%E7%9B%8A%E6%98%8E%E6%98%BE%E7%9A%84%E5%9C%BA%E6%99%AF"><span class="nav-text">13.1 收益明显的场景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#13-2-%E6%94%B6%E7%9B%8A%E4%B8%8D%E6%98%8E%E6%98%BE%E7%9A%84%E5%9C%BA%E6%99%AF"><span class="nav-text">13.2 收益不明显的场景</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E5%9B%9B%E3%80%81PyTorch-%E4%B8%AD%E6%80%8E%E4%B9%88%E7%94%A8%EF%BC%9F"><span class="nav-text">十四、PyTorch 中怎么用？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#14-1-PyTorch-SDPA"><span class="nav-text">14.1 PyTorch SDPA</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#14-2-Transformers-%E4%B8%AD%E7%9A%84%E4%BD%BF%E7%94%A8"><span class="nav-text">14.2 Transformers 中的使用</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%BA%94%E3%80%81%E5%B8%B8%E8%A7%81%E8%AF%AF%E5%8C%BA"><span class="nav-text">十五、常见误区</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%AF%E5%8C%BA-1%EF%BC%9AFlashAttention-%E6%98%AF%E8%BF%91%E4%BC%BC%E7%AE%97%E6%B3%95"><span class="nav-text">误区 1：FlashAttention 是近似算法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%AF%E5%8C%BA-2%EF%BC%9AFlashAttention-%E4%BC%9A%E5%87%8F%E5%B0%91%E7%90%86%E8%AE%BA-FLOPs"><span class="nav-text">误区 2：FlashAttention 会减少理论 FLOPs</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%AF%E5%8C%BA-3%EF%BC%9A%E7%94%A8%E4%BA%86-FlashAttention-%E5%B0%B1%E4%B8%80%E5%AE%9A%E6%9B%B4%E5%BF%AB"><span class="nav-text">误区 3：用了 FlashAttention 就一定更快</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%AF%E5%8C%BA-4%EF%BC%9AFlashAttention-%E8%83%BD%E8%A7%A3%E5%86%B3%E6%89%80%E6%9C%89%E9%95%BF%E4%B8%8A%E4%B8%8B%E6%96%87%E9%97%AE%E9%A2%98"><span class="nav-text">误区 4：FlashAttention 能解决所有长上下文问题</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E5%85%AD%E3%80%81%E9%9D%A2%E8%AF%95%E5%9B%9E%E7%AD%94%E6%A8%A1%E6%9D%BF"><span class="nav-text">十六、面试回答模板</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%B8%83%E3%80%81%E7%BB%88%E6%9E%81%E6%80%BB%E7%BB%93"><span class="nav-text">十七、终极总结</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E5%85%88%E8%AF%B4%E7%BB%93%E8%AE%BA%EF%BC%9AFlashAttention-%E5%88%B0%E5%BA%95%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-text">一、先说结论：FlashAttention 到底是什么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E5%85%88%E5%A4%8D%E4%B9%A0%E6%A0%87%E5%87%86-Attention%EF%BC%9A%E6%85%A2%E5%9C%A8%E5%93%AA%E9%87%8C%EF%BC%9F"><span class="nav-text">二、先复习标准 Attention：慢在哪里？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E7%9C%9F%E6%AD%A3%E7%9A%84%E7%93%B6%E9%A2%88%EF%BC%9A%E4%B8%8D%E6%98%AF%E7%AE%97%E4%B8%8D%E5%8A%A8%EF%BC%8C%E8%80%8C%E6%98%AF%E6%90%AC%E4%B8%8D%E5%8A%A8"><span class="nav-text">三、真正的瓶颈：不是算不动，而是搬不动</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-%E6%A0%87%E5%87%86-Attention-vs-FlashAttention-%E6%95%B0%E6%8D%AE%E6%B5%81%E5%AF%B9%E6%AF%94"><span class="nav-text">3.1 标准 Attention vs FlashAttention 数据流对比</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81FlashAttention-%E7%9A%84%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3%EF%BC%9A%E4%B8%8D%E8%A6%81%E6%8A%8A%E6%95%B4%E5%BC%A0%E6%B3%A8%E6%84%8F%E5%8A%9B%E8%A1%A8%E6%91%8A%E5%BC%80"><span class="nav-text">四、FlashAttention 的核心思想：不要把整张注意力表摊开</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E5%88%86%E5%9D%97%E8%AE%A1%E7%AE%97%EF%BC%9ATiling"><span class="nav-text">五、分块计算：Tiling</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E3%80%81%E5%9C%A8%E7%BA%BF-Softmax%EF%BC%9A%E8%BE%B9%E7%9C%8B%E8%BE%B9%E6%9B%B4%E6%96%B0%E5%85%A8%E5%B1%80%E7%BB%93%E6%9E%9C"><span class="nav-text">六、在线 Softmax：边看边更新全局结果</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%83%E3%80%81FlashAttention-%E7%9A%84%E5%AE%8C%E6%95%B4%E6%B5%81%E7%A8%8B"><span class="nav-text">七、FlashAttention 的完整流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AB%E3%80%81%E4%B8%BA%E4%BB%80%E4%B9%88%E5%AE%83%E7%9C%81%E6%98%BE%E5%AD%98%EF%BC%9F"><span class="nav-text">八、为什么它省显存？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B9%9D%E3%80%81%E4%B8%BA%E4%BB%80%E4%B9%88%E5%AE%83%E6%9B%B4%E5%BF%AB%EF%BC%9F"><span class="nav-text">九、为什么它更快？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E3%80%81%E5%8F%8D%E5%90%91%E4%BC%A0%E6%92%AD%EF%BC%9A%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BF%98%E8%A6%81%E9%87%8D%E7%AE%97%EF%BC%9F"><span class="nav-text">十、反向传播：为什么还要重算？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%B8%80%E3%80%81FlashAttention-v1%E3%80%81v2%E3%80%81v3-%E6%9C%89%E4%BB%80%E4%B9%88%E5%8C%BA%E5%88%AB%EF%BC%9F"><span class="nav-text">十一、FlashAttention v1、v2、v3 有什么区别？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#11-1-FlashAttention-v1%EF%BC%882022%EF%BC%89"><span class="nav-text">11.1 FlashAttention v1（2022）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#11-2-FlashAttention-v2%EF%BC%882023%EF%BC%89"><span class="nav-text">11.2 FlashAttention v2（2023）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#11-3-FlashAttention-v3%EF%BC%882024%EF%BC%89"><span class="nav-text">11.3 FlashAttention v3（2024）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%BA%8C%E3%80%81%E5%AE%83%E5%92%8C-Sparse-Attention%E3%80%81Linear-Attention-%E6%9C%89%E4%BB%80%E4%B9%88%E5%8C%BA%E5%88%AB%EF%BC%9F"><span class="nav-text">十二、它和 Sparse Attention、Linear Attention 有什么区别？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%B8%89%E3%80%81%E8%AE%AD%E7%BB%83%E3%80%81Prefill%E3%80%81Decode-%E4%B8%89%E7%A7%8D%E5%9C%BA%E6%99%AF%E4%B8%8B%E7%9A%84%E6%94%B6%E7%9B%8A%E4%B8%8D%E5%90%8C"><span class="nav-text">十三、训练、Prefill、Decode 三种场景下的收益不同</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E5%9B%9B%E3%80%81%E4%B8%8E-PagedAttention%E3%80%81KV-Cache-%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="nav-text">十四、与 PagedAttention、KV Cache 的关系</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%B8%89%E3%80%81%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E6%94%B6%E7%9B%8A%E6%9C%80%E5%A4%A7%EF%BC%9F"><span class="nav-text">十三、什么时候收益最大？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#13-1-%E6%94%B6%E7%9B%8A%E6%98%8E%E6%98%BE%E7%9A%84%E5%9C%BA%E6%99%AF"><span class="nav-text">13.1 收益明显的场景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#13-2-%E6%94%B6%E7%9B%8A%E4%B8%8D%E6%98%8E%E6%98%BE%E7%9A%84%E5%9C%BA%E6%99%AF"><span class="nav-text">13.2 收益不明显的场景</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E5%9B%9B%E3%80%81PyTorch-%E4%B8%AD%E6%80%8E%E4%B9%88%E7%94%A8%EF%BC%9F"><span class="nav-text">十四、PyTorch 中怎么用？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#14-1-PyTorch-SDPA"><span class="nav-text">14.1 PyTorch SDPA</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#14-2-Hugging-Face-Transformers-%E4%B8%AD%E7%9A%84%E4%BD%BF%E7%94%A8"><span class="nav-text">14.2 Hugging Face Transformers 中的使用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#14-3-%E7%9B%B4%E6%8E%A5%E8%B0%83-flash-attn-%E5%8C%85"><span class="nav-text">14.3 直接调 flash-attn 包</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E5%85%AD%E3%80%81%E5%B8%B8%E8%A7%81%E8%AF%AF%E5%8C%BA"><span class="nav-text">十六、常见误区</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%AF%E5%8C%BA-1%EF%BC%9AFlashAttention-%E6%98%AF%E8%BF%91%E4%BC%BC%E7%AE%97%E6%B3%95"><span class="nav-text">误区 1：FlashAttention 是近似算法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%AF%E5%8C%BA-2%EF%BC%9AFlashAttention-%E4%BC%9A%E5%87%8F%E5%B0%91%E7%90%86%E8%AE%BA-FLOPs"><span class="nav-text">误区 2：FlashAttention 会减少理论 FLOPs</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%AF%E5%8C%BA-3%EF%BC%9A%E7%94%A8%E4%BA%86-FlashAttention-%E5%B0%B1%E4%B8%80%E5%AE%9A%E6%9B%B4%E5%BF%AB"><span class="nav-text">误区 3：用了 FlashAttention 就一定更快</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%AF%E5%8C%BA-4%EF%BC%9AFlashAttention-%E8%83%BD%E8%A7%A3%E5%86%B3%E6%89%80%E6%9C%89%E9%95%BF%E4%B8%8A%E4%B8%8B%E6%96%87%E9%97%AE%E9%A2%98"><span class="nav-text">误区 4：FlashAttention 能解决所有长上下文问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%AF%E5%8C%BA-5%EF%BC%9AFlashAttention-%E7%AE%97%E5%87%BA%E6%9D%A5%E5%92%8C%E6%A0%87%E5%87%86-Attention-%E6%AF%94%E7%89%B9%E4%B8%80%E8%87%B4"><span class="nav-text">误区 5：FlashAttention 算出来和标准 Attention 比特一致</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%B8%83%E3%80%81%E9%9D%A2%E8%AF%95%E5%9B%9E%E7%AD%94%E6%A8%A1%E6%9D%BF"><span class="nav-text">十七、面试回答模板</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E5%85%AB%E3%80%81%E7%BB%88%E6%9E%81%E6%80%BB%E7%BB%93"><span class="nav-text">十八、终极总结</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -281,9 +281,15 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2026-04-28 21:00:00 / 修改时间：14:04:43" itemprop="dateCreated datePublished" datetime="2026-04-28T21:00:00Z">2026-04-28</time>
+      <time title="创建时间：2026-04-28 21:00:00" itemprop="dateCreated datePublished" datetime="2026-04-28T21:00:00Z">2026-04-28</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2026-05-08 14:24:06" itemprop="dateModified" datetime="2026-05-08T14:24:06Z">2026-05-08</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -302,14 +308,14 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>7.6k</span>
+      <span>15k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>7 分钟</span>
+      <span>14 分钟</span>
     </span>
 </div>
 
@@ -372,33 +378,40 @@ $$
 <thead>
 <tr>
 <th>存储位置</th>
-<th style="text-align:right">速度</th>
-<th style="text-align:right">容量</th>
+<th style="text-align:right">典型容量</th>
+<th style="text-align:right">典型带宽</th>
+<th style="text-align:right">相对速度</th>
 <th>类比</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>HBM / 显存</td>
+<td style="text-align:right">数十 GB</td>
+<td style="text-align:right">~1.5–3 TB/s</td>
 <td style="text-align:right">慢</td>
-<td style="text-align:right">大</td>
 <td>仓库</td>
 </tr>
 <tr>
-<td>SRAM / Shared Memory</td>
+<td>SRAM / Shared Memory（每 SM）</td>
+<td style="text-align:right">~100 KB 量级</td>
+<td style="text-align:right">~10+ TB/s</td>
 <td style="text-align:right">快</td>
-<td style="text-align:right">小</td>
 <td>操作台</td>
 </tr>
 <tr>
 <td>Register / 寄存器</td>
+<td style="text-align:right">几 KB</td>
+<td style="text-align:right">极快</td>
 <td style="text-align:right">最快</td>
-<td style="text-align:right">极小</td>
 <td>手里拿着的工具</td>
 </tr>
 </tbody>
 </table>
 </div>
+<p>注意：<strong>HBM 容量大但带宽相对慢，SRAM 容量极小但带宽快一个数量级</strong>。这就是 FlashAttention 设计的物理基础：尽量让数据呆在 SRAM 里多算几次，少进出 HBM。</p>
+<div align="center"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 320" style="max-width:100%;height:auto;font-family:Arial,'Helvetica Neue',sans-serif;"><style>.bar{stroke:#333;stroke-width:1}.lbl{font-size:13px;fill:#222}.ttl{font-size:15px;font-weight:bold;fill:#111;text-anchor:middle}.note{font-size:12px;fill:#555}</style><text x="380" y="24" class="ttl">GPU 内存层级：容量越大越慢，越靠近核心越快</text><text x="40" y="70" class="lbl">HBM 显存</text><rect class="bar" x="180" y="55" width="520" height="22" fill="#ffcc80"/><text x="710" y="72" class="lbl" text-anchor="end">~80 GB / ~3 TB/s（H100 SXM）</text><text x="40" y="120" class="lbl">L2 Cache</text><rect class="bar" x="180" y="105" width="220" height="22" fill="#ffe082"/><text x="410" y="122" class="lbl">~50 MB / ~5 TB/s</text><text x="40" y="170" class="lbl">SRAM / Shared Memory</text><rect class="bar" x="240" y="155" width="100" height="22" fill="#a5d6a7"/><text x="350" y="172" class="lbl">~228 KB/SM · 上百 SM · &gt;10 TB/s 等效带宽</text><text x="40" y="220" class="lbl">Register</text><rect class="bar" x="180" y="205" width="40" height="22" fill="#90caf9"/><text x="230" y="222" class="lbl">~256 KB/SM · 极快</text><text x="380" y="270" class="ttl">FlashAttention 的目标：把热数据放在 SRAM/Register 里反复使用</text><text x="380" y="295" class="note" text-anchor="middle">数字仅为典型量级示意（H100/A100），不同卡型规格不同。</text></svg></div>
+
 <p>标准 Attention 的做法像这样：</p>
 <figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Q、K 从显存读入 → 计算 S → 把 S 写回显存</span><br><span class="line">S 从显存读入 → softmax → 把 P 写回显存</span><br><span class="line">P、V 从显存读入 → 计算 O → 把 O 写回显存</span><br></pre></td></tr></table></figure>
 <p>也就是说，中间的巨大矩阵 <code>S</code> 和 <code>P</code> 被反复写入、读出显存。</p>
@@ -407,6 +420,9 @@ $$
 <p>Attention 的瓶颈不是只有 FLOPs，还有 HBM 和 SRAM 之间的 IO。</p>
 </blockquote>
 <div align="center"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 300" style="max-width:100%;height:auto;font-family:Arial,'Helvetica Neue',sans-serif;"><style>.box{rx:8;ry:8;stroke:#333;stroke-width:1.5}.hbm{fill:#ffecb3}.sram{fill:#e3f2fd}.op{fill:#e8f5e9}.txt{font-size:14px;fill:#222;text-anchor:middle}.small{font-size:12px;fill:#555;text-anchor:middle}.arrow{stroke:#555;stroke-width:2;marker-end:url(#arr)}</style><defs><marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#555"/></marker></defs><text x="380" y="24" class="txt" style="font-weight:bold">标准 Attention：巨大中间矩阵反复进出显存</text><rect class="box hbm" x="40" y="70" width="150" height="70"/><text x="115" y="100" class="txt">HBM 显存</text><text x="115" y="122" class="small">Q / K / V / S / P</text><rect class="box sram" x="305" y="70" width="150" height="70"/><text x="380" y="100" class="txt">SRAM</text><text x="380" y="122" class="small">临时计算</text><rect class="box op" x="570" y="70" width="150" height="70"/><text x="645" y="100" class="txt">CUDA Core</text><text x="645" y="122" class="small">矩阵乘 / softmax</text><line class="arrow" x1="190" y1="92" x2="305" y2="92"/><line class="arrow" x1="305" y1="118" x2="190" y2="118"/><line class="arrow" x1="455" y1="92" x2="570" y2="92"/><line class="arrow" x1="570" y1="118" x2="455" y2="118"/><text x="247" y="82" class="small">读 Q/K</text><text x="247" y="140" class="small">写 S/P</text><text x="512" y="82" class="small">送去计算</text><text x="512" y="140" class="small">结果返回</text><text x="380" y="220" class="txt">问题：S 和 P 都是 N×N，序列越长，中间矩阵越大，显存读写成本越恐怖。</text></svg></div>
+
+<h3 id="3-1-标准-Attention-vs-FlashAttention-数据流对比"><a href="#3-1-标准-Attention-vs-FlashAttention-数据流对比" class="headerlink" title="3.1 标准 Attention vs FlashAttention 数据流对比"></a>3.1 标准 Attention vs FlashAttention 数据流对比</h3><p>下面这张图直接把两者放在一起对比，最能体现”是否反复进出 HBM”这一关键差别：</p>
+<div align="center"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 360" style="max-width:100%;height:auto;font-family:Arial,'Helvetica Neue',sans-serif;"><style>.b{rx:6;ry:6;stroke:#333;stroke-width:1.2}.h{fill:#ffe0b2}.s{fill:#bbdefb}.f{fill:#c8e6c9}.bad{stroke:#c62828;stroke-width:2;fill:none}.good{stroke:#2e7d32;stroke-width:2;fill:none}.t{font-size:13px;fill:#222;text-anchor:middle}.tt{font-size:14px;font-weight:bold;fill:#111;text-anchor:middle}.sm{font-size:11px;fill:#555;text-anchor:middle}</style><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#444"/></marker></defs><text x="190" y="22" class="tt">标准 Attention</text><rect class="b h" x="60" y="40" width="260" height="40"/><text x="190" y="65" class="t">HBM：Q K V → S → P → O</text><rect class="b s" x="60" y="100" width="260" height="40"/><text x="190" y="125" class="t">SRAM：每步只算一小段</text><line stroke="#c62828" stroke-width="2" x1="100" y1="80" x2="100" y2="100" marker-end="url(#ar)"/><line stroke="#c62828" stroke-width="2" x1="140" y1="100" x2="140" y2="80" marker-end="url(#ar)"/><line stroke="#c62828" stroke-width="2" x1="180" y1="80" x2="180" y2="100" marker-end="url(#ar)"/><line stroke="#c62828" stroke-width="2" x1="220" y1="100" x2="220" y2="80" marker-end="url(#ar)"/><line stroke="#c62828" stroke-width="2" x1="260" y1="80" x2="260" y2="100" marker-end="url(#ar)"/><line stroke="#c62828" stroke-width="2" x1="300" y1="100" x2="300" y2="80" marker-end="url(#ar)"/><text x="190" y="170" class="sm">中间矩阵 S、P 反复进出 HBM，IO 爆炸</text><text x="190" y="195" class="sm" style="fill:#c62828">HBM 读写次数 ∝ N²</text><text x="570" y="22" class="tt">FlashAttention</text><rect class="b h" x="440" y="40" width="260" height="40"/><text x="570" y="65" class="t">HBM：只存 Q K V 和最终 O / L</text><rect class="b f" x="440" y="100" width="260" height="40"/><text x="570" y="125" class="t">SRAM：分块算完整流水线</text><line stroke="#2e7d32" stroke-width="2" x1="500" y1="80" x2="500" y2="100" marker-end="url(#ar)"/><line stroke="#2e7d32" stroke-width="2" x1="640" y1="100" x2="640" y2="80" marker-end="url(#ar)"/><text x="570" y="170" class="sm">S、P 只存活在 SRAM，用完就丢</text><text x="570" y="195" class="sm" style="fill:#2e7d32">HBM 读写次数 ∝ N²·d²/M（M 为 SRAM 大小）</text><line x1="380" y1="40" x2="380" y2="200" stroke="#999" stroke-dasharray="4 3"/><text x="380" y="240" class="tt">两者数学结果完全一致，差别只在数据流动方式</text><text x="380" y="280" class="sm">标准 Attention：算法等价于"每步落盘 → 再读"；</text><text x="380" y="300" class="sm">FlashAttention：算法等价于"在 SRAM 里把所有步骤一次性流水串起来"。</text></svg></div>
 
 <hr>
 <h2 id="四、FlashAttention-的核心思想：不要把整张注意力表摊开"><a href="#四、FlashAttention-的核心思想：不要把整张注意力表摊开" class="headerlink" title="四、FlashAttention 的核心思想：不要把整张注意力表摊开"></a>四、FlashAttention 的核心思想：不要把整张注意力表摊开</h2><p>标准 Attention 像是在处理一张巨大的 Excel 表：</p>
@@ -444,43 +460,74 @@ $$
 <hr>
 <h2 id="六、在线-Softmax：边看边更新全局结果"><a href="#六、在线-Softmax：边看边更新全局结果" class="headerlink" title="六、在线 Softmax：边看边更新全局结果"></a>六、在线 Softmax：边看边更新全局结果</h2><p>普通 softmax 通常要先拿到整行数据，然后做三步：</p>
 <figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1. 找到这一行的最大值 m</span><br><span class="line">2. 计算 exp(x - m)</span><br><span class="line">3. 求和并归一化</span><br></pre></td></tr></table></figure>
-<p>FlashAttention 不能一次看完整行，只能一块一块看。因此它维护两个运行中的变量：</p>
+<p>FlashAttention 不能一次看完整行，只能一块一块看。因此对<strong>每一行 Query</strong>，它维护三个运行中的变量：</p>
 <ul>
-<li><code>m</code>：当前已经看过的所有块中的最大值</li>
-<li><code>l</code>：当前 softmax 分母的累计值</li>
+<li>$m$：当前已经看过的所有块中的最大值（per-row）</li>
+<li>$\ell$：当前 softmax <strong>未归一化</strong> 的分母累计值</li>
+<li>$O$：当前未归一化的输出累计值（行向量）</li>
 </ul>
-<p>当新 block 到来时，更新：</p>
+<p>每当一个新的 K/V 块到来，FlashAttention 做如下更新：</p>
+<p>第 1 步，算这一块的局部分数与局部最大值：</p>
 <div>
 $$
-m_{new}=\max(m_{old},m_{block})
+S_{block} = Q\, K_{block}^{T} / \sqrt{d}, \quad m_{block} = \max(S_{block})
+$$
+</div>
+
+<p>第 2 步，更新全局最大值，并把”旧累积”按新最大值重新缩放：</p>
+<div>
+$$
+m_{new} = \max(m_{old},\, m_{block})
 $$
 </div>
 
 <div>
 $$
-l_{new}=e^{m_{old}-m_{new}}l_{old}+e^{m_{block}-m_{new}}l_{block}
+\ell_{new} = e^{m_{old}-m_{new}}\,\ell_{old} + \sum_j e^{S_{block,j}-m_{new}}
 $$
 </div>
 
-<p>这一步非常重要。它解决了两个问题：</p>
+<p>第 3 步，<strong>对输出 O 做同样的 rescale，然后把当前块的贡献加进来</strong>：</p>
+<div>
+$$
+O_{new} = e^{m_{old}-m_{new}}\,O_{old} + \sum_j e^{S_{block,j}-m_{new}}\, V_{block,j}
+$$
+</div>
+
+<p>最后所有块都处理完后，再除以 $\ell$ 完成归一化：</p>
+<div>
+$$
+O_{final} = O / \ell
+$$
+</div>
+
+<p>这一套公式解决了两个问题：</p>
 <ol>
-<li><strong>数值稳定</strong>：始终减去最大值，避免指数爆炸。</li>
-<li><strong>分块等价</strong>：虽然一块一块算，但最后结果和一次性 softmax 完全一致。</li>
+<li><strong>数值稳定</strong>：始终减去当前最大值 $m_{new}$，避免 $e^{x}$ 上溢。</li>
+<li><strong>分块等价</strong>：虽然一块一块累加，但最终结果与一次性对整行做 softmax 严格相等（不是近似）。</li>
 </ol>
+<blockquote>
+<p>关键直觉：每当出现新最大值时，<strong>所有”旧的累积”都按 $e^{m<em>{old}-m</em>{new}}$ 收缩一次</strong>，这样大家始终处在同一个”减最大值”的尺度下，可以放心相加。</p>
+</blockquote>
+<p>下面这张图把”新块到来 → rescale 旧累积 → 合并新贡献”的过程画出来：</p>
+<div align="center"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 320" style="max-width:100%;height:auto;font-family:Arial,'Helvetica Neue',sans-serif;"><style>.b{rx:6;ry:6;stroke:#333;stroke-width:1.2}.old{fill:#ffe0b2}.new{fill:#bbdefb}.mer{fill:#c8e6c9}.t{font-size:13px;fill:#222;text-anchor:middle}.tt{font-size:14px;font-weight:bold;fill:#111;text-anchor:middle}.sm{font-size:11px;fill:#555;text-anchor:middle}</style><defs><marker id="ar3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#444"/></marker></defs><text x="380" y="22" class="tt">在线 Softmax：每个新块都触发一次 rescale + accumulate</text><rect class="b old" x="40" y="60" width="180" height="120"/><text x="130" y="80" class="t" style="font-weight:bold">旧累积</text><text x="130" y="105" class="t">m_old</text><text x="130" y="125" class="t">ℓ_old</text><text x="130" y="145" class="t">O_old</text><text x="130" y="170" class="sm">已处理的若干 K/V 块</text><rect class="b new" x="290" y="60" width="180" height="120"/><text x="380" y="80" class="t" style="font-weight:bold">新块</text><text x="380" y="105" class="t">S_block = Q · K_blockᵀ/√d</text><text x="380" y="125" class="t">m_block = max(S_block)</text><text x="380" y="170" class="sm">本次循环新加载的 K/V 块</text><rect class="b mer" x="540" y="60" width="180" height="120"/><text x="630" y="80" class="t" style="font-weight:bold">合并后</text><text x="630" y="105" class="t">m_new = max(m_old, m_block)</text><text x="630" y="125" class="t">ℓ_new = α·ℓ_old + Σ exp(...)</text><text x="630" y="145" class="t">O_new = α·O_old + Σ exp·V</text><text x="630" y="170" class="sm">α = exp(m_old − m_new)</text><line stroke="#444" stroke-width="2" x1="220" y1="120" x2="290" y2="120" marker-end="url(#ar3)"/><line stroke="#444" stroke-width="2" x1="470" y1="120" x2="540" y2="120" marker-end="url(#ar3)"/><text x="380" y="230" class="tt">所有块累完后：O_final = O_new / ℓ_new</text><text x="380" y="270" class="sm">关键：每次 m 变大，旧的 O、ℓ 都按 α 缩水一次，</text><text x="380" y="290" class="sm">这样无论先来后到，最终结果和一次性 softmax 完全相等。</text></svg></div>
+
 <p>直觉上看，在线 softmax 就像你在分批统计全班成绩：</p>
 <ul>
 <li>每来一批学生，更新当前最高分。</li>
-<li>如果新的最高分变了，之前那批学生的相对权重也要重新缩放。</li>
+<li>如果新的最高分变了，之前那批学生的相对权重也要按比例<strong>重新缩放</strong>。</li>
 <li>最后得到的统计结果和一次性看完整个班一样。</li>
 </ul>
 <hr>
-<h2 id="七、FlashAttention-的完整流程"><a href="#七、FlashAttention-的完整流程" class="headerlink" title="七、FlashAttention 的完整流程"></a>七、FlashAttention 的完整流程</h2><p>以一个 Q block 为例，FlashAttention 大致做下面这些事：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">for each Q_block:</span><br><span class="line">    初始化输出 O_block = 0</span><br><span class="line">    初始化 running max m = -∞</span><br><span class="line">    初始化 running sum l = 0</span><br><span class="line"></span><br><span class="line">    for each K_block, V_block:</span><br><span class="line">        1. 把 Q_block, K_block, V_block 加载到 SRAM</span><br><span class="line">        2. 计算小块分数 S_block = Q_block × K_block^T</span><br><span class="line">        3. 根据 mask 处理 causal attention</span><br><span class="line">        4. 用在线 softmax 更新 m 和 l</span><br><span class="line">        5. 把当前 block 对输出的贡献合并进 O_block</span><br><span class="line"></span><br><span class="line">    把最终 O_block 写回 HBM</span><br></pre></td></tr></table></figure>
+<h2 id="七、FlashAttention-的完整流程"><a href="#七、FlashAttention-的完整流程" class="headerlink" title="七、FlashAttention 的完整流程"></a>七、FlashAttention 的完整流程</h2><p>下面给出 FlashAttention v2 风格的伪代码（外层是 Q，内层是 K/V，对推理更友好；v1 的循环顺序与之相反，详见第十一节）：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">for each Q_block:                  # 外循环：固定一段 Query</span><br><span class="line">    把 Q_block 加载到 SRAM</span><br><span class="line">    O_block = 0                    # 未归一化输出</span><br><span class="line">    m = -inf                       # 行最大值</span><br><span class="line">    l = 0                          # 行 softmax 分母</span><br><span class="line"></span><br><span class="line">    for each K_block, V_block:     # 内循环：扫遍整段 Key/Value</span><br><span class="line">        加载 K_block, V_block 到 SRAM</span><br><span class="line">        S = Q_block · K_blockᵀ / sqrt(d)</span><br><span class="line">        应用 mask（如 causal mask）</span><br><span class="line">        m_new = max(m, rowmax(S))</span><br><span class="line">        P    = exp(S - m_new)                       # 局部概率（未归一化）</span><br><span class="line">        α    = exp(m - m_new)                       # rescale 因子</span><br><span class="line">        l    = α * l + rowsum(P)</span><br><span class="line">        O_block = α * O_block + P · V_block         # 同步 rescale 输出</span><br><span class="line">        m = m_new</span><br><span class="line"></span><br><span class="line">    O_block = O_block / l           # 最后一次性归一化</span><br><span class="line">    把 O_block 与 L = m + log(l) 写回 HBM</span><br></pre></td></tr></table></figure>
 <p>关键点：</p>
 <blockquote>
-<p><strong>中间的 <code>S_block</code> 和 <code>P_block</code> 只存在于 SRAM / register 中，用完就丢，不写回显存。</strong></p>
+<p><strong>中间的 <code>S</code> 和 <code>P</code> 只存在于 SRAM / register 中，用完就丢，不写回 HBM。</strong> 写回 HBM 的只有最终输出 <code>O</code> 和每一行的 softmax 统计量 <code>L = m + log(l)</code>（反向时用得上，但只是 $O(N)$ 大小）。</p>
 </blockquote>
-<p>标准 Attention 需要保存完整 <code>S</code> 和 <code>P</code>；FlashAttention 只保存最终输出 <code>O</code> 以及少量 softmax 统计量。</p>
+<p>可以把 v2 的”双层循环”画成下面这张矩阵图：</p>
+<div align="center"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 360" style="max-width:100%;height:auto;font-family:Arial,'Helvetica Neue',sans-serif;"><style>.cell{fill:#fafafa;stroke:#bbb}.row{fill:#bbdefb;stroke:#1565c0;stroke-width:2}.col{fill:#c8e6c9;stroke:#2e7d32;stroke-width:2}.cur{fill:#ffcc80;stroke:#e65100;stroke-width:2}.t{font-size:13px;fill:#222;text-anchor:middle}.tt{font-size:14px;font-weight:bold;fill:#111;text-anchor:middle}.sm{font-size:11px;fill:#555;text-anchor:middle}</style><text x="380" y="22" class="tt">FlashAttention v2 的双层循环：固定 Q 行，扫过整列 K/V</text><g transform="translate(180,50)"><g><rect class="cell" x="0" y="0" width="50" height="40"/><rect class="cell" x="50" y="0" width="50" height="40"/><rect class="cell" x="100" y="0" width="50" height="40"/><rect class="cell" x="150" y="0" width="50" height="40"/><rect class="cell" x="200" y="0" width="50" height="40"/><rect class="cell" x="250" y="0" width="50" height="40"/><rect class="cell" x="300" y="0" width="50" height="40"/></g><g><rect class="row" x="0" y="40" width="50" height="40"/><rect class="cur" x="50" y="40" width="50" height="40"/><rect class="row" x="100" y="40" width="50" height="40"/><rect class="row" x="150" y="40" width="50" height="40"/><rect class="row" x="200" y="40" width="50" height="40"/><rect class="row" x="250" y="40" width="50" height="40"/><rect class="row" x="300" y="40" width="50" height="40"/></g><g><rect class="cell" x="0" y="80" width="50" height="40"/><rect class="cell" x="50" y="80" width="50" height="40"/><rect class="cell" x="100" y="80" width="50" height="40"/><rect class="cell" x="150" y="80" width="50" height="40"/><rect class="cell" x="200" y="80" width="50" height="40"/><rect class="cell" x="250" y="80" width="50" height="40"/><rect class="cell" x="300" y="80" width="50" height="40"/></g><g><rect class="cell" x="0" y="120" width="50" height="40"/><rect class="cell" x="50" y="120" width="50" height="40"/><rect class="cell" x="100" y="120" width="50" height="40"/><rect class="cell" x="150" y="120" width="50" height="40"/><rect class="cell" x="200" y="120" width="50" height="40"/><rect class="cell" x="250" y="120" width="50" height="40"/><rect class="cell" x="300" y="120" width="50" height="40"/></g></g><text x="180" y="80" class="t" text-anchor="end">Q_block →</text><text x="180" y="105" class="sm" text-anchor="end">外循环</text><text x="555" y="220" class="t">↑</text><text x="555" y="240" class="sm">内循环：扫遍 K/V</text><text x="380" y="285" class="tt">每个 Q 行只读一次 HBM，内层把 K/V 流水扫过去</text><text x="380" y="310" class="sm">v1 与之相反：外循环 K/V，内循环 Q —— 反向更直观，但前向并行度差一些。</text></svg></div>
+
 <hr>
 <h2 id="八、为什么它省显存？"><a href="#八、为什么它省显存？" class="headerlink" title="八、为什么它省显存？"></a>八、为什么它省显存？</h2><p>标准 Attention 的中间显存主要来自：</p>
 <figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">S = QK^T          # N × N</span><br><span class="line">P = softmax(S)    # N × N</span><br></pre></td></tr></table></figure>
@@ -510,8 +557,17 @@ $$
 <h2 id="十、反向传播：为什么还要重算？"><a href="#十、反向传播：为什么还要重算？" class="headerlink" title="十、反向传播：为什么还要重算？"></a>十、反向传播：为什么还要重算？</h2><p>训练时，反向传播需要用到前向过程中的一些中间结果。</p>
 <p>标准 Attention 会直接保存完整的注意力概率矩阵 <code>P</code>，反向时直接读出来。</p>
 <p>FlashAttention 不保存 <code>P</code>，那反向怎么办？</p>
-<p>答案是：<strong>重算</strong>。</p>
-<p>反向传播时，它根据保存的 <code>O</code>、<code>m</code>、<code>l</code> 以及原始的 <code>Q/K/V</code>，重新分块计算需要的 softmax 结果。</p>
+<p>答案是：<strong>重算</strong>（recomputation）。</p>
+<p>前向阶段，FlashAttention 写回 HBM 的”反向所需”的中间量只有：</p>
+<ul>
+<li>输出 <code>O</code>（$N \times d$）</li>
+<li>每行的 softmax 统计量 <code>L = m + log(l)</code>（$O(N)$）</li>
+</ul>
+<p>反向阶段，对每个 (Q_block, K_block) 对，<strong>重新加载 Q、K、V</strong>，重新算一次：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">S = Q · Kᵀ / sqrt(d)</span><br><span class="line">P = exp(S - L)        # 直接利用前向保存的 L 一次性恢复 softmax</span><br></pre></td></tr></table></figure>
+<p>这里有个非常优雅的细节：因为 <code>L = m + log(l)</code>，所以 $\exp(S - L) = \exp(S - m)/l$，<strong>也就是真正的 softmax 概率</strong>。换句话说：<strong>只要保存一行一个 <code>L</code> 标量，就足以在反向时一次性还原整行的概率</strong>，不需要保存 N×N 的 P，也不需要保存中间 m、l。</p>
+<div align="center"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 320" style="max-width:100%;height:auto;font-family:Arial,'Helvetica Neue',sans-serif;"><style>.b{rx:6;ry:6;stroke:#333;stroke-width:1.2}.std{fill:#ffcdd2}.fa{fill:#c8e6c9}.t{font-size:13px;fill:#222;text-anchor:middle}.tt{font-size:14px;font-weight:bold;fill:#111;text-anchor:middle}.sm{font-size:11px;fill:#555;text-anchor:middle}</style><text x="380" y="22" class="tt">前向保存 vs 反向重算</text><text x="190" y="55" class="tt">标准 Attention</text><rect class="b std" x="60" y="70" width="260" height="60"/><text x="190" y="95" class="t">前向保存：完整 P (N×N)</text><text x="190" y="115" class="t">反向直接读 P</text><rect class="b std" x="60" y="150" width="260" height="60"/><text x="190" y="180" class="t">显存吃满，长序列直接 OOM</text><text x="570" y="55" class="tt">FlashAttention</text><rect class="b fa" x="440" y="70" width="260" height="60"/><text x="570" y="92" class="t">前向只保存：</text><text x="570" y="112" class="t">O (N×d) + L (N)</text><rect class="b fa" x="440" y="150" width="260" height="60"/><text x="570" y="172" class="t">反向重算：</text><text x="570" y="192" class="t">用 Q,K,V 与 L 重新算 P</text><text x="380" y="250" class="tt">用一点点重算时间，换来 N² 级别的显存节省</text><text x="380" y="280" class="sm">在 GPU 上：HBM IO 比额外 FLOPs 贵很多，所以总时间反而更短。</text></svg></div>
+
 <p>这是一种典型的时间换空间：</p>
 <div class="table-container">
 <table>
@@ -538,32 +594,35 @@ $$
 </div>
 <p>但在 GPU 上，显存 IO 往往比多做一点计算更贵。所以整体上 FlashAttention 仍然更快、更省。</p>
 <hr>
-<h2 id="十一、FlashAttention-v1、v2、v3-有什么区别？"><a href="#十一、FlashAttention-v1、v2、v3-有什么区别？" class="headerlink" title="十一、FlashAttention v1、v2、v3 有什么区别？"></a>十一、FlashAttention v1、v2、v3 有什么区别？</h2><h3 id="11-1-FlashAttention-v1"><a href="#11-1-FlashAttention-v1" class="headerlink" title="11.1 FlashAttention v1"></a>11.1 FlashAttention v1</h3><p>v1 的核心贡献是提出 <strong>IO-aware exact attention</strong>：</p>
+<h2 id="十一、FlashAttention-v1、v2、v3-有什么区别？"><a href="#十一、FlashAttention-v1、v2、v3-有什么区别？" class="headerlink" title="十一、FlashAttention v1、v2、v3 有什么区别？"></a>十一、FlashAttention v1、v2、v3 有什么区别？</h2><h3 id="11-1-FlashAttention-v1（2022）"><a href="#11-1-FlashAttention-v1（2022）" class="headerlink" title="11.1 FlashAttention v1（2022）"></a>11.1 FlashAttention v1（2022）</h3><p>v1 的核心贡献是提出 <strong>IO-aware exact attention</strong>：</p>
 <ul>
-<li>分块计算</li>
+<li>分块计算（tiling）</li>
 <li>在线 softmax</li>
 <li>不保存完整 attention matrix</li>
 <li>显著降低 HBM 读写</li>
 </ul>
 <p>它证明了：<strong>注意力优化不能只看 FLOPs，还必须看显存 IO。</strong></p>
-<h3 id="11-2-FlashAttention-v2"><a href="#11-2-FlashAttention-v2" class="headerlink" title="11.2 FlashAttention v2"></a>11.2 FlashAttention v2</h3><p>v2 主要是工程层面的进一步优化：</p>
+<p>特点：v1 的循环顺序是 <strong>外循环 K/V、内循环 Q</strong>，这种顺序在反向上比较自然，但前向时 Q 的 rescale 频繁、并行度受限。</p>
+<h3 id="11-2-FlashAttention-v2（2023）"><a href="#11-2-FlashAttention-v2（2023）" class="headerlink" title="11.2 FlashAttention v2（2023）"></a>11.2 FlashAttention v2（2023）</h3><p>v2 在工程实现上做了系统性的重构：</p>
 <ul>
-<li>更好的并行化策略</li>
-<li>更少的非矩阵乘法操作</li>
-<li>更高的 Tensor Core 利用率</li>
-<li>支持更广泛的 head dimension</li>
-<li>对长序列训练更友好</li>
+<li><strong>互换循环顺序</strong>：把 Q 放到外层、K/V 放到内层，每个 Q 行只需一次 rescale，前向显著加速。</li>
+<li><strong>减少非矩阵乘法操作</strong>（更少的 rescale、除法、log），把更多 FLOPs 留给 Tensor Core 这种”会算大块矩阵乘”的硬件单元。</li>
+<li><strong>更好的并行化</strong>：在 batch、head、序列维度上同时切分，提升 GPU 占用率。</li>
+<li><strong>更广 head dimension 与 mask 支持</strong>（支持 causal、local、ALiBi 等）。</li>
+<li>端到端在 A100 上比 v1 快约 2× 左右（论文给出的典型数字）。</li>
 </ul>
-<p>如果说 v1 是“算法突破”，v2 就是“把 GPU 榨得更干净”。</p>
-<h3 id="11-3-FlashAttention-v3"><a href="#11-3-FlashAttention-v3" class="headerlink" title="11.3 FlashAttention v3"></a>11.3 FlashAttention v3</h3><p>v3 面向 Hopper 架构（如 H100）进一步优化：</p>
+<p>如果说 v1 是”算法突破”，v2 就是”把 GPU 榨得更干净”。</p>
+<h3 id="11-3-FlashAttention-v3（2024）"><a href="#11-3-FlashAttention-v3（2024）" class="headerlink" title="11.3 FlashAttention v3（2024）"></a>11.3 FlashAttention v3（2024）</h3><p>v3 面向 NVIDIA Hopper 架构（H100）做硬件深度适配：</p>
 <ul>
-<li>利用 Hopper 的异步能力</li>
-<li>更好地重叠数据搬运和计算</li>
-<li>针对 FP8 等低精度计算优化</li>
-<li>进一步提升 H100 上的吞吐</li>
+<li><strong>Warp-specialized producer/consumer 调度</strong>：一部分 warp 专门负责异步搬运数据（TMA），另一部分 warp 专门做矩阵乘 + softmax，<strong>让数据搬运和计算真正重叠起来</strong>。</li>
+<li><strong>GEMM 与 Softmax 的指令级流水</strong>：在 register 层面交错排布，进一步隐藏 softmax 的非矩阵乘开销。</li>
+<li><strong>FP8 支持</strong>：在低精度路径下做了块级缩放（block scaling），尽量保留数值精度，但 FP8 仍可能有可观的精度下降，需要业务方做评估。</li>
+<li>在 H100 上 FP16 比 v2 快约 1.5–2×，FP8 接近 1.2 PFLOPs/s 量级（论文数据）。</li>
 </ul>
 <p>简单理解：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">FlashAttention v1：想明白怎么省 IO</span><br><span class="line">FlashAttention v2：在 A100 等 GPU 上跑得更满</span><br><span class="line">FlashAttention v3：为 H100 / Hopper 继续深度压榨硬件</span><br></pre></td></tr></table></figure>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">FlashAttention v1：想明白怎么省 IO（A100 上 ~2× 提升）</span><br><span class="line">FlashAttention v2：把 GPU 流水线榨干，A100 上比 v1 再快 ~2×</span><br><span class="line">FlashAttention v3：为 Hopper / H100 重写调度，吃满异步与 FP8</span><br></pre></td></tr></table></figure>
+<div align="center"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 320" style="max-width:100%;height:auto;font-family:Arial,'Helvetica Neue',sans-serif;"><style>.b{rx:8;ry:8;stroke:#333;stroke-width:1.2}.v1{fill:#ffe0b2}.v2{fill:#bbdefb}.v3{fill:#c8e6c9}.t{font-size:13px;fill:#222;text-anchor:middle}.tt{font-size:14px;font-weight:bold;fill:#111;text-anchor:middle}.sm{font-size:11px;fill:#555;text-anchor:middle}</style><text x="380" y="22" class="tt">FlashAttention 三代演进</text><rect class="b v1" x="40" y="50" width="220" height="220"/><text x="150" y="78" class="tt">v1（2022）</text><text x="150" y="105" class="t">IO-aware exact attention</text><text x="150" y="125" class="t">Tiling + 在线 Softmax</text><text x="150" y="145" class="t">外循环 K/V，内循环 Q</text><text x="150" y="170" class="sm">A100：≈2× vs PyTorch</text><text x="150" y="195" class="sm">关键洞察：</text><text x="150" y="215" class="sm">"算法慢" ≠ "FLOPs 多"，</text><text x="150" y="235" class="sm">很多时候是 IO 慢。</text><rect class="b v2" x="270" y="50" width="220" height="220"/><text x="380" y="78" class="tt">v2（2023）</text><text x="380" y="105" class="t">外循环 Q，内循环 K/V</text><text x="380" y="125" class="t">非 matmul 操作减少</text><text x="380" y="145" class="t">更高 Tensor Core 利用率</text><text x="380" y="170" class="sm">A100：≈2× vs v1</text><text x="380" y="195" class="sm">支持 ALiBi / 各种 mask、</text><text x="380" y="215" class="sm">更广的 head_dim、</text><text x="380" y="235" class="sm">长序列训练首选。</text><rect class="b v3" x="500" y="50" width="220" height="220"/><text x="610" y="78" class="tt">v3（2024）</text><text x="610" y="105" class="t">Hopper / H100 专用</text><text x="610" y="125" class="t">Warp specialization</text><text x="610" y="145" class="t">异步搬运 + 计算重叠</text><text x="610" y="170" class="sm">FP8 路径（带块级缩放）</text><text x="610" y="195" class="sm">FP16 ≈1.5–2× vs v2</text><text x="610" y="215" class="sm">FP8 ≈1.2 PFLOPs/s</text><text x="610" y="235" class="sm">数值要做精度评估</text><text x="380" y="295" class="sm">v1 → v2 → v3 是"算法 → 调度 → 硬件适配"的三层优化</text></svg></div>
+
 <hr>
 <h2 id="十二、它和-Sparse-Attention、Linear-Attention-有什么区别？"><a href="#十二、它和-Sparse-Attention、Linear-Attention-有什么区别？" class="headerlink" title="十二、它和 Sparse Attention、Linear Attention 有什么区别？"></a>十二、它和 Sparse Attention、Linear Attention 有什么区别？</h2><p>这是非常容易混淆的点。</p>
 <div class="table-container">
@@ -610,6 +669,90 @@ $$
 </blockquote>
 <p>所以使用 FlashAttention 通常不需要重新训练模型结构，也不会改变模型输出的理论含义。</p>
 <hr>
+<h2 id="十三、训练、Prefill、Decode-三种场景下的收益不同"><a href="#十三、训练、Prefill、Decode-三种场景下的收益不同" class="headerlink" title="十三、训练、Prefill、Decode 三种场景下的收益不同"></a>十三、训练、Prefill、Decode 三种场景下的收益不同</h2><p>很多人只笼统地说 “FlashAttention 提速很多”，但实际上它在三种典型场景里的收益差别很大，搞清这一点能避免很多”为什么我用了没快多少”的困惑。</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>场景</th>
+<th>序列长度</th>
+<th>Q 长度</th>
+<th>KV 长度</th>
+<th>FlashAttention 收益</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>训练</td>
+<td>长</td>
+<td>全长</td>
+<td>全长</td>
+<td><strong>极大</strong>：N×N 中间矩阵全省下来</td>
+</tr>
+<tr>
+<td>推理 prefill</td>
+<td>长</td>
+<td>全 prompt 长度</td>
+<td>全 prompt 长度</td>
+<td><strong>大</strong>：和训练前向类似</td>
+</tr>
+<tr>
+<td>推理 decode</td>
+<td>长</td>
+<td>1（只算新 token）</td>
+<td>全 KV cache</td>
+<td><strong>小</strong>：瓶颈不在 N×N 而在 KV 加载</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>为什么 decode 阶段收益小？因为这时 Q 只有 1 个 token，注意力矩阵从 N×N 退化成 1×N，<strong>不再有 O(N²) 中间矩阵可省</strong>。这时真正的瓶颈是把整段 KV cache 从 HBM 读进来——属于 memory-bound 而非 compute-bound 问题。</p>
+<p>针对这一痛点，社区提出了 <strong>FlashDecoding</strong>（2023）和 <strong>FlashDecoding++</strong>（2024）：</p>
+<ul>
+<li>把 KV 维度也切成多个 chunk，<strong>沿 KV 维度并行</strong>多个 SM 同时算</li>
+<li>最后用一次 reduction 合并 partial softmax 结果</li>
+<li>在长上下文 decode 上能再带来 2–4× 加速</li>
+</ul>
+<div align="center"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 320" style="max-width:100%;height:auto;font-family:Arial,'Helvetica Neue',sans-serif;"><style>.b{rx:6;ry:6;stroke:#333;stroke-width:1.2}.tr{fill:#ffe0b2}.pr{fill:#bbdefb}.dc{fill:#c8e6c9}.t{font-size:13px;fill:#222;text-anchor:middle}.tt{font-size:14px;font-weight:bold;fill:#111;text-anchor:middle}.sm{font-size:11px;fill:#555;text-anchor:middle}</style><text x="380" y="22" class="tt">不同阶段的注意力形状决定了 FlashAttention 的收益</text><rect class="b tr" x="40" y="50" width="220" height="180"/><text x="150" y="75" class="tt">训练</text><text x="150" y="100" class="t">Q：[N, d]</text><text x="150" y="120" class="t">K/V：[N, d]</text><text x="150" y="142" class="t">Attention 矩阵：N×N</text><text x="150" y="180" class="sm" style="fill:#bf360c">★ FlashAttention 收益最大</text><text x="150" y="200" class="sm">省下 N² 中间显存</text><rect class="b pr" x="270" y="50" width="220" height="180"/><text x="380" y="75" class="tt">推理 Prefill</text><text x="380" y="100" class="t">Q：[N_prompt, d]</text><text x="380" y="120" class="t">K/V：[N_prompt, d]</text><text x="380" y="142" class="t">Attention 矩阵：N_p × N_p</text><text x="380" y="180" class="sm" style="fill:#0d47a1">★ 收益与训练前向类似</text><text x="380" y="200" class="sm">长 prompt 越长越值</text><rect class="b dc" x="500" y="50" width="220" height="180"/><text x="610" y="75" class="tt">推理 Decode</text><text x="610" y="100" class="t">Q：[1, d]</text><text x="610" y="120" class="t">K/V：[N_kv, d]</text><text x="610" y="142" class="t">Attention 矩阵：1×N_kv</text><text x="610" y="180" class="sm" style="fill:#1b5e20">★ 收益较小</text><text x="610" y="200" class="sm">需 FlashDecoding 沿 KV 切并行</text><text x="380" y="275" class="sm">decode 阶段瓶颈是"读 KV cache"，本质是 memory-bound</text><text x="380" y="295" class="sm">这就是为什么 vLLM、SGLang 等框架还要叠加 PagedAttention 等优化</text></svg></div>
+
+<hr>
+<h2 id="十四、与-PagedAttention、KV-Cache-的关系"><a href="#十四、与-PagedAttention、KV-Cache-的关系" class="headerlink" title="十四、与 PagedAttention、KV Cache 的关系"></a>十四、与 PagedAttention、KV Cache 的关系</h2><p>经常有同学问：”vLLM 用的 PagedAttention 和 FlashAttention 是什么关系？是替代品吗？”</p>
+<p>答案是：<strong>不是替代，而是叠加</strong>。</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>优化</th>
+<th>解决的问题</th>
+<th>工作层</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>FlashAttention</strong></td>
+<td>注意力计算本身的 IO/显存</td>
+<td>单次 attention kernel 内部</td>
+</tr>
+<tr>
+<td><strong>PagedAttention</strong></td>
+<td>KV cache 在多请求间的碎片化与浪费</td>
+<td>KV cache 的内存管理</td>
+</tr>
+<tr>
+<td><strong>KV Cache</strong></td>
+<td>decode 时不重复算历史 token</td>
+<td>前向流程层面</td>
+</tr>
+<tr>
+<td><strong>Continuous Batching</strong></td>
+<td>请求级调度，提升吞吐</td>
+<td>调度器层</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>你完全可以同时用 FlashAttention 内核 + PagedAttention 内存管理 + Continuous Batching 调度，三者互补，事实上 vLLM 的高性能内核就是这么组合的。</p>
+<hr>
 <h2 id="十三、什么时候收益最大？"><a href="#十三、什么时候收益最大？" class="headerlink" title="十三、什么时候收益最大？"></a>十三、什么时候收益最大？</h2><p>FlashAttention 的收益和场景强相关。</p>
 <h3 id="13-1-收益明显的场景"><a href="#13-1-收益明显的场景" class="headerlink" title="13.1 收益明显的场景"></a>13.1 收益明显的场景</h3><ol>
 <li><strong>长上下文训练</strong>：比如 4K、8K、32K、128K tokens。</li>
@@ -626,40 +769,75 @@ $$
 </ol>
 <hr>
 <h2 id="十四、PyTorch-中怎么用？"><a href="#十四、PyTorch-中怎么用？" class="headerlink" title="十四、PyTorch 中怎么用？"></a>十四、PyTorch 中怎么用？</h2><p>现在很多框架已经把 FlashAttention 类似的优化封装进标准接口。</p>
-<h3 id="14-1-PyTorch-SDPA"><a href="#14-1-PyTorch-SDPA" class="headerlink" title="14.1 PyTorch SDPA"></a>14.1 PyTorch SDPA</h3><p>PyTorch 2.x 提供了 <code>scaled_dot_product_attention</code>：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">import</span> torch.nn.functional <span class="keyword">as</span> F</span><br><span class="line"></span><br><span class="line">q = torch.randn(<span class="number">2</span>, <span class="number">8</span>, <span class="number">1024</span>, <span class="number">64</span>, device=<span class="string">&quot;cuda&quot;</span>, dtype=torch.float16)</span><br><span class="line">k = torch.randn(<span class="number">2</span>, <span class="number">8</span>, <span class="number">1024</span>, <span class="number">64</span>, device=<span class="string">&quot;cuda&quot;</span>, dtype=torch.float16)</span><br><span class="line">v = torch.randn(<span class="number">2</span>, <span class="number">8</span>, <span class="number">1024</span>, <span class="number">64</span>, device=<span class="string">&quot;cuda&quot;</span>, dtype=torch.float16)</span><br><span class="line"></span><br><span class="line">out = F.scaled_dot_product_attention(</span><br><span class="line">    q, k, v,</span><br><span class="line">    attn_mask=<span class="literal">None</span>,</span><br><span class="line">    dropout_p=<span class="number">0.0</span>,</span><br><span class="line">    is_causal=<span class="literal">True</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
-<p>在满足条件时，PyTorch 会自动选择更高效的 kernel（可能是 FlashAttention、memory-efficient attention 或 math fallback）。</p>
-<h3 id="14-2-Transformers-中的使用"><a href="#14-2-Transformers-中的使用" class="headerlink" title="14.2 Transformers 中的使用"></a>14.2 Transformers 中的使用</h3><p>Hugging Face Transformers 中，很多模型可以通过参数启用：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> transformers <span class="keyword">import</span> AutoModelForCausalLM</span><br><span class="line"></span><br><span class="line">model = AutoModelForCausalLM.from_pretrained(</span><br><span class="line">    <span class="string">&quot;meta-llama/Llama-2-7b-hf&quot;</span>,</span><br><span class="line">    torch_dtype=<span class="string">&quot;auto&quot;</span>,</span><br><span class="line">    attn_implementation=<span class="string">&quot;flash_attention_2&quot;</span>,</span><br><span class="line">    device_map=<span class="string">&quot;auto&quot;</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<h3 id="14-1-PyTorch-SDPA"><a href="#14-1-PyTorch-SDPA" class="headerlink" title="14.1 PyTorch SDPA"></a>14.1 PyTorch SDPA</h3><p>PyTorch 2.x 提供了 <code>scaled_dot_product_attention</code>（简称 SDPA）：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">import</span> torch.nn.functional <span class="keyword">as</span> F</span><br><span class="line"></span><br><span class="line"><span class="comment"># 形状约定：(batch, head, seq, head_dim)</span></span><br><span class="line">q = torch.randn(<span class="number">2</span>, <span class="number">8</span>, <span class="number">1024</span>, <span class="number">64</span>, device=<span class="string">&quot;cuda&quot;</span>, dtype=torch.float16)</span><br><span class="line">k = torch.randn(<span class="number">2</span>, <span class="number">8</span>, <span class="number">1024</span>, <span class="number">64</span>, device=<span class="string">&quot;cuda&quot;</span>, dtype=torch.float16)</span><br><span class="line">v = torch.randn(<span class="number">2</span>, <span class="number">8</span>, <span class="number">1024</span>, <span class="number">64</span>, device=<span class="string">&quot;cuda&quot;</span>, dtype=torch.float16)</span><br><span class="line"></span><br><span class="line">out = F.scaled_dot_product_attention(</span><br><span class="line">    q, k, v,</span><br><span class="line">    attn_mask=<span class="literal">None</span>,</span><br><span class="line">    dropout_p=<span class="number">0.0</span>,</span><br><span class="line">    is_causal=<span class="literal">True</span>,</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<p>PyTorch 在底层会从三种后端中自动挑选：</p>
+<ol>
+<li><code>flash</code> —— FlashAttention（v2/v3，看 PyTorch 版本与硬件）</li>
+<li><code>mem_efficient</code> —— xFormers 风格的 memory-efficient attention</li>
+<li><code>math</code> —— 数学回退实现（保底，会显式生成 N×N 矩阵）</li>
+</ol>
+<p>要让 SDPA 真正命中 <code>flash</code> 后端，下面这些条件<strong>最容易踩坑</strong>：</p>
+<ul>
+<li><code>q/k/v</code> 必须是 <code>float16</code> 或 <code>bfloat16</code>（FP32 通常走不到 flash）</li>
+<li>在 CUDA 设备上、CC ≥ 8.0（Ampere 及以上）</li>
+<li><code>head_dim</code> 是受限集合（v2 一般支持 ≤ 256，v1 时代仅 64/128）</li>
+<li><code>attn_mask</code> 必须是 <code>None</code> 或可转换成 causal/标准的形式（任意 dense mask 会回退）</li>
+<li><code>dropout_p</code> 必须是 0（部分版本）</li>
+<li>张量必须连续</li>
+</ul>
+<p>可以用上下文管理器<strong>强制只允许 flash 后端</strong>，从而验证是否真的走到：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> torch.nn.attention <span class="keyword">import</span> sdpa_kernel, SDPBackend</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> sdpa_kernel(SDPBackend.FLASH_ATTENTION):</span><br><span class="line">    out = F.scaled_dot_product_attention(q, k, v, is_causal=<span class="literal">True</span>)</span><br></pre></td></tr></table></figure>
+<p>如果不满足条件，PyTorch 会直接报错，从而暴露你”以为命中了 flash，实际走了 math fallback”的隐形性能 bug。</p>
+<h3 id="14-2-Hugging-Face-Transformers-中的使用"><a href="#14-2-Hugging-Face-Transformers-中的使用" class="headerlink" title="14.2 Hugging Face Transformers 中的使用"></a>14.2 Hugging Face Transformers 中的使用</h3><p>很多模型可以通过参数显式启用：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> transformers <span class="keyword">import</span> AutoModelForCausalLM</span><br><span class="line"></span><br><span class="line">model = AutoModelForCausalLM.from_pretrained(</span><br><span class="line">    <span class="string">&quot;meta-llama/Llama-2-7b-hf&quot;</span>,</span><br><span class="line">    torch_dtype=<span class="string">&quot;auto&quot;</span>,</span><br><span class="line">    attn_implementation=<span class="string">&quot;flash_attention_2&quot;</span>,</span><br><span class="line">    device_map=<span class="string">&quot;auto&quot;</span>,</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<p><code>attn_implementation</code> 常见取值：</p>
+<ul>
+<li><code>&quot;eager&quot;</code> —— 原始实现（保底）</li>
+<li><code>&quot;sdpa&quot;</code> —— 走 PyTorch SDPA（自动挑后端）</li>
+<li><code>&quot;flash_attention_2&quot;</code> —— 强制走 FlashAttention-2 内核（需要 <code>flash-attn</code> 包）</li>
+</ul>
 <p>实际能否启用取决于：</p>
 <ul>
-<li>GPU 架构</li>
-<li>CUDA 版本</li>
-<li>PyTorch 版本</li>
-<li>flash-attn 包是否安装</li>
-<li>head dimension 是否支持</li>
-<li>attention mask 形式是否兼容</li>
+<li>GPU 架构（Ampere/Hopper 通常 OK，Turing/Volta 一般不行）</li>
+<li>CUDA 版本与 PyTorch 版本</li>
+<li><code>flash-attn</code> 包是否安装、版本是否匹配</li>
+<li>head dimension 是否在受支持集合</li>
+<li>attention mask 是否兼容（自定义 dense mask 通常不支持）</li>
 </ul>
+<h3 id="14-3-直接调-flash-attn-包"><a href="#14-3-直接调-flash-attn-包" class="headerlink" title="14.3 直接调 flash-attn 包"></a>14.3 直接调 flash-attn 包</h3><p>最底层的用法是直接用 <code>flash-attn</code> 包提供的函数：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> flash_attn <span class="keyword">import</span> flash_attn_func</span><br><span class="line"></span><br><span class="line"><span class="comment"># 形状约定：(batch, seq, head, head_dim)，注意和 SDPA 不同</span></span><br><span class="line">out = flash_attn_func(q, k, v, dropout_p=<span class="number">0.0</span>, causal=<span class="literal">True</span>)</span><br></pre></td></tr></table></figure>
+<p>直接调更可控，也能用上 v3 的特性（如 FP8、不同的 mask 类型），但需要自己处理张量布局、mask、batched variable-length 等细节，<strong>业务代码一般用 SDPA 或 Transformers 即可</strong>。</p>
 <hr>
-<h2 id="十五、常见误区"><a href="#十五、常见误区" class="headerlink" title="十五、常见误区"></a>十五、常见误区</h2><h3 id="误区-1：FlashAttention-是近似算法"><a href="#误区-1：FlashAttention-是近似算法" class="headerlink" title="误区 1：FlashAttention 是近似算法"></a>误区 1：FlashAttention 是近似算法</h3><p>错误。FlashAttention 是精确 attention，数学结果与标准 attention 等价，差异主要来自浮点精度和计算顺序。</p>
+<h2 id="十六、常见误区"><a href="#十六、常见误区" class="headerlink" title="十六、常见误区"></a>十六、常见误区</h2><h3 id="误区-1：FlashAttention-是近似算法"><a href="#误区-1：FlashAttention-是近似算法" class="headerlink" title="误区 1：FlashAttention 是近似算法"></a>误区 1：FlashAttention 是近似算法</h3><p>错误。FlashAttention 是精确 attention，数学结果与标准 attention 等价，差异主要来自浮点精度和计算顺序。</p>
 <h3 id="误区-2：FlashAttention-会减少理论-FLOPs"><a href="#误区-2：FlashAttention-会减少理论-FLOPs" class="headerlink" title="误区 2：FlashAttention 会减少理论 FLOPs"></a>误区 2：FlashAttention 会减少理论 FLOPs</h3><p>不准确。它主要减少的是显存 IO，不是从公式上消灭矩阵乘法。实际速度提升来自更少的数据搬运和更好的 kernel fusion。</p>
-<h3 id="误区-3：用了-FlashAttention-就一定更快"><a href="#误区-3：用了-FlashAttention-就一定更快" class="headerlink" title="误区 3：用了 FlashAttention 就一定更快"></a>误区 3：用了 FlashAttention 就一定更快</h3><p>不一定。短序列、小 batch、旧 GPU、非 attention 瓶颈场景下，收益可能不明显。</p>
+<h3 id="误区-3：用了-FlashAttention-就一定更快"><a href="#误区-3：用了-FlashAttention-就一定更快" class="headerlink" title="误区 3：用了 FlashAttention 就一定更快"></a>误区 3：用了 FlashAttention 就一定更快</h3><p>不一定。短序列、小 batch、旧 GPU、非 attention 瓶颈场景下，收益可能不明显；推理 decode 阶段尤其需要叠加 FlashDecoding 才有大收益。</p>
 <h3 id="误区-4：FlashAttention-能解决所有长上下文问题"><a href="#误区-4：FlashAttention-能解决所有长上下文问题" class="headerlink" title="误区 4：FlashAttention 能解决所有长上下文问题"></a>误区 4：FlashAttention 能解决所有长上下文问题</h3><p>不能。它降低了注意力计算的显存和 IO 压力，但完整 attention 的计算量仍然与 $N^2$ 有关。超长上下文还需要 RoPE 扩展、稀疏注意力、滑动窗口、KV Cache 管理等技术配合。</p>
+<h3 id="误区-5：FlashAttention-算出来和标准-Attention-比特一致"><a href="#误区-5：FlashAttention-算出来和标准-Attention-比特一致" class="headerlink" title="误区 5：FlashAttention 算出来和标准 Attention 比特一致"></a>误区 5：FlashAttention 算出来和标准 Attention 比特一致</h3><p>不是的。FlashAttention 的<strong>数学定义</strong>和标准 attention 等价，但<strong>浮点结果</strong>几乎一定有微小差异，原因有三：</p>
+<ol>
+<li>加法顺序不同。浮点加法不满足结合律，分块累加和一次性求和会有不同的舍入。</li>
+<li>指数 / 除法在 FP16/BF16 下精度本来就有限。</li>
+<li>v3 的 FP8 路径精度更低，需要业务做评估。</li>
+</ol>
+<p>但这些误差通常远小于训练本身的浮点噪声，<strong>对模型质量没有可观察影响</strong>。</p>
 <hr>
-<h2 id="十六、面试回答模板"><a href="#十六、面试回答模板" class="headerlink" title="十六、面试回答模板"></a>十六、面试回答模板</h2><p>如果面试官问：“FlashAttention 为什么快？”可以这样回答：</p>
+<h2 id="十七、面试回答模板"><a href="#十七、面试回答模板" class="headerlink" title="十七、面试回答模板"></a>十七、面试回答模板</h2><p>如果面试官问：”FlashAttention 为什么快？”可以这样回答：</p>
 <blockquote>
 <p>FlashAttention 的核心不是改变 Attention 公式，而是改变计算方式。标准 Attention 会显式生成并保存 $N \times N$ 的 score 和 probability 矩阵，导致大量 HBM 显存读写。FlashAttention 把 Q/K/V 分块加载到 SRAM 中，使用在线 softmax 一边计算一边更新归一化统计量，避免把完整注意力矩阵写回显存。这样额外中间显存从 $O(N^2)$ 降到 $O(N)$，并通过 kernel fusion 减少读写和调度开销，所以在长序列训练和大模型推理中速度更快、显存更省。</p>
+<p>进一步可以补充：v2 把外循环换成 Q，提升前向并行度并减少非 matmul 操作；v3 在 Hopper 上做 warp specialization、把数据搬运和计算异步重叠，并支持 FP8。同时要区分场景：训练 / prefill 收益最大，decode 由于 Q 长度只有 1，需要叠加 FlashDecoding 才能有显著加速。</p>
 </blockquote>
 <hr>
-<h2 id="十七、终极总结"><a href="#十七、终极总结" class="headerlink" title="十七、终极总结"></a>十七、终极总结</h2><p>最后用 5 句话总结 FlashAttention：</p>
+<h2 id="十八、终极总结"><a href="#十八、终极总结" class="headerlink" title="十八、终极总结"></a>十八、终极总结</h2><p>最后用 7 句话总结 FlashAttention：</p>
 <ol>
 <li><strong>FlashAttention 是精确 Attention，不是近似算法。</strong></li>
 <li><strong>它的核心优化对象是显存 IO，而不只是 FLOPs。</strong></li>
 <li><strong>它通过分块计算和在线 Softmax，避免保存完整 $N \times N$ 注意力矩阵。</strong></li>
-<li><strong>它把中间显存从 $O(N^2)$ 降到 $O(N)$，长序列收益尤其明显。</strong></li>
-<li><strong>FlashAttention v2/v3 继续围绕 GPU 并行、Tensor Core、Hopper 架构做深度优化，是现代 LLM 训练和推理的重要基础设施。</strong></li>
+<li><strong>它把额外中间显存从 $O(N^2)$ 降到 $O(N)$，长序列收益尤其明显。</strong></li>
+<li><strong>训练 / prefill 收益最大；decode 由于 Q 只有 1，需要 FlashDecoding 才能继续加速。</strong></li>
+<li><strong>v1 → v2 → v3 是”算法 → 调度 → 硬件”的三层优化路径，分别对应 IO-aware、并行重排、Hopper 异步与 FP8。</strong></li>
+<li><strong>它和 PagedAttention、KV Cache、Continuous Batching 是叠加关系，不是替代关系。</strong></li>
 </ol>
-<p>如果把标准 Attention 比作“把整张地图摊开在桌上找路”，那么 FlashAttention 就是“边走边看局部地图，同时记住全局方向”。它没有改变目的地，却极大减少了你搬地图、摊地图、收地图的时间。</p>
+<p>如果把标准 Attention 比作”把整张地图摊开在桌上找路”，那么 FlashAttention 就是”边走边看局部地图，同时记住全局方向”。它没有改变目的地，却极大减少了你搬地图、摊地图、收地图的时间。</p>
 
     </div>
 

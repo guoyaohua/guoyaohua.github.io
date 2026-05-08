@@ -10,7 +10,7 @@
   <rights>All rights reserved 2026, 郭耀华</rights>
   <subtitle>欲穷千里目，更上一层楼。</subtitle>
   <title>郭耀华's Blog | 深度学习、机器学习领域技术博客</title>
-  <updated>2026-04-28T14:04:43.658Z</updated>
+  <updated>2026-05-08T14:24:06.744Z</updated>
   <entry>
     <author>
       <name>郭耀华</name>
@@ -32,7 +32,7 @@
       <![CDATA[<center>FlashAttention 是现代大模型训练与推理中最重要的底层优化之一。它并没有改变注意力机制的数学结果，也不是近似算法，却能显著降低显存占用、提升计算速度。本文从标准 Attention 的显存瓶颈讲起，用图解方式拆开 FlashAttention 的核心思想：<strong>IO-aware、分块计算、在线 Softmax、SRAM 复用、反向重算</strong>。看完这篇，你会真正明白它为什么快、为什么省、什么时候有效、什么时候不明显。</center>]]>
     </summary>
     <title>【AI】FlashAttention 详解：为什么它能让大模型注意力计算又快又省显存？</title>
-    <updated>2026-04-28T14:04:43.658Z</updated>
+    <updated>2026-05-08T14:24:06.744Z</updated>
   </entry>
   <entry>
     <author>
